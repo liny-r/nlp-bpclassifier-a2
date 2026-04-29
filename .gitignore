@@ -1,0 +1,21 @@
+# API keys — never commit
+.env
+
+# Large model binaries
+saved_model/fasttext_model.bin
+saved_model/*.bin
+
+# Old files
+old/
+
+# Python
+__pycache__/
+*.pyc
+*.pyo
+.ipynb_checkpoints/
+
+# macOS
+.DS_Store
+
+# Zip archives (raw data already in ECT/)
+*.zip
