@@ -20,8 +20,9 @@ A binary sentence classifier for earnings-call transcripts that distinguishes **
 ├── report.md                         # Full write-up
 ├── run_gold_judges.py                # Reproduce gold labels via Ollama
 ├── gui.py                            # Streamlit tagging app
-├── leaderboard.png                   # Test leaderboard chart
-├── confusion_matrix.png              # HistGBM test confusion matrix
+├── figures/
+│   ├── leaderboard.png                   # Test leaderboard chart
+│   └── confusion_matrix.png              # HistGBM test confusion matrix
 ├── cache/
 │   ├── sentence_pool.parquet         # 53,236 unique sentences (≥40 chars)
 │   ├── splits.pkl                    # Train/val/test splits (60/20/20, seed=42)
