@@ -9,7 +9,7 @@ transcript via file upload or text paste; displays every sentence in its
 original position with boilerplate highlighted in red.
 """
 
-import pickle, re
+import pickle, re, html as _html
 from pathlib import Path
 
 import numpy as np
@@ -71,6 +71,8 @@ def build_regex_features(texts):
     return np.array(rows, dtype=np.float32)
 
 def predict_sentences(sentences, payload):
+    if not sentences:
+        return np.array([], dtype=int), np.array([], dtype=float)
     embedder = load_embedder(payload['embed_model'])
     emb = embedder.encode(sentences, batch_size=128, show_progress_bar=False,
                           convert_to_numpy=True, normalize_embeddings=True)
@@ -120,10 +122,23 @@ with st.sidebar:
         st.stop()
 
 # Input
+ECT_DIR = Path(__file__).parent / 'ECT'
+ect_files = sorted(ECT_DIR.glob('*.txt')) if ECT_DIR.exists() else []
+
 st.subheader('Load transcript')
-tab_upload, tab_paste = st.tabs(['Upload .txt file', 'Paste text'])
+tab_ect, tab_upload, tab_paste = st.tabs(['ECT library', 'Upload .txt file', 'Paste text'])
 
 raw_text = ''
+with tab_ect:
+    if ect_files:
+        labels = [f.name for f in ect_files]
+        choice = st.selectbox('Select transcript', ['— choose —'] + labels)
+        if choice != '— choose —':
+            raw_text = (ECT_DIR / choice).read_text(encoding='utf-8', errors='ignore')
+            st.caption(f'Loaded: {choice}  ({len(raw_text):,} chars)')
+    else:
+        st.warning('ECT/ directory not found next to gui.py.')
+
 with tab_upload:
     uploaded = st.file_uploader('Choose a .txt earnings-call transcript', type=['txt'])
     if uploaded:
@@ -135,7 +150,7 @@ with tab_paste:
         raw_text = pasted
 
 if not raw_text.strip():
-    st.info('Upload or paste a transcript to begin.')
+    st.info('Select a transcript from ECT, upload a file, or paste text to begin.')
     st.stop()
 
 # Run classifier
@@ -176,10 +191,13 @@ bp_style   = 'background-color: #ffcccc; padding: 2px 4px; border-radius: 2px;'
 sb_style   = ''
 short_style = 'color: #aaaaaa; font-style: italic;'
 
-html_parts = ['<div style="font-family: sans-serif; line-height: 1.8; font-size: 14px;">']
+import streamlit.components.v1 as _components
+
+html_parts = ['<div style="font-family: sans-serif; line-height: 1.8; font-size: 14px; padding: 4px;">']
 for sent, keep in all_sents:
+    s = _html.escape(sent.replace('\n', ' ').replace('\r', ' '))
     if not keep:
-        html_parts.append(f'<span style="{short_style}">{sent}</span> ')
+        html_parts.append(f'<span style="{short_style}">{s}</span> ')
         continue
     lbl = label_map.get(sent, 1)
     prob = proba_map.get(sent, 0.5)
@@ -190,13 +208,14 @@ for sent, keep in all_sents:
         html_parts.append(
             f'<span style="{style}" title="{title}">'
             f'<sup style="font-size:9px;color:#cc0000">{tag}</sup>'
-            f'{sent}</span> '
+            f'{s}</span> '
         )
     else:
-        html_parts.append(f'<span title="{title}">{sent}</span> ')
+        html_parts.append(f'<span title="{title}">{s}</span> ')
 html_parts.append('</div>')
 
-st.markdown(''.join(html_parts), unsafe_allow_html=True)
+est_height = max(600, len(all_sents) * 28)
+_components.html(''.join(html_parts), height=est_height, scrolling=True)
 
 # Download tagged results as CSV
 import pandas as pd, io
