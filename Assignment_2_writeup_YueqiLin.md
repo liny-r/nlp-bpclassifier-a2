@@ -76,7 +76,7 @@ A stratified sample of 2,500 sentences (stratified by `speaker_type`) was labele
 | j6 | ministral-3:8b | 16.5% | Active |
 | j7 | cogito:14b | 23.6% | Active |
 
-The final label uses **majority vote of 5 active judges** (≥ 3/5 agree). Unanimous agreement (5–0) occurred on 1,921 sentences (76.8%).
+The final label uses **majority vote of 5 active judges** (≥ 3/5 agree). Unanimous agreement (5–0) occurred on 1,921 sentences (76.8%); the **disagreement rate** (any split, including 4–1) was **23.2%** (579 sentences), of which 255 were escalated to human review.
 
 ### 2.3 Human Audit
 
@@ -115,36 +115,36 @@ Eight classifiers span five distinct families, satisfying the ≥5-family requir
 
 ### 4.1 Rules + Regex (Classifier 1)
 
-A deterministic rule applied directly to the 25 regex flags: a sentence is boilerplate if any of the 11 boilerplate-signal flags fires and none of the high-confidence substantive flags fire. This baseline requires no training data and achieves SB recall = 0.898 — below the 0.96 floor.
+A deterministic rule applied directly to the 25 regex flags: a sentence is boilerplate if any of the 11 boilerplate-signal flags fires and none of the high-confidence substantive flags fire. **Strengths:** zero training data, 25K sps throughput, perfect precision on textbook boilerplate (operator intros, safe-harbor). **Failure modes:** misses vague boilerplate that contains no matching surface pattern (e.g. "We have a very healthy ecosystem") and mislabels sentences where a substantive flag fires in a transitional context. SB recall = 0.898 — the only classifier that fails the 0.96 floor.
 
 ### 4.2 Logistic Regression (Classifier 2)
 
-`sklearn.linear_model.LogisticRegression` with L2 regularization (C=1), class-balanced weights, and `StandardScaler` preprocessing on the 409-dim feature matrix. Training takes < 1 second. The threshold is tuned by OOF sweep (§5).
+`sklearn.linear_model.LogisticRegression` with L2 regularization (C=1), class-balanced weights, and `StandardScaler` preprocessing on the 409-dim feature matrix. Training takes 2.6 s; inference 16.7K sps. **Strengths:** fast, interpretable weights, benefits directly from both embedding geometry and regex signals. **Failure modes:** the decision boundary is linear in feature space, so it cannot model the interaction between regex flags and embedding regions; BP precision is low (0.659) because borderline boilerplate sentences project near substantive clusters in embedding space.
 
 ### 4.3 HistGradientBoosting (Classifier 3)
 
-`sklearn.ensemble.HistGradientBoostingClassifier` with 500 estimators, max depth 6, class weights. Handles the moderate class imbalance (10:90) natively. This is the **deployment model** saved as `best_model.pkl` due to its compact size and fast CPU inference.
+`sklearn.ensemble.HistGradientBoostingClassifier` with 500 estimators, max depth 6, class-balanced weights. Training takes 7.9 s; inference 20.9K sps. **Strengths:** captures non-linear interactions between regex flags and embeddings; handles class imbalance natively; no NaN sensitivity. **Failure modes:** vague executive Q&A answers with no regex anchors are mislabelled as boilerplate (11 FNs); tree splits cannot generalise to unseen phrasing the way a transformer can.
 
 ### 4.4 FastText (Classifier 4)
 
-Facebook's supervised FastText on raw sentence text. Trained for 25 epochs with word n-grams (n=2), learning rate 0.5, embedding dim 100. The model outputs log-probabilities which are calibrated via isotonic regression before thresholding.
+Facebook's supervised FastText on raw sentence text. Trained for 25 epochs with word n-grams (n=2), learning rate 0.5, embedding dim 100. Training takes 1.4 s; inference only 587 sps (preprocessing overhead). **Strengths:** tiny model (~2 MB), no embedding dependency, robust to OOV tokens via character n-grams. **Failure modes:** worst BP F1 (0.475 on test) because n-gram bag-of-words has no positional or contextual awareness; "revenue" and "thank you" in the same sentence receive equal weight from both unigrams, making nuanced mixed sentences hard to classify.
 
 ### 4.5 FinBERT Fine-tuned (Classifier 5)
 
-`ProsusAI/finbert` — a BERT model pre-trained on financial text — is fine-tuned for 3 epochs on the training split using AdamW (lr=2e-5, batch 16) with a linear warmup schedule. Inference runs on CPU (forced, to avoid MPS out-of-memory on Apple M1 Pro). FinBERT achieves the best test macro-F1 of all individual models (0.923).
+`ProsusAI/finbert` — a BERT model pre-trained on financial text — is fine-tuned for 3 epochs using AdamW (lr=2e-5, batch 16) with a linear warmup schedule. Inference runs on CPU (forced to avoid MPS out-of-memory on M1 Pro) at 21 sps. **Strengths:** best test macro-F1 (0.923) and BP F1 (0.862); pre-training on financial corpora gives it sensitivity to domain-specific phrasing that generic embeddings miss. **Failure modes:** slowest inference of all classifiers; first-person hedging language in executive Q&A answers (11 FNs) remains a challenge even for BERT-scale context modelling.
 
 ### 4.6 SetFit / MiniLM (Classifier 6)
 
-SetFit with `sentence-transformers/all-MiniLM-L6-v2`. Due to a `sentence-transformers` version constraint (2.2.2 installed, ≥5.0 required for SetFit), the contrastive fine-tuning step is skipped; instead a Logistic Regression head is fitted on the cached MiniLM embeddings. The head uses class-balanced weights.
+SetFit with `sentence-transformers/all-MiniLM-L6-v2`. Due to a version constraint (`sentence-transformers` 2.2.2 installed, ≥5.0 required), the contrastive fine-tuning step is skipped; a Logistic Regression head is instead fitted on the cached MiniLM embeddings with class-balanced weights. Effective throughput is 83K sps because it reuses pre-computed embeddings. **Strengths:** highest SB recall on test (0.987); extremely fast inference. **Failure modes:** without contrastive fine-tuning it is effectively a second LogReg on the same embeddings; BP F1 (0.719) trails FinBERT and the mean-prob ensemble.
 
 ### 4.7 & 4.8 Ensembles (Classifiers 7a and 7b)
 
 Two soft-vote ensembles combine the five learned classifiers (LogReg, HistGBM, FastText, FinBERT, SetFit):
 
-- **7a — mean-prob:** average P(substantive) across all five models
-- **7b — rank-avg:** average the rank percentile of each model's P(substantive); mitigates scale differences between calibrated and uncalibrated models
+- **7a — mean-prob:** average P(substantive) across all five models. Achieves the best BP F1 of all non-FinBERT entries (0.800) by smoothing out individual model overconfidence.
+- **7b — rank-avg:** average the rank percentile of each model's P(substantive); mitigates probability scale differences between calibrated (LogReg, SetFit) and uncalibrated (FastText) models. Its threshold (0.140) is much lower than mean-prob because rank percentiles are bounded by the empirical distribution.
 
-Each ensemble gets its own independently tuned threshold.
+**Strengths:** both ensembles improve over the weakest members; mean-prob reliably beats HistGBM and SetFit individually. **Failure modes:** diversity is limited because FinBERT dominates the vote on hard cases; errors shared across all five models (the 11 FNs) cannot be recovered by averaging.
 
 
 ## 5. Recall-Constrained Threshold Tuning
@@ -193,16 +193,16 @@ FinBERT leads on both macro-F1 and SB recall. FastText has the lowest throughput
 
 All eight classifiers are evaluated on the frozen 500-sentence test set using thresholds from §5.
 
-| Rank | Model | Accuracy | Macro-F1 | BP F1 | SB Recall | Meets Floor | Threshold |
-|------|-------|----------|----------|-------|-----------|-------------|-----------|
-| 1 | **5-FinBERT-FT** | **0.970** | **0.923** | 0.862 | 0.976 | ✓ | 0.820 |
-| 2 | 7a-Ensemble(mean-prob) | 0.960 | 0.889 | 0.800 | 0.980 | ✓ | 0.615 |
-| 3 | 6-SetFit | 0.950 | 0.846 | 0.719 | 0.987 | ✓ | 0.220 |
-| 4 | 3-HistGBM(emb+regex) | 0.942 | 0.831 | 0.695 | 0.976 | ✓ | 0.810 |
-| 5 | 7b-Ensemble(rank-avg) | 0.942 | 0.828 | 0.688 | 0.978 | ✓ | 0.140 |
-| 6 | 2-LogReg(emb+regex) | 0.938 | 0.813 | 0.659 | 0.978 | ✓ | 0.045 |
-| 7 | 4-FastText | 0.916 | 0.715 | 0.475 | 0.978 | ✓ | 0.855 |
-| 8 | 1-Rules+Regex | 0.856 | 0.664 | 0.410 | 0.898 | **✗** | — |
+| Rank | Model | Acc | Macro-F1 | BP F1 | SB F1 | SB Recall | Floor | Train (s) | Throughput (sps) | Threshold |
+|------|-------|-----|----------|-------|-------|-----------|-------|-----------|-----------------|-----------|
+| 1 | **5-FinBERT-FT** | **0.970** | **0.923** | 0.862 | 0.983 | 0.976 | ✓ | ~900 | 21 | 0.820 |
+| 2 | 7a-Ensemble(mean-prob) | 0.960 | 0.889 | 0.800 | 0.978 | 0.980 | ✓ | — | — | 0.615 |
+| 3 | 6-SetFit | 0.950 | 0.846 | 0.719 | 0.973 | 0.987 | ✓ | — | 83,429 | 0.220 |
+| 4 | 3-HistGBM(emb+regex) | 0.942 | 0.831 | 0.695 | 0.968 | 0.976 | ✓ | 7.9 | 20,922 | 0.810 |
+| 5 | 7b-Ensemble(rank-avg) | 0.942 | 0.828 | 0.688 | 0.968 | 0.978 | ✓ | — | — | 0.140 |
+| 6 | 2-LogReg(emb+regex) | 0.938 | 0.813 | 0.659 | 0.966 | 0.978 | ✓ | 2.6 | 16,711 | 0.045 |
+| 7 | 4-FastText | 0.916 | 0.715 | 0.475 | 0.954 | 0.978 | ✓ | 1.4 | 587 | 0.855 |
+| 8 | 1-Rules+Regex | 0.856 | 0.664 | 0.410 | 0.918 | 0.898 | **✗** | 0 | 25,591 | — |
 
 **7 of 8 classifiers** clear the 0.96 SB recall floor on the test set. The rules baseline fails (SB recall = 0.898). FinBERT leads on macro-F1 (0.923) and accuracy (0.970).
 
@@ -226,7 +226,7 @@ These are substantive sentences that "sound" vague or conversational (all 11 sho
 > *"So we're in kind of the pole position in that regard."*
 > *"Let me just be clear about where the ones that we've just done are heading…"*
 
-**Pattern:** executive Q&A answers with real strategic intent expressed through first-person hedging language. None trigger the dollar/percentage/guidance regex flags, and the embeddings land near other hedged executive statements regardless of substance.
+**Pattern:** executive Q&A answers with real strategic intent expressed through first-person hedging language. None trigger the dollar/percentage/guidance regex flags, and the embeddings land near other hedged executive statements regardless of substance. **Error type: feature gap** — the model lacks a signal for strategic intent without numerical anchors. These are not label-noise cases; the gold labels are correct.
 
 ### 7.2 False Positives (boilerplate labelled as substantive)
 
@@ -239,7 +239,7 @@ These are substantive sentences that "sound" vague or conversational (all 11 sho
 > *"Custom silicon market."* (speaker label fragment mis-tokenised as a sentence)
 > *"At the golf majors with Rory and Scottie; with A'ja to kick off a new WNBA season; at the Champions League final with PSG."*
 
-**Pattern:** two distinct failure modes — (a) vague positive statements that pattern-match to executive commentary in embedding space but carry no material information; (b) slide-transition phrases ("Turning to…") and speaker-label fragments that survived the 40-char filter.
+**Pattern:** two distinct failure modes — (a) **feature gap:** vague positive statements that pattern-match to executive commentary in embedding space but carry no material information ("We have a very healthy ecosystem"); (b) **pipeline gap:** slide-transition phrases ("Turning to capital and liquidity on Slide 5") and speaker-label fragments ("Custom silicon market.") that survived the 40-char filter — these are parsing artefacts that better sentence-boundary detection would eliminate. None are clear label-noise cases.
 
 ### 7.3 Confusion Matrix (HistGBM, test set)
 
@@ -253,26 +253,43 @@ SB recall = 438/449 = **0.9755** ✓ | BP precision = 33/44 = **0.750** | BP rec
 ![Confusion matrix heatmap](figures/confusion_matrix.png)
 
 
-## 8. GUI
+## 8. What We Would Try Next
 
-A Streamlit application (`gui.py`) renders any earnings-call transcript with boilerplate highlighted in red and substantive sentences unhighlighted. The sidebar shows a dropdown of all 131 ECT transcripts for instant loading.
+Given more time, the three highest-leverage improvements would be:
 
-Features:
-- **ECT library tab**: select any of the 131 transcripts by filename
+1. **Better sentence boundary detection.** Several FPs are speaker-label fragments or slide-transition half-sentences that NLTK Punkt lets through. A transcript-aware pre-processor that strips speaker tags and merges orphaned fragments would reduce these noise errors without retraining any classifier.
+
+2. **Contrastive fine-tuning (true SetFit).** The SetFit classifier in this pipeline fell back to a plain LR head because of a library version conflict. Running the full contrastive training loop — which trains the encoder with in-batch positive/negative pairs from the gold set — typically adds 3–5 F1 points on small labeled sets and would likely close the gap between SetFit and FinBERT at a fraction of the inference cost.
+
+3. **Speaker-type conditioning.** Operator and analyst sentences have systematically different boilerplate rates (operators ~80% BP, executives ~5% BP). Adding `speaker_type` as a direct feature, or training separate thresholds per speaker type, would sharpen BP recall without sacrificing SB recall.
+
+## 10. GUI
+
+A Streamlit application (`gui.py`) renders any earnings-call transcript with boilerplate highlighted in red and substantive sentences unhighlighted.
+
+**Features:**
+- **ECT library tab**: dropdown of all 131 transcripts for one-click loading
 - **Upload tab**: upload any `.txt` transcript
-- **Paste tab**: paste raw text
-- Statistics panel: total sentences, BP count/%, SB count/%
+- **Paste tab**: paste raw text directly
+- Statistics panel showing total classified sentences, BP count/%, SB count/%
 - Hover tooltip on each sentence showing P(substantive)
-- Download button for a CSV of all classifications
+- Download button for a CSV of all sentence classifications
 
-To launch:
+**Screenshot 1** — statistics panel and boilerplate highlighting (Citi Q4-2023, 695 sentences, 16.1% BP):
+
+![GUI screenshot — statistics panel](figures/gui_screenshot1.png)
+
+**Screenshot 2** — tagged transcript view showing inline boilerplate (red) and substantive sentences:
+
+![GUI screenshot — tagged transcript](figures/gui_screenshot2.png)
+
+**Launch command:**
 
 ```bash
 /Users/yueqilin/anaconda3/bin/python -m streamlit run gui.py
 ```
 
-
-## 9. Reproducibility
+## 11. Reproducibility
 
 **Install dependencies:**
 ```bash
