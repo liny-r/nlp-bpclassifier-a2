@@ -29,6 +29,9 @@ header-includes: |
 \newpage
 
 ## Executive Summary
+
+This report builds a binary boilerplate-vs-substantive sentence classifier for earnings-call transcripts. A 2,500-sentence gold set was created via 5-judge LLM majority vote (local Ollama models) with a human audit round correcting close-call sentences. Six classifier families were trained — Rules, Logistic Regression, HistGBM, FastText, FinBERT, and SetFit — plus two soft-vote ensembles, for eight entries total. Thresholds were tuned via 5-fold OOF cross-validation with a 0.97 substantive-recall safety margin above the 0.96 constraint. **7 of 8 classifiers meet the 0.96 test-set recall floor.** FinBERT achieves the highest test macro-F1 (0.923); the mean-probability ensemble is second (0.889). HistGBM is saved as the deployment artifact for its compact size and sub-second CPU inference.
+
 ## 1. Introduction
 
 Earnings-call transcripts mix two qualitatively different types of language. *Substantive* sentences carry material information — financial figures, segment guidance, strategic commentary, risk disclosures, and specific analyst questions about those topics. *Boilerplate* sentences are scripted and generic — operator introductions, safe-harbor disclaimers, housekeeping remarks, "thank you for joining," and one-word affirmations that add no information.
@@ -150,7 +153,7 @@ Each model's default 0.5 threshold is replaced by a threshold that:
 1. **Meets the recall floor:** SB recall ≥ 0.97 on out-of-fold predictions (1% safety margin above the 0.96 assignment constraint, to absorb train→test generalization gap)
 2. **Maximizes macro-F1** among all thresholds that meet the floor
 
-Thresholds are tuned on **5-fold stratified OOF probabilities** on the train+val pool (n=2,000), rather than the validation set directly, to avoid single-split noise. The OOF HistGBM threshold standard deviation across folds was 0.20, motivating the 0.97 safety margin.
+Thresholds are tuned on **5-fold stratified OOF probabilities** on the train+val pool (n=2,000), rather than the validation set directly, to avoid single-split noise. The OOF HistGBM per-fold thresholds were [0.580, 0.685, 0.850, 0.945, 0.580] (mean=0.728, std=0.147), indicating high fold-to-fold variance and motivating the 0.97 safety margin.
 
 | Model | OOF threshold |
 |-------|--------------|
@@ -165,7 +168,28 @@ Thresholds are tuned on **5-fold stratified OOF probabilities** on the train+val
 The rank-avg ensemble has a much lower threshold (0.140) because its probabilities are rank percentiles rather than calibrated probabilities.
 
 
-## 6. Test Set Results
+## 6. Results
+
+### 6.1 Validation Set Leaderboard
+
+All classifiers are first evaluated on the validation set (500 sentences, never used for threshold tuning of the final model). Thresholds here are the val-sweep thresholds, not OOF thresholds.
+
+| Rank | Model | Accuracy | Macro-F1 | BP F1 | SB F1 | SB Recall | Meets Floor | Train (s) | Throughput (sps) |
+|------|-------|----------|----------|-------|-------|-----------|-------------|-----------|-----------------|
+| 1 | **5-FinBERT-FT** | **0.970** | **0.922** | 0.860 | 0.983 | 0.980 | ✓ | — | 21 |
+| 2 | 7a-Ensemble(mean-prob) | 0.942 | 0.837 | 0.707 | 0.968 | 0.973 | ✓ | — | — |
+| 3 | 3-HistGBM(emb+regex) | 0.938 | 0.816 | 0.667 | 0.966 | 0.978 | ✓ | 7.9 | 20,922 |
+| 4 | 6-SetFit | 0.928 | 0.789 | 0.617 | 0.960 | 0.971 | ✓ | — | 83,429 |
+| 5 | 7b-Ensemble(rank-avg) | 0.926 | 0.781 | 0.602 | 0.959 | 0.971 | ✓ | — | — |
+| 6 | 2-LogReg(emb+regex) | 0.916 | 0.727 | 0.500 | 0.954 | 0.975 | ✓ | 2.6 | 16,711 |
+| 7 | 4-FastText | 0.912 | 0.701 | 0.450 | 0.952 | 0.978 | ✓ | 1.4 | 587 |
+| 8 | 1-Rules+Regex | 0.828 | 0.599 | 0.295 | 0.902 | 0.884 | **✗** | — | 25,591 |
+
+FinBERT leads on both macro-F1 and SB recall. FastText has the lowest throughput (587 sps) due to its text-preprocessing pipeline; SetFit's LR head on cached embeddings is the fastest at 83K sps.
+
+![Val + Test leaderboard](figures/leaderboard.png)
+
+### 6.2 Final Test Set Leaderboard
 
 All eight classifiers are evaluated on the frozen 500-sentence test set using thresholds from §5.
 
@@ -191,23 +215,31 @@ Error analysis is performed on the HistGBM model (test set, t=0.810): 11 false n
 
 ### 7.1 False Negatives (substantive labelled as boilerplate)
 
-These are substantive sentences that "sound" vague or conversational:
+These are substantive sentences that "sound" vague or conversational (all 11 shown):
 
 > *"I don't know if he's nailed it down yet, but we'll be getting that information out shortly."*
+> *"I don't know all the efforts we're involved in, but to the extent we're involved in these efforts, I and most Palantirians feel very positive about it."*
+> *"I was just so delighted to see how well they have done, the morale of the team and how the team is working together."*
 > *"I continue to be excited by the opportunities and the sheer potential of our franchise."*
 > *"In Converse, the team took some decisive steps this quarter to bring the brand back to a healthy business."*
+> *"And done properly, as we talk about on the slide, we're very happy to be lenders to them."*
 > *"So we're in kind of the pole position in that regard."*
+> *"Let me just be clear about where the ones that we've just done are heading…"*
 
-**Pattern:** executive Q&A answers that contain real strategic intent but use first-person hedging language, lack financial figures, and don't trigger any substantive regex flags.
+**Pattern:** executive Q&A answers with real strategic intent expressed through first-person hedging language. None trigger the dollar/percentage/guidance regex flags, and the embeddings land near other hedged executive statements regardless of substance.
 
 ### 7.2 False Positives (boilerplate labelled as substantive)
 
 > *"That's one of the priorities that the team has had now for a while is to continue to do more."*
-> *"Turning to capital and liquidity on Slide 5."*
+> *"So I have a good recollection of some of the steps and changes how we told the story over time."*
+> *"And before diving into the results, I want to take a moment to thank our entire Fastenal Blue Team across the world."*
+> *"We have a very healthy ecosystem as well."*
 > *"A lot of people are spending a lot of time on it."*
-> *"At the golf majors with Rory and Scottie; with A'ja to kick off a new WNBA season…"*
+> *"Turning to capital and liquidity on Slide 5."*
+> *"Custom silicon market."* (speaker label fragment mis-tokenised as a sentence)
+> *"At the golf majors with Rory and Scottie; with A'ja to kick off a new WNBA season; at the Champions League final with PSG."*
 
-**Pattern:** slide-transition phrases that mimic substantive discourse structure; vague statements with no concrete content that nonetheless pattern-match to executive speech style in the embedding space.
+**Pattern:** two distinct failure modes — (a) vague positive statements that pattern-match to executive commentary in embedding space but carry no material information; (b) slide-transition phrases ("Turning to…") and speaker-label fragments that survived the 40-char filter.
 
 ### 7.3 Confusion Matrix (HistGBM, test set)
 
@@ -216,7 +248,9 @@ These are substantive sentences that "sound" vague or conversational:
 | **True BP** | 33 | 18 |
 | **True SB** | 11 | 438 |
 
-SB recall = 438/449 = **0.9755** ✓
+SB recall = 438/449 = **0.9755** ✓ | BP precision = 33/44 = **0.750** | BP recall = 33/51 = **0.647**
+
+![Confusion matrix heatmap](figures/confusion_matrix.png)
 
 
 ## 8. GUI
