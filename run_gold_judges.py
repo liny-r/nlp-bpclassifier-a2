@@ -6,13 +6,17 @@ Usage:
     python run_gold_judges.py --smoke   # smoke-test only (no full run)
 
 Judges (all local Ollama — no API keys needed):
-    j1  qwen3:8b       judge1_qwen3.parquet
-    j2  gemma3:4b      judge2_gemma3.parquet
-    j3  cogito:latest  judge3_cogito.parquet
-    j4  qwen3:14b      judge4_qwen314b.parquet
-    j5  gemma3:12b     judge5_gemma12b.parquet
+    j3  cogito:8b           judge3_cogito.parquet
+    j4  qwen3:14b           judge4_qwen314b.parquet
+    j5  gemma3:12b          judge5_gemma12b.parquet
+    j6  ministral-3:8b      judge6_ministral3.parquet
+    j7  cogito:14b          judge7_cogito14b.parquet
 
-All 5 run sequentially (shared GPU, avoids OOM).
+Removed judges (manual review showed systematic disagreement with ground truth):
+    j1  qwen3:8b   — removed: over-flagged boilerplate (~29% BP, inconsistent with human audit)
+    j2  gemma3:4b  — removed: severe BP bias (~48% BP), overridden 746/2500 times by majority
+
+Majority vote: ≥ 3/5 judges agree.
 Checkpoints every CHECKPOINT_EVERY sentences — safe to interrupt and resume.
 """
 
@@ -209,11 +213,11 @@ def main():
     print(f'Gold sample: {len(gold_sample)} sentences (seed={RANDOM_SEED})\n')
 
     judges = [
-        ('j1_qwen3',    lambda t: ollama_judge(t, 'qwen3:8b'),      GOLD_DIR / 'judge1_qwen3.parquet',    True),
-        ('j2_gemma3',   lambda t: ollama_judge(t, 'gemma3:4b'),     GOLD_DIR / 'judge2_gemma3.parquet',   True),
-        ('j3_cogito',   lambda t: ollama_judge(t, 'cogito:latest'), GOLD_DIR / 'judge3_cogito.parquet',   True),
-        ('j4_qwen314b', lambda t: ollama_judge(t, 'qwen3:14b'),     GOLD_DIR / 'judge4_qwen314b.parquet', True),
-        ('j5_gemma12b', lambda t: ollama_judge(t, 'gemma3:12b'),    GOLD_DIR / 'judge5_gemma12b.parquet', True),
+        ('j3_cogito',     lambda t: ollama_judge(t, 'cogito:latest'),     GOLD_DIR / 'judge3_cogito.parquet',      True),  # cogito:8b
+        ('j4_qwen314b',   lambda t: ollama_judge(t, 'qwen3:14b'),         GOLD_DIR / 'judge4_qwen314b.parquet',    True),
+        ('j5_gemma12b',   lambda t: ollama_judge(t, 'gemma3:12b'),        GOLD_DIR / 'judge5_gemma12b.parquet',    True),
+        ('j6_ministral3', lambda t: ollama_judge(t, 'ministral-3:latest'), GOLD_DIR / 'judge6_ministral3.parquet', True),  # ministral-3:8b
+        ('j7_cogito14b',  lambda t: ollama_judge(t, 'cogito:14b'),        GOLD_DIR / 'judge7_cogito14b.parquet',   True),
     ]
 
     print('Judges:')

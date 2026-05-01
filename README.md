@@ -24,12 +24,16 @@ A binary sentence classifier for earnings-call transcripts that distinguishes **
 │   ├── splits.pkl                    # Train/val/test splits (60/20/20, seed=42)
 │   ├── embeddings_gold.pkl           # all-MiniLM-L6-v2 embeddings (384-dim)
 │   └── gold/
-│       ├── gold_labels.parquet       # 2,500-sentence gold set (5-judge MV)
-│       ├── judge1_qwen3.parquet      # Individual judge caches
+│       ├── gold_labels.parquet       # 2,500-sentence gold set (7-judge MV + human)
+│       ├── human_review.csv          # Round 1 human audit (299 labels)
+│       ├── human_review_round2.csv   # Round 2 human audit (216 sentences)
+│       ├── judge1_qwen3.parquet
 │       ├── judge2_gemma3.parquet
 │       ├── judge3_cogito.parquet
 │       ├── judge4_qwen314b.parquet
-│       └── judge5_gemma12b.parquet
+│       ├── judge5_gemma12b.parquet
+│       ├── judge6_ministral3.parquet
+│       └── judge7_cogito14b.parquet
 ├── saved_model/                      # Saved best model (best_model.pkl)
 └── ECT/                              # Raw earnings-call transcripts (131 files)
 ```
@@ -38,24 +42,32 @@ A binary sentence classifier for earnings-call transcripts that distinguishes **
 
 ## Gold Labeling Methodology
 
-Gold labels were generated via **5-LLM majority vote** on a stratified sample of 2,500 sentences:
+Gold labels were generated via **5-LLM majority vote (≥ 3/5)** on a stratified sample of 2,500 sentences, followed by a **2-round human audit** of close-call sentences:
 
-| Judge | Model | Source | BP% | Failures |
-|---|---|---|---|---|
-| j1 | qwen3:8b | Ollama (local) | 29.3% | 0% |
-| j2 | gemma3:4b | Ollama (local) | 47.5% | 0% |
-| j3 | cogito:latest | Ollama (local) | 8.2% | 0% |
-| j4 | qwen3:14b | Ollama (local) | 11.2% | 0% |
-| j5 | gemma3:12b | Ollama (local) | 19.4% | 0% |
+| Judge | Model | BP% | Failures |
+|---|---|---|---|
+| j3 | cogito:8b | 8.2% | 0% |
+| j4 | qwen3:14b | 11.2% | 0% |
+| j5 | gemma3:12b | 19.4% | 0% |
+| j6 | ministral-3:8b | 16.5% | 0% |
+| j7 | cogito:14b | 23.6% | 0% |
 
-- All 5 judges responded on all 2,500 sentences (0% failure rate)
-- Final label = majority vote (≥3 of 5 agree)
-- Unanimous agreement (5-0): 1,408 sentences (56.3%)
-- Close calls (2-3 split): 481 sentences → hand-audited
+**Removed judges (manual review — systematic disagreement with ground truth):**
+
+| Judge | Model | BP% | Reason |
+|---|---|---|---|
+| ~~j1~~ | ~~qwen3:8b~~ | ~~29.3%~~ | Over-flagged boilerplate; manual audit disagreed |
+| ~~j2~~ | ~~gemma3:4b~~ | ~~47.5%~~ | Severe BP bias; overridden 746/2,500 times by majority |
+
+- All 5 active judges responded on all 2,500 sentences (0% failure rate)
+- Final LLM label = majority vote (≥ 3 of 5 agree)
+- **Human audit round 1:** 299 close-call sentences reviewed; human label overrides LLM vote
+- **Human audit round 2:** 216 additional close calls (`human_review_round2.csv`, in progress)
+- Unanimous agreement (5-0): 1,921 sentences (76.8%)
 
 **Label prompt** enforces strict single-word output (`boilerplate` / `substantive`) with edge-case anchors (analyst intros → boilerplate, safe-harbor → boilerplate, sentences with dollar amounts + context → substantive).
 
-**Final gold set:** 2,500 sentences | BP=458 (18.3%) | SB=2,042 (81.7%)
+**Final gold set:** 2,500 sentences | BP = 334 (13.4%) | SB = 2,166 (86.6%)
 
 ---
 
@@ -67,7 +79,7 @@ The notebook (`Assignment_2_BPClassifier.ipynb`) is organized in sections:
 |---|---|
 | §1 | Environment setup, imports, paths |
 | §2 | Sentence extraction from 131 transcripts → `sentence_pool.parquet` |
-| §3 | Gold labeling: 5 LLM judges + majority vote → `gold_labels.parquet` |
+| §3 | Gold labeling: 5 LLM judges (j3–j7) + 2-round human audit → `gold_labels.parquet` |
 | §4 | Stratified train/val/test split (60/20/20) |
 | §5 | Feature engineering: 384-dim embeddings + 25 regex flags = 409 features |
 | §6 | Classifier zoo: Rules, LogReg, HistGBM, FastText, FinBERT, SetFit |
@@ -79,15 +91,27 @@ The notebook (`Assignment_2_BPClassifier.ipynb`) is organized in sections:
 
 ## Classifier Results (Validation Set)
 
-| Model | macro-F1 | SB Recall | Meets Floor |
-|---|---|---|---|
-| 1 — Rules+Regex | 0.566 | 0.890 | ✗ |
-| 2 — LogReg (emb+reg) | 0.655 | 0.955 | ✗ |
-| 3 — HistGBM (emb+reg) | 0.695 | 0.960 | ✓ |
-| 4 — FastText | TBD | | |
-| 5 — FinBERT-FT | TBD | | |
-| 6 — SetFit | TBD | | |
-| 7 — Ensemble | TBD | | |
+| Model | Macro-F1 | BP F1 | SB Recall | Meets Floor |
+|---|---|---|---|---|
+| 1 — Rules+Regex | 0.600 | 0.302 | 0.875 | ✗ |
+| 2 — LogReg (emb+regex) | 0.747 | 0.539 | 0.969 | ✓ |
+| 3 — HistGBM (emb+regex) | 0.824 | 0.681 | 0.976 | ✓ |
+| 4 — FastText | 0.731 | 0.506 | 0.976 | ✓ |
+| 5 — FinBERT-FT | 0.847 | 0.725 | 0.969 | ✓ |
+| 6 — SetFit (MiniLM) | **0.853** | **0.735** | 0.976 | ✓ |
+| 7a — Ensemble(mean-prob) | 0.844 | 0.717 | 0.982 | ✓ |
+| 7b — Ensemble(rank-avg) | 0.818 | 0.673 | 0.964 | ✓ |
+
+*Gold: BP=256 (10.2%) / SB=2244 (89.8%). SetFit best on val; Ensemble second.*
+
+## Final Test Set Results
+
+| Model | Macro-F1 | BP F1 | SB Recall | Meets Floor |
+|---|---|---|---|---|
+| HistGBM (t=0.815) | 0.764 | 0.571 | 0.969 | ✓ |
+| **Ensemble-mean (t=0.670)** | **0.816** | **0.667** | **0.976** | **✓** |
+
+*Saved artifact: `best_model.pkl` = HistGBM retrained on train+val, threshold=0.815.*
 
 ---
 
@@ -97,18 +121,18 @@ The notebook (`Assignment_2_BPClassifier.ipynb`) is organized in sections:
 
 ```bash
 pip install pandas numpy scikit-learn sentence-transformers tqdm \
-            streamlit fasttext-wheel groq google-genai transformers \
-            setfit pyarrow
+            streamlit fasttext-wheel transformers accelerate \
+            setfit pyarrow datasets
 ```
 
 ### Ollama models (for gold labeling only)
 
 ```bash
-ollama pull qwen3:8b
-ollama pull gemma3:4b
-ollama pull cogito:latest
+ollama pull cogito:8b
 ollama pull qwen3:14b
 ollama pull gemma3:12b
+ollama pull ministral-3:8b
+ollama pull cogito:14b
 ```
 
 ### Reproduce gold labels
