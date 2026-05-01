@@ -10,6 +10,12 @@ saved_model/**/optimizer.*
 saved_model/**/rng_state.*
 saved_model/**/scheduler.*
 
+# Training checkpoints (intermediate; best_model.pkl is the deployment artifact)
+saved_model/**/checkpoint-*/
+
+# Claude Code memory (local tooling)
+.claude/
+
 # Old files
 old/
 
