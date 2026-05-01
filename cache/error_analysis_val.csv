@@ -1,0 +1,514 @@
+ticker,quarter,speaker_type,text,true_label,proba_gbm,pred_gbm,error_gbm,proba_ens,pred_ens
+AMD,Q1-2025,executive,"But overall standpoint, it performed right where we would expect.",1,0.9993771746312863,1,TP,0.871302387569526,1
+INTC,Q4-2023,ir,"We again beat our guidance across revenue, gross margin and EPS.",1,0.9995378783018932,1,TP,0.9982171174048666,1
+FAST,Q4-2023,analyst,"I guess, Onsite sales growth during the quarter was only slightly ahead of company average rate, which is a notable slowdown versus past performance here.",1,0.9999926220117701,1,TP,0.9975729921700178,1
+BLK,Q3-2024,executive,"We generated 350 basis points of margin expansion year-over-year, while operating income rose 26%.",1,0.9999982527623974,1,TP,0.9984127734387245,1
+PLTR,Q4-2024,analyst,Now everyone is really concerned about DOGE with the change of administration.,1,0.9818981644396827,1,TP,0.9905119073852069,1
+FDX,Q4-2025,executive,"We increased our dividend by 5% in FY '26, making this the fifth consecutive year with a dividend increase.",1,0.9998165200354944,1,TP,0.9982627001248641,1
+FDX,Q1-2025,ir,Nimble is an AI robotics and autonomous e-commerce fulfillment technology company.,1,0.9999103940995886,1,TP,0.9923356520529119,1
+WFC,Q2-2024,executive,And so the work is a meaningful part of as we think about prioritization in terms of our tech spend.,1,0.9999349796808742,1,TP,0.9978970934589318,1
+BLK,Q1-2024,executive,But they want to do it differently than they did in the past.,1,0.9982121153539182,1,TP,0.9594233977478938,1
+AVGO,Q1-2026,analyst,"Now on AI, some of these COT initiatives are coming to the market now, but it looks like they're at least 2x less performant than your current generation solutions, 2x less complex in terms of chip design complexity, packaging complexity, IP.",1,0.9999988547119131,1,TP,0.9981587761064311,1
+NVDA,Q1-2026,ir,"Against the backdrop of robust demand, we greatly improved our supply and availability in Q1 and expect to continue these efforts in Q2.",1,0.9999894754392541,1,TP,0.9983475342732337,1
+JPM,Q2-2025,executive,"But yes, as Jamie points out, just remember that to the extent that the market is sufficient, which maybe it's not, but you can't really hedge ahead of cuts that are already priced in, right?",1,0.9999764006277755,1,TP,0.9984103141566731,1
+FAST,Q2-2025,executive,"And the biggest 2 drivers of that were people centered and occupancy centered were, the 2 biggest drivers that were variable.",1,0.9995822083115119,1,TP,0.9958384805025391,1
+BLK,Q3-2025,executive,We're positioned to be a preferred capital partner with insurers while maintaining our balance sheet light approach.,1,0.996801785184402,1,TP,0.9968960435207046,1
+FAST,2026_01_20,executive,"First off, for Jeff Watts, I suspect all of you saw the announcement we made in late December.",1,0.9936893188234338,1,TP,0.9838298580736827,1
+GS,Q4-2025,executive,"We think that we can do things that, over time, will drive upside to that.",1,0.9999105731456479,1,TP,0.9932013522241997,1
+BLK,Q3-2025,executive,You see the deployment numbers in the earnings release are strong and steady.,1,0.9999639989520612,1,TP,0.9976416195211602,1
+BLK,Q3-2025,executive,"That's generally, I think, good for continued access to credit for corporates, but it's also a good opportunity for clients to secure excess spread and long-term attractive risk-adjusted returns.",1,0.9999456760836868,1,TP,0.9822633536640037,1
+JPM,Q3-2025,analyst,"And so the question for you guys is, what do you think they could do to lower the spread between mortgage rates and their corresponding Treasury yield, assuming the Treasury yields don't go down?",1,0.9999023235784232,1,TP,0.9980277097237824,1
+NKE,Q3-2026,executive,Now I'll share a specific outlook for the fourth quarter of fiscal '26.,1,0.006737247493396755,0,FN,0.35093895744212755,0
+GS,Q4-2025,executive,"But the bar for doing something significant and transformational is very, very high.",1,0.9996308754190668,1,TP,0.9976729547944443,1
+AVGO,Q2-2025,analyst,Is that the right kind of mix that you expect going forward?,1,0.9995283020740205,1,TP,0.9951514677104152,1
+FDX,Q2-2026,analyst,"I'm sure, for instance, Canada is being run much more efficiently now than when you started your integration efforts.",1,0.9999865571900924,1,TP,0.9983049878002788,1
+BLK,Q3-2024,executive,"BlackRock's nearly $4 trillion in assets across public fixed income, cash and private credit, means we both provide integrated fixed income solutions for our clients and deliverable scale benefits.",1,0.9999849360772228,1,TP,0.9982795868005809,1
+FDX,Q2-2026,executive,And so those -- that's why those are in our adjusted and those are onetime costs.,1,0.999976587404587,1,TP,0.996394524515163,1
+JPM,Q2-2025,executive,"You'll recall that at Investor Day, I made a couple of comments previewing the potential evolution of the outlook.",1,0.9342510443791117,1,TP,0.7643527381542332,1
+GS,Q4-2023,analyst,"Is that someone from the Board currently, someone from outside Goldman Sachs, what type of person is the Board looking for?",1,0.990705437002875,1,TP,0.8005276019514925,1
+PLTR,Q1-2025,executive,You're going to have to spend it on things that actually work and work means spending it on people that have actually done this on the battlefield.,1,0.9884470412082298,1,TP,0.9520322875816303,1
+FDX,Q1-2026,analyst,And then whenever we get the revenue growth the operating leverage is going to be really strong.,1,0.9999947676927834,1,TP,0.9985016179268641,1
+AVGO,Q3-2025,analyst,"Best wishes, Hock, for the next part of your tenure.",0,0.004256741959190962,0,TN,0.27665160430805413,0
+FAST,Q2-2025,executive,"So it makes it a lot easier for them if we could put up a strong quarter because it makes the call just a lot easier, it makes the Q&A a lot easier.",1,0.9961010696221215,1,TP,0.9680770184195945,1
+NVDA,Q4-2025,analyst,Or will these infrastructures remain fairly distinct?,1,0.9999676154332542,1,TP,0.9977664526955431,1
+NKE,Q2-2025,executive,"And because of that, we're starting to see those teams deliver the innovation.",1,0.99883403740008,1,TP,0.9968777869180387,1
+FAST,Q1-2024,executive,This timing is estimated to have cost us 30 to 50 basis points of growth in the quarter.,1,0.9999952764852467,1,TP,0.9983726201818406,1
+AVGO,Q3-2025,executive,I'm just giving a total number to give you a sense of how strong the business is as a whole for the company.,1,0.9975435288978696,1,TP,0.9975338997258983,1
+PLTR,Q4-2023,executive,"Fourth quarter international commercial revenue grew 11% year-over-year and 14% sequentially to $154 million as we continue to capitalize on targeted growth opportunities in Asia, the Middle East and beyond.",1,0.9999918314260399,1,TP,0.9985280244744181,1
+INTC,Q4-2025,analyst,Are you able to move the mix towards data center?,1,0.9952880846840302,1,TP,0.8749564954024208,1
+INTC,Q2-2025,ir,"Dave will then discuss our overall financial results, including third quarter guidance, before we transition to answer your questions.",1,0.9122930845579822,1,TP,0.5945156514018021,0
+BLK,Q4-2025,executive,"After annualizing for the impact of HPS and Preqin, we would expect a mid-single-digit percentage increase in G&A.",1,0.999994640674624,1,TP,0.9986042438820173,1
+AMD,Q3-2025,analyst,"Maybe as a quick follow-up, could you tell us about the useful lives of GPUs?",1,0.9999557915479617,1,TP,0.9965041420317237,1
+BLK,Q1-2026,executive,"I'll have Martin start with that, and then I'll finish it up.",0,0.8026516405517821,0,TN,0.27921529771635506,0
+NVDA,Q2-2026,ir,"Notably, in the quarter was an increase in Hopper 100 and H200 shipments.",1,0.9999977942137933,1,TP,0.9982292481075536,1
+JNJ,Q4-2024,executive,We received the approval of SPRAVATO as the first and only monotherapy for adults with treatment-resistant depression.,1,0.8414164543808376,1,TP,0.7605966309920753,1
+BLK,Q1-2025,executive,"We've always discussed the ETF business having multiple different segments where clients evaluate price relative to many different objectives and see a different value proposition in superior indexes or liquidity, capital markets expertise.",1,0.9999944766575651,1,TP,0.998097734326624,1
+WFC,Q4-2025,executive,"And then you've got the continuation of deposit and loan growth coming throughout the year, and so that will build as you go.",1,0.9999901219098951,1,TP,0.9984880941122736,1
+BLK,Q2-2025,executive,"We are intentionally organizing to bring clients under one unified firm, not a collection of enterprises, and we have aligned our cultures and aligned each and everybody's interest.",1,0.9986994796909185,1,TP,0.9953800135561945,1
+GS,Q2-2024,executive,"And I think one of the things that we find attractive about our platform is that we have opportunities to scale across multiple asset classes within alternatives, equity, credit, real estate infrastructure.",1,0.9998816153171003,1,TP,0.9983106176372912,1
+NVDA,Q1-2026,executive,"Enterprise AI, AI must be deployable on-prem and integrated with existing IT.",1,0.9999449936896946,1,TP,0.9966656088490771,1
+BLK,Q1-2024,executive,"We ended the quarter with record AUM of nearly $10.5 trillion and one of the strongest opportunity sets ahead across multiple growth engines, including technology, outsourced solutions and private markets.",1,0.9999987444045497,1,TP,0.9983320167420853,1
+JPM,Q4-2025,analyst,"But I'm just wondering, we have your -- you have your NII outlook, we have your expenses.",1,0.9961654120215759,1,TP,0.9721920304909201,1
+PLTR,Q1-2024,executive,That's why you have this rule of -- that's why we have 57 on the Rule of 40.,1,0.9866325761091879,1,TP,0.9681444098778714,1
+GS,Q1-2026,executive,"But I think this continues with any sort of a medium-term or longer-term view to be a very, very attractive platform for us, and we are very confident that we have significant runway to further scale our business toward our $300 billion target.",1,0.9999781553803775,1,TP,0.9980983619529697,1
+FAST,Q3-2025,executive,"But we anticipate from the profit growth perspective, that will continue to kick in until we anniversary that as we move into the second quarter of next year, but you're going to see similar expense growth, what you're thinking.",1,0.999995624644286,1,TP,0.9985520670788934,1
+WFC,Q1-2024,executive,"And that's been a good trade, I think, for us so far.",1,0.9288721142975973,1,TP,0.5926242782360971,0
+GS,Q2-2024,executive,"This business has been a key contributor to our success in increasing more durable revenues and provides us with a strong source of demand for our suite of alternative products, a great example of the power of this unique platform.",1,0.9999747697494873,1,TP,0.9983146962032189,1
+BLK,Q1-2026,executive,"And we launched [ HLEND E ] in Europe, and we're bringing a new GIP core infrastructure fund to market in Europe as well, which we think will be a great jumping off point for private wealth.",1,0.9999675501363897,1,TP,0.998277255173775,1
+NVDA,Q3-2025,ir,"This past quarter, we celebrated the 25th anniversary of the GeForce 256, the world's first GPU.",1,0.9999247258856615,1,TP,0.9974725367603714,1
+NKE,Q2-2026,executive,"And we also launched Structure 26 in our stability silo, and we're launching Structure Plus next month.",1,0.9999902384842464,1,TP,0.997994719195313,1
+FAST,Q4-2023,executive,"We have a lot of customers in a lot of places that share a company, and we want to make sure that we weren't creating conflict in that regard.",1,0.9893480319350725,1,TP,0.9638095781271888,1
+GS,Q2-2025,executive,"Part of that was our confidence in the durability of our revenue, the business mix, which we've grown and we've executed on and we've improved.",1,0.999799931943601,1,TP,0.9983049143914527,1
+PLTR,Q4-2023,executive,We signed a multitude of U.S. commercial deals last quarter.,1,0.9961785944129273,1,TP,0.8143272878514318,1
+GS,Q1-2026,executive,"But if you pull apart the year-over-year delta, it was rough magnitude, $650 million of the $750 million increase was attributable to transaction-based expenses.",1,0.9999975733759435,1,TP,0.9975861254064984,1
+INTC,Q3-2024,ir,We will also integrate our software business into our core business units to foster more integrated solutions that address our customers' most difficult challenges.,1,0.9997354191339851,1,TP,0.9979233630709151,1
+BLK,Q1-2025,executive,"Together, we know how to invest in, own them, improve on them and operate them.",1,0.9999440846426231,1,TP,0.974451530711008,1
+PLTR,Q4-2023,executive,And that means that we always have software that's so far in the future that it will meet the moment that the DoD actually has.,1,0.9992733121670574,1,TP,0.9981496143049199,1
+JNJ,Q4-2025,ir,We continue to see share gains across all indications with particularly strong momentum from our IBD launch as well as market growth.,1,0.9999686935118923,1,TP,0.9985102017563522,1
+BLK,Q3-2025,executive,And the whole business of outsourcing portfolios and general accounts to BlackRock.,1,0.9997225427306996,1,TP,0.8073964349904337,1
+INTC,Q4-2023,analyst,So -- it seems like there could be persistent headwinds in terms of capacity utilization.,1,0.9999512893989565,1,TP,0.9953298125157435,1
+C,Q4-2023,ir,"Executives - CEO & Chair of the Board
+It's Jane.",0,0.06288548444397045,0,TN,0.20131792889238703,0
+JPM,Q1-2025,executive,We're deeply embedded in these other countries.,1,0.9996614969470786,1,TP,0.9885524074022441,1
+FAST,Q1-2025,executive,"Executives - Former Executive VP & CFO
+Got it.",0,0.0035570930816522187,0,TN,0.0200300481350065,0
+NVDA,Q3-2025,executive,"In fact, as Colette mentioned earlier, we will deliver this quarter more Blackwells than we had previously estimated.",1,0.9996145249021243,1,TP,0.9981572979115227,1
+PLTR,Q4-2025,executive,"They all work together, building on each other.",0,0.675295634990995,0,TN,0.7292979614114785,1
+BLK,Q3-2024,executive,"With higher rates, distributions to paid-in capital are a critical measure of success and where we are an industry leader.",1,0.9999760712111077,1,TP,0.9984498291323944,1
+INTC,Q2-2024,ir,"As Pat discussed earlier, lower-than-anticipated revenue in the back half of the year is putting pressure on gross margins and earnings.",1,0.999720557964981,1,TP,0.9982123216817991,1
+PLTR,Q4-2025,executive,"In general, the conversation now is, I've heard you made this work.",0,0.16052219472022813,0,TN,0.5533030886600011,0
+AMD,Q4-2025,executive,"We did lean in on OpEx, and I think it was for all the right reasons.",1,0.9969517021518638,1,TP,0.9026357471536117,1
+NKE,Q4-2025,executive,And they're the right actions to reignite brand momentum and growth.,1,0.999796875675327,1,TP,0.9887998659995368,1
+BLK,Q2-2024,executive,"And our planned acquisition of Preqin will expand our capabilities beyond private markets, investment management and technology to data.",1,0.9999788356621414,1,TP,0.9978264926974074,1
+NKE,Q1-2025,executive,"When we look at the order book for spring footwear, men's and women's Running footwear is growing double digits.",1,0.9998238187937811,1,TP,0.998253398935784,1
+AMD,Q3-2025,analyst,And then you also have component issues that you're seeing across interconnected memory.,1,0.9978027885268214,1,TP,0.9979179199304321,1
+NKE,Q2-2026,executive,"Thank you, Matthew, and appreciate the question.",0,0.05549955716731726,0,TN,0.03346544357952545,0
+INTC,Q4-2025,analyst,"Lip-Bu, there's obviously a lot of excitement about your foundry business.",1,0.9993670514454569,1,TP,0.9774974416444762,1
+C,Q4-2024,ir,"Markets revenues increased 6% to $19.8 billion, primarily driven by growth in equity, which had its highest annual revenue in a decade and spread products.",1,0.9999973694433428,1,TP,0.9982757793311565,1
+C,Q3-2025,ir,And then the other piece to think about is the performance.,1,0.9763251184402181,1,TP,0.9824001455029219,1
+C,Q2-2025,ir,"Average loans increased 15%, driven by continued demand for trade loans globally as our clients expand their operations and suppliers.",1,0.9999978369950656,1,TP,0.9984383922292824,1
+BLK,Q3-2025,executive,"Tokenization can make that even better, faster, more efficient.",1,0.9999800552134708,1,TP,0.9981304305646637,1
+C,Q1-2024,ir,We've seen both the issuers taking advantage as well as the investors.,1,0.9998805389122368,1,TP,0.9982016986520611,1
+NKE,Q4-2025,executive,"So in the end, it's going to take time to flow into the market, but we're confident in the product pipeline.",1,0.9999936332183766,1,TP,0.9982261262082066,1
+PLTR,Q4-2023,executive,Fourth quarter U.S. commercial revenue grew 70% year-over-year and 12% sequentially to $131 million.,1,0.9999877646890953,1,TP,0.9982078957784466,1
+INTC,Q1-2025,ir,"While we are currently focused on delivering Intel 18A, we are also working closely with customers to define the critical KPIs to ensure online delivery of Intel 14A.",1,0.9999381406811371,1,TP,0.9981755742795773,1
+BLK,Q2-2024,executive,Rate cuts should normalize bond markets.,1,0.9998535537259744,1,TP,0.9950811189227162,1
+AMD,Q2-2024,analyst,Just any kind of breakdown between those two and why you're seeing it a little bit better.,1,0.9994832175343481,1,TP,0.9944812121464273,1
+BLK,Q2-2025,executive,And I look at the opportunities in Europe similarly to the type of growth rates we saw in the U.S. over the last 5 years.,1,0.9999970986462201,1,TP,0.9984643297105003,1
+GS,Q3-2024,executive,"We are seeing positive momentum in this business, and we remain focused on increasing lending penetration and expanding our loan product offerings.",1,0.9999846819870685,1,TP,0.9983106076330216,1
+AVGO,Q3-2024,executive,"No, it was just the timing of when we chose to do it this time.",0,0.982683906205268,1,FP,0.7609641387739006,1
+AMD,Q4-2023,executive,"And at the same time, Embedded is going through the bottoming process.",1,0.9998901947708119,1,TP,0.9975918328613845,1
+WFC,Q2-2025,executive,You're going to see continued repricing on the fixed asset components of the balance sheet.,1,0.999419288736407,1,TP,0.8380205835402819,1
+INTC,Q3-2024,ir,Revenue is expected to be flat sequentially across DCAI and NEX businesses in aggregate.,1,0.9999872654840026,1,TP,0.998497575753672,1
+C,Q4-2025,ir,Markets delivered net income of $783 million with an RoTCE of 6.2% in the quarter and 11.6% for the full year.,1,0.9999903871072523,1,TP,0.9979706400542252,1
+JPM,Q1-2026,executive,"We looked at it through every angle early roll rates, delinquency rates, cash buffer, spend, discretionary spend, nondiscretionary spend, it all looks consistent with prior trends and fundamentally, healthy.",1,0.9999849146854416,1,TP,0.9910312467135783,1
+NKE,Q2-2025,executive,The final action we prioritize is building back and earning the trust of our key wholesale partners.,1,0.9999979859226269,1,TP,0.9983385767626487,1
+JPM,Q1-2024,executive,"But if you think of real estate, there's 2 pieces.",1,0.9994627346454646,1,TP,0.9966308532882747,1
+GS,Q4-2023,executive,"It's a big, big tenet of what we're trying to do.",1,0.39204310174083096,0,FN,0.6043897596424522,0
+JNJ,Q1-2025,executive,"Executives - Executive Vice President of Innovative Medicine and R&D
+Maybe just a comment on Icotrokinra since you asked about that.",0,0.9753463438506614,1,FP,0.3983967376898322,0
+JPM,Q3-2024,executive,"I think that becomes a policy issue that, every time there comes some kind of fluctuation in the market, people panic, and the Feds got to stomp in and provide stuff.",1,0.9999582613475518,1,TP,0.9977598588161062,1
+PLTR,Q4-2023,executive,Turning to our international government business.,1,0.9993155886306381,1,TP,0.48339427444005656,0
+BLK,Q1-2025,executive,Are we going to see a systematic reallocation into other parts of the world?,1,0.9999134293307141,1,TP,0.9976180185424054,1
+FDX,Q2-2025,ir,"As a separate company, FedEx will strengthen its leading value proposition with an emphasis on delivering outstanding service, continuing to provide a differentiated offering in premium segments and remaining focused on higher-yielding service and building on our technology ecosystem to create smarter supply chains for all.",1,0.9999657311979424,1,TP,0.9971591464515367,1
+C,Q2-2025,analyst,I'm just trying to get a run rate and where those go to?,1,0.9996472100385029,1,TP,0.9860833243791258,1
+AMD,Q4-2023,executive,"So yes, look, we are really happy with how the MI300 has come up, and we've now deployed and working with a number of customers.",1,0.9998859026512176,1,TP,0.9982050686514974,1
+BLK,Q1-2026,executive,"We probably have had more client calls, more calls with leadership and governments than ever before.",1,0.999813223361484,1,TP,0.9969208032675194,1
+BLK,Q4-2023,analyst,How can BlackRock's global distribution platform accelerate their growth?,1,0.9999994136085221,1,TP,0.9981212367781594,1
+JPM,Q3-2025,analyst,"So my question is both of demand and credit fundamentals, what are you seeing in terms of drivers of client demand there on the lending side on the wholesale front?",1,0.9999820004423818,1,TP,0.9984331077543859,1
+NVDA,Q4-2026,ir,"Executives - Vice President of Investor Relations & Strategic Finance
+We will now transition to Q&A.",0,0.7966766178785595,0,TN,0.20248918046099754,0
+JNJ,Q1-2026,analyst,Can you walk us through the investments you guys are making on prescriber and patient education?,1,0.9999056584072338,1,TP,0.9964528117846733,1
+PLTR,Q4-2023,executive,"It's -- By the way, for those of you who are evaluating our company, we are going to invite all of you to our bootcamps.",1,0.9981502522654588,1,TP,0.7210102294254133,1
+WFC,Q4-2025,analyst,"But when you look at this team, are you 75% there in terms of you got all the people you need?",1,0.9994261106883795,1,TP,0.9981803918931484,1
+WFC,Q3-2024,executive,And we feel really good about our allowance for coverage ratio.,1,0.9951816100830587,1,TP,0.9892172969752318,1
+AMD,Q4-2024,executive,People like the work that we've done in inference.,1,0.3164295292650417,0,FN,0.6713749702887709,1
+JNJ,Q1-2025,executive,That is speculative just looking at the pharmaceutical landscape and where national security interest may reside and what products that those are delivered from.,1,0.9999798181578289,1,TP,0.9983411328753377,1
+AMD,Q2-2025,ir,"For upscale inferencing, MI355 delivers up to 40% more tokens per dollar, providing leadership performance and clear TCO advantages.",1,0.9999877534279863,1,TP,0.997596773483201,1
+WFC,Q4-2024,ir,"In response to the Federal Reserve rate cuts, we have reduced standard pricing for commercial clients as well as pricing for promotional deposit offers and CDs in our consumer businesses.",1,0.9999290837892324,1,TP,0.9984715655838421,1
+INTC,Q3-2025,ir,"Within the quarter, CCG further advanced its relationship with Microsoft through a collaboration with Windows ML and the deep integration of Intel vPro manageability with Microsoft Intune enabling secure, cloud connected fleet management for businesses of all sizes.",1,0.999994418945595,1,TP,0.9980671098674027,1
+NKE,Q2-2026,executive,"This gives us confidence that our Win Now actions are working, profitability is recovering, and we are on the path back to sustainable, profitable growth.",1,0.999734143579215,1,TP,0.9983001455175453,1
+C,Q1-2024,ir,Cost of credit of approximately $2.2 billion increased 34% largely driven by higher NCLs of $1.9 billion as card loan vintages that were originated over the last few years were delayed in their maturation due to the unprecedented levels of government stimulus during the pandemic and are now maturing.,1,0.9999968764401062,1,TP,0.9983520469632792,1
+BLK,Q2-2025,executive,"Executives - Founder, CEO & Chairman
+Let me just add a few more things.",0,0.0041659526317298756,0,TN,0.018022516621190383,0
+JNJ,Q2-2025,executive,"And it's also important to mention that VARIPULSE accommodates competitive advantages like the only approved 0 fluoro solution and deep sedation workflows, which we know are a major benefit to hospitals and patients.",1,0.9999910409477999,1,TP,0.9981571785974863,1
+NKE,Q2-2025,analyst,"And kind of to wrap that all up, it would very much seem that you are going for those margins before sales.",1,0.9992919012857828,1,TP,0.9977926562674732,1
+AVGO,Q3-2025,executive,"So many -- most of all our customers now we see create multiple data center sites close at hand, not far away, within range, 100 kilometers is kind of the level.",1,0.9999968591739428,1,TP,0.997923605045415,1
+JPM,Q4-2025,executive,"A lot of it is consumer-facing, digital, personalization, travel, offers, all these things, which we think are wonderful things.",1,0.9993194285731383,1,TP,0.996342304486902,1
+AVGO,Q1-2026,ir,"Bookings continue to be strong and total contract value booked in Q1 exceeded $9.2 billion, sustaining an ARR, which is annual recurring revenue growth of 19% year-upon-year.",1,0.9999882490737811,1,TP,0.9984702630340815,1
+C,Q4-2025,ir,"And in order for us to ensure we're delivering greater returns in '27, '28, et cetera, we have to continue to invest in the franchise.",1,0.9999885545025883,1,TP,0.9983440494075904,1
+PLTR,Q3-2024,executive,"Besides making America even stronger and better and our allies stronger, better and all of us more lethal, besides protecting Palantirians and most ex-Palantirians, our individual investors are near and dear to our and certainly my heart, and I love it that you guys are winning.",0,0.9545976298118664,1,FP,0.9782607158268537,1
+NKE,Q4-2025,executive,And we expect digital traffic to be down as we spend less money on performance media and also manage our classic franchises.,1,0.999580613115673,1,TP,0.9979200711763829,1
+INTC,Q4-2024,analyst,So you also talked about increased competitiveness weighing on margins at least into Q1.,1,0.9998979868468563,1,TP,0.9978558362941689,1
+JPM,Q1-2026,executive,The increase also reflects the absence of an FDIC special accrual release in the prior year and credit costs of $2.5 billion with net charge-offs of $2.3 billion and a net reserve build of $191 million.,1,0.999997402418404,1,TP,0.9983929647828169,1
+PLTR,Q4-2025,executive,Fourth quarter stock-based compensation expense was $196 million and equity-related employer payroll tax expense was $27 million.,1,0.9999535286695034,1,TP,0.9970877931701267,1
+INTC,Q4-2023,executive,"Well, let me step back a little bit on the 60%.",1,0.9820023553609765,1,TP,0.9745069506290296,1
+FAST,Q1-2026,executive,But we're all impacted by the same economics.,0,0.9999386840377997,1,FP,0.8085421312520703,1
+GS,Q4-2025,analyst,And then you mentioned that your backlog today is the highest in 4 years.,1,0.999968632868996,1,TP,0.9982868163196471,1
+JPM,Q3-2025,executive,"Consumer spending remained robust, while income was a bit lower.",1,0.9999758683241723,1,TP,0.9850307090034663,1
+INTC,Q3-2024,ir,Operating margins increased sequentially by 900 basis points on better gross margins and spending discipline.,1,0.9999932812835881,1,TP,0.998359158116244,1
+BLK,Q4-2023,executive,And the fact that we are taking 75% in BlackRock stock tells us we also think it's undervalued.,1,0.9999890359926391,1,TP,0.9984501711629828,1
+FDX,Q4-2024,executive,And we look forward to updating you along the way.,0,0.050864257840093074,0,TN,0.22071055396294975,0
+NKE,Q4-2025,executive,"In Greater China, Q4 revenue declined 20%, largely in line with our plan.",1,0.9999944858417926,1,TP,0.9982165667175072,1
+BLK,Q1-2025,analyst,"And is there any risk you think of any backlash to BlackRock, specifically as a U.S. headquartered manager?",1,0.9998023288458725,1,TP,0.9978998221522813,1
+FAST,Q4-2023,executive,"Executives - Former Executive VP & CFO
+Yes, so something to watch.",0,0.051063819988513344,0,TN,0.022053807774425394,0
+NKE,Q3-2025,executive,Let me -- here's -- we're absolutely gaining confidence in the product pipeline.,1,0.9992445846908519,1,TP,0.9862810635753515,1
+GS,Q1-2026,executive,"But the thing that's been getting a lot of focus is direct lending and direct lending is about $1.6 trillion to $1.7 trillion of assets, of which the retail channel for that direct lending business is about 20% or about $230 billion of NAV.",1,0.9999890879007354,1,TP,0.9983376111889918,1
+GS,Q1-2024,executive,The vast majority of the activity was actually refinancing.,1,0.999968675142524,1,TP,0.9956400281505884,1
+AVGO,Q2-2025,ir,We ended the second quarter with $9.5 billion of cash and $69.4 billion of gross principal debt.,1,0.9999423700391208,1,TP,0.997901458964688,1
+NKE,Q4-2024,executive,"And at our Investor Day in November, we will provide an updated outlook on growth and profitability, taking into consideration the marketplace dynamics that we're dealing with across the portfolio, where we are in the product transition and also some of the strategic shifts that we've put into place over the last year.",1,0.994614157263449,1,TP,0.9936612384208185,1
+C,Q1-2025,ir,"On Slide 14, we show the results for U.S.",1,0.988394606044623,1,TP,0.793894469380648,1
+AMD,Q3-2025,executive,ROCm 7 is a significant step forward in terms of performance and sort of all the frameworks that we support.,1,0.9999812083187549,1,TP,0.998388934165461,1
+C,Q1-2025,ir,The deep knowledge and breadth of capabilities that we have from decades on the ground in so many local markets are real points of distinction when serving our clients from reconfiguring their supply chain to addressing their hedging and funding approaches to advising on their strategic agenda.,1,0.999992170250218,1,TP,0.9973454997651361,1
+JNJ,Q4-2024,executive,"Turning to MedTech for the full year, we reported a second year of over $30 billion in sales with growth across most parts of the business, including particularly strong momentum in cardiovascular and vision.",1,0.9999929910720484,1,TP,0.9984201570723441,1
+GS,Q2-2025,executive,Our provision for credit losses of $384 million primarily reflects charge-offs in our credit card portfolio as well as modest levels of growth across both the card and wholesale portfolios.,1,0.9999686423834184,1,TP,0.9985496848362111,1
+NKE,Q4-2024,executive,"I also think where sport happens, it's one of the derivatives of the post-COVID environment.",1,0.9845139812173919,1,TP,0.7942743915439344,1
+FAST,Q1-2025,executive,"And I think with that kind of mix, I think our shareholders do really well, investing in Fastenal over time because we have our head in the right place.",1,0.9999779121731662,1,TP,0.9963909310583843,1
+FDX,Q3-2025,executive,We do anticipate from a margin perspective that Q4 will be strong for us.,1,0.9998650046953295,1,TP,0.9984249286688994,1
+FAST,Q3-2024,executive,So I have a good recollection of some of the steps and changes how we told the story over time.,0,0.7824770442365794,0,TN,0.8198341355610396,1
+NVDA,Q4-2024,executive,And now people understand that software is really key.,1,0.9990701776212318,1,TP,0.9937743966141731,1
+NKE,Q3-2025,executive,The challenge we have in the near term is that we were buying against a different plan.,1,0.999714694271693,1,TP,0.9983343772742211,1
+BLK,Q4-2024,executive,We've been at the forefront of advocacy for retirement solutions through our whole history.,1,0.9931254956072205,1,TP,0.9858245677000674,1
+INTC,Q1-2025,ir,We expect noncontrolled income or NCI to net to 0 in Q2 and for the full year to be approximately $500 million on a GAAP basis.,1,0.9997129034128546,1,TP,0.9984253821790233,1
+JPM,Q2-2024,executive,"Expenses of $9.4 billion were up 13% year-on-year, predominantly driven by First Republic expenses now reflected in the lines of business, as I mentioned earlier, as well as field compensation and continued growth in technology and marketing.",1,0.9999939144882235,1,TP,0.9983999625644886,1
+C,Q4-2025,ir,"Services delivered net income of $2.2 billion, with an RoTCE of 36.1% in the quarter and 28.6% for the full year.",1,0.9999989785653048,1,TP,0.9980212611021816,1
+NKE,Q1-2025,executive,"All told, we expect that the return to strong growth will take time, but we believe that we have all the right building blocks, especially with Elliott now leading us forward.",1,0.999997268649979,1,TP,0.9977140015216464,1
+JNJ,Q4-2025,executive,"Some of them are already approved, most of them submitted.",1,0.9742667156036232,1,TP,0.9434422158725612,1
+GS,Q4-2025,analyst,"The delta really is ECM, obviously, and advisory and DCM are kind of tracking to '21 levels already.",1,0.9999560292235707,1,TP,0.998417223777168,1
+GS,Q2-2025,analyst,"And then I know there's a focus on the top 150 clients, but just these kind of evolution in coverage and how that's resonating the opportunity to kind of employ that more broadly just across the franchise and just taking more client wallet more broadly?",1,0.9999760647566233,1,TP,0.9984697302398912,1
+NKE,Q2-2026,executive,"We've locked in some of our most important team franchises for the long term, which strategically puts us at a great position in the world of sport.",1,0.9998919224515973,1,TP,0.9978872172149196,1
+JNJ,Q3-2024,executive,Innovative Medicine growth was driven by our key brands and continued uptake from recently launched products with 11 assets delivering double-digit growth.,1,0.9999978560269779,1,TP,0.9985560681675987,1
+NKE,Q4-2024,executive,And so the actions that we've taken over the past year have enabled us the opportunity to make some bold swings in fiscal year '25.,1,0.9999816887481529,1,TP,0.9964494288098548,1
+C,Q2-2024,analyst,"And then in the wind column, since it's so nebulous is back office, where are you achieving?",1,0.9990737690995222,1,TP,0.998023841114039,1
+INTC,Q4-2025,executive,Most important is kind of building up the IP portfolio so that we can serve the customer.,1,0.999979582299857,1,TP,0.9980678527083793,1
+C,Q4-2024,ir,"We provide details on our $2.4 trillion balance sheet which decreased 3% sequentially, largely driven by the impact of foreign exchange translation.",1,0.9999569828059884,1,TP,0.9984225871550706,1
+INTC,Q2-2024,executive,"And for that, we'll point you back to, again, right?",0,0.25081418351604406,0,TN,0.2556431249024361,0
+NVDA,Q4-2026,analyst,"I'd like to ask about space data centers, which some of your customers are considering.",1,0.9995750468359936,1,TP,0.9954144718633628,1
+FAST,Q2-2025,executive,Now moving on to Slide 4 and looking at our customer site performance.,1,0.9998697114690304,1,TP,0.9981740735769064,1
+NVDA,Q1-2025,ir,"Training continues to scale as models learn to be multimodal, understanding text, speech, images, video, and 3D and learn to reason and plan.",1,0.9997526471160478,1,TP,0.995227565433985,1
+INTC,Q2-2025,analyst,I guess I just kind of wonder like how an external customer would continue to be engaged.,1,0.9999425749785054,1,TP,0.8772843258041274,1
+C,Q3-2024,ir,"So one, I think that on Retail Services, you're seeing a couple of things play out.",1,0.9996367696838936,1,TP,0.9786931217978629,1
+WFC,Q2-2025,analyst,What are the puts and takes relative to your expectations if we think about the year so far?,1,0.9999301159866341,1,TP,0.9967893647946294,1
+INTC,Q3-2024,executive,And the benefits that we get from the overall cash flows and managing the balance sheet of the company as we go forward are highly beneficial as well.,1,0.9999658981339125,1,TP,0.9982556649399221,1
+AVGO,Q4-2024,executive,I'm not sure they really break out between what's AI and what's non-AI out there.,1,0.9999410729853885,1,TP,0.9934566418641403,1
+INTC,Q1-2025,ir,"While we have offsets, including a global, highly diversified manufacturing footprint to help mitigate tariffs, we will certainly see cost increase, and we feel it prudent to anticipate a TAM contraction.",1,0.9999946879011663,1,TP,0.9968535509308427,1
+AVGO,Q4-2024,ir,"In Q1, we expect the momentum in AI connectivity to be as strong as more hyperscalers deploy Jericho3-AI in their fabrics.",1,0.9998501676272048,1,TP,0.9984845710504022,1
+WFC,Q1-2024,executive,I think what we're seeing so far is exactly what we expected to see at the beginning of the year.,1,0.8642100149863164,1,TP,0.9601306352716372,1
+FAST,Q4-2023,executive,And they sort of just freewheeling give me answers.,0,0.9982379493015406,1,FP,0.5488043637716136,0
+JNJ,Q1-2026,executive,"So maybe as a reminder, despite recent advances in bladder cancer, unmet need in that area really remains significant and this is for bladder sparing options.",1,0.9999904357454455,1,TP,0.9984739961667023,1
+FAST,Q3-2024,executive,Product and customer mix played its customary role.,1,0.9998384299391584,1,TP,0.9473312696513465,1
+WFC,Q4-2024,analyst,"As a follow-up, and I apologize if this is putting the cart before the horse.",0,0.9317889236077805,1,FP,0.4756613678680912,0
+JPM,Q1-2025,executive,"But I think what it sort of highlights is that during this transitional period and this elevated uncertainty, you might see some distortions in the data that make it hard to draw larger conclusions.",1,0.999970280430623,1,TP,0.9981911595612643,1
+C,Q2-2024,ir,"But as I think about what we're seeing now, there is that dichotomy that I mentioned, where we have the higher FICO score customers that are driving the spend growth and that, frankly, have still continued strong balances in savings.",1,0.9999868985437784,1,TP,0.9985643396469687,1
+FAST,Q1-2024,executive,The tone of business activity from regional leadership is best characterized as steady at weak levels.,1,0.9965312687112757,1,TP,0.9968853875604999,1
+WFC,Q2-2025,executive,"And I think what's happened as we sort of looked at and some of this started in the -- towards the end of the first quarter, early second quarter,  and we sort of talked about it in some other public forums.",0,0.993684005679482,1,FP,0.7457551765436597,1
+C,Q4-2025,ir,And I am highly confident in our ability to get the remaining work done.,1,0.9391170054087049,1,TP,0.9653638657104457,1
+JNJ,Q3-2025,executive,"Q3, we returned that business to growth with tremendous performances in categories like hips with 5.1%, knees 5.6%, strong performance in trauma and actually returning to growth in spine.",1,0.9999832394894034,1,TP,0.9985418392408505,1
+FDX,Q4-2025,executive,"At Federal Express, total U.S. domestic package yield was up slightly with strength in our priority services offset by mix shift in softer yields in deferred and ground economy.",1,0.9999769978123603,1,TP,0.9982724769875067,1
+JNJ,Q4-2023,executive,"Otherwise, they are flying blind if they don't have a mapping system.",1,0.9995635588154953,1,TP,0.9932885801551142,1
+JPM,Q4-2025,executive,So what we saw -- if you sort of -- and we would -- we show the number every quarter.,0,0.6920662219939983,0,TN,0.9204857550353802,1
+AVGO,Q2-2024,executive,"That's a third alternative, and we are clear to make it very distinct and differentiated for our end-use customers.",1,0.9997439125600718,1,TP,0.9980943157468906,1
+FAST,Q1-2025,executive,Or is this something that's going to be announced on Wednesday and canceled on Friday?,1,0.9844846626442872,1,TP,0.8994491890968274,1
+FAST,Q2-2025,executive,"So again, to the team, thank you very much and I'll now pass it over to Dan.",0,0.00993514597901562,0,TN,0.09762987887755448,0
+AVGO,Q1-2025,executive,"But why we're bidding the numbers so far in Q1 and seems to be encouraging in Q2 partly from improved networking shipments, as I indicated, to cost those XPUs in AI accelerators even in some cases, GPUs together for the hyperscalers.",1,0.9999987227753656,1,TP,0.9984416178035909,1
+PLTR,Q4-2024,executive,Fourth quarter commercial revenue grew 31% year-over-year and 17% sequentially to $372 million.,1,0.9999586954215051,1,TP,0.9982414684466129,1
+C,Q4-2023,ir,You've seen us actively manage that through the year.,1,0.9954940365422885,1,TP,0.9850682793027286,1
+JNJ,Q2-2025,analyst,"So if we look ahead to 2026, '27 is it fair to think of the MedTech business as a closer to high single-digit growth business?",1,0.9999985129990034,1,TP,0.9984055212543399,1
+WFC,Q1-2025,executive,"If we have a much deeper recession, would you see allowance uptick?",1,0.9998385389602524,1,TP,0.9981028087810102,1
+GS,Q4-2024,executive,"And lastly, we are driving Platform Solutions to pretax breakeven in 2025.",1,0.9999632793021318,1,TP,0.9980577613416901,1
+GS,Q4-2023,executive,We feel good about the fundraising progress we've made.,1,0.8641717614013746,1,TP,0.6967231170634897,1
+C,Q4-2024,ir,"Branded cards revenues increased 7% with interest-earning balance growth of 7% as payment rates continue to normalize, and we continue to see spend growth which was up 5%.",1,0.9999900950902443,1,TP,0.9984060293467699,1
+FDX,Q2-2025,executive,The pressure that we're seeing is on the base rate and then weight.,1,0.9998989857205273,1,TP,0.9983739404816123,1
+NVDA,Q1-2026,ir,"Leading companies include 1X, Agility Robotics, Figure AI, Uber and Waabi.",1,0.9999978395770678,1,TP,0.994425819024763,1
+FDX,Q1-2026,executive,"As far as the pull forward, I will remain optimistic the American consumer from our numbers has been resilient.",1,0.9997173552391159,1,TP,0.9981781370411638,1
+NVDA,Q4-2025,executive,You present that circumstance to a vision language model.,1,0.4632814563612211,0,FN,0.8832873233319646,1
+GS,Q2-2024,executive,"Taken together, financing revenues were a record $2.2 billion for the second quarter and a record $4.4 billion for the first half of the year.",1,0.9999899880485249,1,TP,0.9981434143614594,1
+WFC,Q4-2024,ir,"Since 2021, we have rolled out a total of 11 new cards, including 4 new consumer cards and a new small business card in 2024.",1,0.9999711925255584,1,TP,0.9980013509688911,1
+AMD,Q4-2024,executive,I don't -- we didn't see that in the fourth quarter.,1,0.45304497378042746,0,FN,0.8381597708466717,1
+C,Q3-2025,ir,And I think the piece we were particularly pleased about was the record $18.6 billion of net new investment assets.,1,0.9999885082239296,1,TP,0.9974506163642186,1
+C,Q4-2025,ir,"In 2025, we integrated Citi Token Services with 24/7 U.S. dollar clearing, launched in Hong Kong and Dublin and added euro as a transaction currency.",1,0.9999132514595573,1,TP,0.9978211905437167,1
+JNJ,Q3-2025,executive,"And at the same time, we have the foresight to recognize when a stand-alone company could be better and could be in a better position to drive growth innovation and better margins.",1,0.9999779343722163,1,TP,0.9984514223271613,1
+NKE,Q4-2025,executive,"And what I will say, we will lead with a sharp focus on sport.",1,0.9714967422693521,1,TP,0.8438009633486605,1
+AMD,Q1-2024,ir,"Client segment revenue was $1.4 billion, up 85% year-over-year, driven primarily by Ryzen 8000 series processors.",1,0.9999992088464376,1,TP,0.9982143080417536,1
+BLK,Q3-2024,executive,"But investors will have to re-risk to meet their long-term return needs, and we see great opportunities, investors across a number of structural trends continue to build this.",1,0.9999987509041682,1,TP,0.9984157709456314,1
+JPM,Q1-2024,executive,"Fixed income was down 7% driven by lower activity in rates and commodities compared to a strong prior year quarter, partially offset by strong results in Securitized Products.",1,0.99998235995149,1,TP,0.9982209805953486,1
+GS,Q1-2025,executive,"I will say over time, and this is all proportionate, as we scale our alternatives platform, we use capital to start up new funds to start up new platforms.",1,0.9999959959052266,1,TP,0.9981505534772236,1
+AMD,Q4-2023,analyst,"And as a quick follow-up, I'm just curious, the traditional server demand that you see, I know when we look at server CPU, shipments are down north of 20% year-over-year.",1,0.9999951313658788,1,TP,0.9974846840260263,1
+FDX,Q1-2026,ir,"Earlier this month, we announced a 5.9% general rate increase effective in January.",1,0.9999936675999864,1,TP,0.9981913303600667,1
+FAST,Q4-2024,executive,And history has told me that we have approaching 10 Onsites per diem.,1,0.9999395599348521,1,TP,0.9981350756547405,1
+JPM,Q4-2025,executive,"The increase in NII ex Markets was primarily driven by higher firm-wide deposit balances and revolving balances in card, largely offset by the impact of lower rates.",1,0.9999977275857381,1,TP,0.9984823392872881,1
+GS,Q4-2023,executive,"We aspire to be the world's most exceptional financial institution, united by our shared value client service, partnership, integrity and excellence.",0,0.9939656323551994,1,FP,0.8965917139067694,1
+FAST,Q4-2023,analyst,"So when you look at your end markets, can you see pockets where this is starting to validate that thesis?",1,0.9994920173504488,1,TP,0.9984156956544397,1
+NKE,Q1-2025,executive,"We expect SG&A to be roughly flat versus the prior year, with increased demand creation investment largely offset by tighter operating overhead.",1,0.9999929507209377,1,TP,0.9985565461940846,1
+INTC,Q4-2023,analyst,Could you talk about a bit more about the client market?,1,0.99598486306366,1,TP,0.9800918161118146,1
+AVGO,Q4-2025,executive,"We have so many components beyond XPUs, custom accelerators in any system -- in AI system, any AI system used by hyperscalers that, yes, we believe it begins to make sense to do it as a system sale and be responsible, but be fully responsible for the entire system or rack, as you call it.",1,0.9999991554737269,1,TP,0.9967364075060008,1
+JNJ,Q4-2023,analyst,"Analysts - Senior Analyst
+Just, Joe, a question for you.",0,0.9040685253837838,1,FP,0.3079306467814142,0
+BLK,Q3-2024,analyst,Maybe you can update us on where you are along the journey of variabilizing your expenses?,1,0.9974960453808079,1,TP,0.9911431607670176,1
+GS,Q1-2024,executive,"Performance matters, client experience matters.",1,0.9997469082410728,1,TP,0.9727702998362547,1
+JPM,Q2-2025,executive,I would say it's not high on my list because we can do it ourselves and buying people and comp plans.,1,0.9998439722950117,1,TP,0.9725112243381704,1
+GS,Q1-2026,analyst,I'm assuming that's to finance -- equity financing.,1,0.9927276626984731,1,TP,0.8240148531451468,1
+GS,Q2-2024,executive,"We made strong progress in growing our more durable revenue streams, including record first-half revenues across FICC and equities financing, management and other fees and Private Banking and lending.",1,0.9999982035001656,1,TP,0.9985006977882742,1
+BLK,Q4-2024,executive,BlackRock is a meaningful outperformer when assets are in motion and investors are re-risking.,1,0.9999768160208184,1,TP,0.9984841936639457,1
+NKE,Q3-2026,executive,"The team is really focused from a product perspective, and Matt touched on some of this, moving from being so sportswear reliant to also be really focusing in on performance where we have growth in running, training and football.",1,0.9999223607228587,1,TP,0.9983440987355054,1
+INTC,Q3-2024,executive,The steps that we took in our financial restructuring this quarter was very critical to be able to bring us to a point that we can say we have the capacity to and driving to long-term shareholder return.,1,0.9997527879242295,1,TP,0.9978917951572323,1
+JPM,Q1-2026,executive,And ensuring that we're using our financial resources efficiently to support the client franchise.,1,0.9999047605772153,1,TP,0.9896855424769802,1
+NVDA,Q4-2026,analyst,"But Jensen, I'm curious, when you look at your top cloud customers, cloud CapEx close to $700 billion this year, many investors are concerned that it would be harder for this level to grow into next year.",1,0.9999953316717299,1,TP,0.9978988671098881,1
+JPM,Q1-2024,executive,There's just too many moving parts there.,0,0.99149126486145,1,FP,0.5994737151875706,0
+AVGO,Q3-2024,ir,"And this translates into an annualized booking value, or ABV as I had described before, of $2.5 billion during Q3, up 32% from the preceding quarter.",1,0.9999924670686919,1,TP,0.996750460344279,1
+JPM,Q4-2024,analyst,And I know you get this question a lot about the kind of high-class dilemma of your growing capital base and your perspective of that as earnings in store.,1,0.9998884767161317,1,TP,0.9948121945943995,1
+C,Q4-2023,ir,In the [ 80 to 81 ] we've assumed it roughly flat.,1,0.9982342186221003,1,TP,0.9971054428913174,1
+WFC,Q2-2025,ir,Deposit flows for both our consumer and commercial clients were in line with seasonal trends.,1,0.9999949035536386,1,TP,0.9982059867569035,1
+NKE,Q3-2026,executive,"At the same time, we are even more confident in where we are headed.",0,0.6992539872308597,0,TN,0.8705904469216786,1
+INTC,Q4-2024,executive,"But as I stated before, we look at each generation of products based on what's the right product, what's the right process, what's the right market window, and what allows our customers to win.",1,0.9998563012896972,1,TP,0.9983262161391485,1
+C,Q2-2024,ir,You can see that in our results again this quarter.,1,0.69297919100334,0,FN,0.9321162297462398,1
+JNJ,Q2-2024,executive,It will then take a few weeks for the vote administrator to vet and tally the votes.,0,0.9961010236405818,1,FP,0.9812267383563956,1
+BLK,Q1-2024,executive,"Performance fees of $204 million increased from a year ago, primarily reflecting higher revenue from alternatives.",1,0.9999987046870459,1,TP,0.9983922268163161,1
+NKE,Q2-2025,analyst,But how much incremental pressure do you expect on 2026 sales?,1,0.9999979232247955,1,TP,0.9984882069949738,1
+AVGO,Q2-2024,executive,"And I start to learn the value of a very strong bunch of partners they have, which are a network of distributors and something like 15,000 VARs, value-added resales, supported with these distributors.",1,0.9999971059098021,1,TP,0.9979811521978617,1
+NKE,Q2-2025,executive,"We have got to reset bigger bolder consumer-led NIKE concepts that represent the full expression of the NIKE brand, have the service and the experience that we expect that'll drive the performance and the productivity of those doors.",1,0.9995696284408079,1,TP,0.9984579605067078,1
+INTC,Q1-2024,executive,So this should be an ongoing story for us on the gross margin front.,1,0.9992928334747494,1,TP,0.9918294873324618,1
+WFC,Q4-2023,executive,"When you look at the components there, I mean, the largest one is going to be our advisory fees in the Wealth and Investment Management business and market levels are higher than they were this time last year.",1,0.9999967607329081,1,TP,0.9985077196512601,1
+GS,Q4-2025,executive,"Obviously, if you go back over the last 10 years, capital in the large banks has grown meaningfully over the last 10 years.",1,0.9999770321707697,1,TP,0.9982735564427353,1
+JNJ,Q3-2024,executive,"Excluding special items, the effective tax rate was 19.3% versus 15.6% in the same period last year.",1,0.9999928084457945,1,TP,0.9977721378047406,1
+FAST,Q2-2024,executive,"As I was looking through it, I'm going to dodge the question a little bit because what I've observed is, you're going to have to tell me what you're going to build in for our revenue growth.",1,0.999955288261319,1,TP,0.9978755859890269,1
+INTC,Q3-2025,ir,"In addition, we are advancing our work on Intel 18AP, and we continue to hit our PDK milestones.",1,0.9999851077374904,1,TP,0.9985096565225998,1
+BLK,Q1-2025,executive,"BlackRock has a meaningful role in helping manage Viridium's private market investments going forward, including in infrastructure investments and private credit.",1,0.9999574488292982,1,TP,0.9933126760533891,1
+JPM,Q3-2024,analyst,"You put it in your presentation, of course, $1.5 trillion, average loan is $1.3 trillion.",1,0.9974678057924525,1,TP,0.9972861765658472,1
+C,Q3-2024,ir,"So your point around the low number, the low print 11.46 in the second quarter, that really is a combination relative to first quarter of FX translation, some seasonally lower card balances and lower interest payments in Argentina playing through that sequential 1Q to 2Q.",1,0.9999776283984353,1,TP,0.9985492121231342,1
+PLTR,Q3-2024,executive,And you have very similar use cases in underwriting and in health care.,1,0.9998831906823288,1,TP,0.9888687155477609,1
+JPM,Q2-2025,executive,"And also just CET, just capital usage, et cetera.",0,0.9706034508049554,1,FP,0.8286806328742644,1
+NKE,Q3-2024,executive,We executed well to recapture transitory cost headwinds and expand gross margins even in a promotional environment.,1,0.9999007419007293,1,TP,0.9983135550418856,1
+BLK,Q1-2025,executive,"Last year, we invested in enriching our private markets information, investments, data platform to serve our clients more.",1,0.9999938323545073,1,TP,0.9979402262786821,1
+AMD,Q4-2024,executive,"Gross margin was 54%, up 330 basis points year-over-year due to a favorable shift in revenue mix with higher Data Center and Client revenues lower Gaming revenue, partially offset by the impact of lower embedded revenue.",1,0.9999798605283303,1,TP,0.998450195653124,1
+JNJ,Q4-2023,executive,"Not only has it beat our internal deal models, but it also is performing better than what the Street had called for that business prior to the announcement of the acquisition.",1,0.9999988058591822,1,TP,0.9982921872414389,1
+BLK,Q3-2025,executive,And we think that it allows us to build portfolios that take appropriate levels of risk across the working life and manage different levels of portfolio liquidity.,1,0.9997442821456028,1,TP,0.9932860772422835,1
+NKE,Q4-2025,executive,Our teams are also making strong progress in expanding our distribution with strategic partners.,1,0.9999956995697378,1,TP,0.9983893225330526,1
+C,Q1-2025,analyst,"And then in terms of credit, like how -- what's it baking in around the unemployment rate?",1,0.9997233896713755,1,TP,0.9983282879634567,1
+C,Q4-2024,ir,And that gets us to the mid- to high-teen returns in the medium term.,1,0.9991049425950951,1,TP,0.9980859290572146,1
+WFC,Q4-2023,analyst,"On the NII outlook of down 7% to 9%, can you maybe help us think about the expected net interest margin trajectory through the year?",1,0.9999788599505075,1,TP,0.9984056682260547,1
+INTC,Q3-2024,executive,So it's a number that says we are at where we'd want to be at this point in the process development life cycle.,1,0.9998343573296496,1,TP,0.9889543531102942,1
+WFC,Q3-2024,executive,"I guess I'll just repeat what we've said in the past, which is we think that there continue to be meaningful efficiencies around the company, but we also are investing in both spending whatever we need to spend in the risk and regulatory space as well as investing for the future.",1,0.9999947508587831,1,TP,0.9979426026683541,1
+GS,Q4-2023,executive,"And if you look at those two businesses, that's the vast, vast majority of the firm, and I think they can operate mid-teens.",1,0.999989389754267,1,TP,0.9958689336545852,1
+INTC,Q2-2024,ir,"Even as we lower overall spending, we will continue to fund the investments needed to deliver our strategy.",1,0.999996250962424,1,TP,0.9977512064010693,1
+GS,Q4-2023,analyst,So I wanted to ask a couple of questions about comp leverage and operating margins.,1,0.9985020470122973,1,TP,0.9695104859226203,1
+AMD,Q3-2025,executive,"But then we're also seeing the other trend, which is there's just a need for more AI compute.",1,0.9999821365370454,1,TP,0.9983515745350058,1
+C,Q2-2024,ir,And so the FICO inflation has effectively kind of fizzled out when we look at the mix and dynamic of the customer portfolio that we have at this point.,1,0.9999835318135636,1,TP,0.9984752869953132,1
+JNJ,Q1-2024,executive,We began enrollment of patients in a pivotal trial evaluating Laminar's left atrial appendage elimination device to reduce the risk of stroke in patients with nonvalvular atrial fibrillation.,1,0.9994791803356112,1,TP,0.9976906375734638,1
+INTC,Q4-2024,executive,"We want to be doing more than what we promised to every turn, to every stakeholder, including investors, including customers, including suppliers, so what have you.",1,0.9998843503574092,1,TP,0.9885117813682023,1
+FAST,Q1-2025,analyst,"Because when we think about a fastener, the majority of the COGS are transportation and metal.",1,0.9998624298969524,1,TP,0.9513885718578441,1
+C,Q1-2025,ir,So lower rates on floating rate assets would be a tailwind.,1,0.9999876042927881,1,TP,0.9979133396369347,1
+BLK,Q4-2023,executive,"Over this time period, we reduced our share count by nearly 23 million shares or 13%.",1,0.9999927016370427,1,TP,0.997408191193443,1
+BLK,Q3-2024,executive,I want to thank all the BlackRock employees for their commitment to upholding our culture and serving our clients with excellence.,0,0.047506003041955416,0,TN,0.17064487028547592,0
+C,Q3-2024,ir,"Executives - CEO & Chair of the Board
+There isn't a hard rule on you have to have got 4 full quarters after you have -- after you have separated.",0,0.23613909220831503,0,TN,0.7955655507713504,1
+BLK,Q1-2025,executive,"We do think for the opportunity to be really broad, really scalable and the most tangible, we'd likely need to see litigation reform or at least some advice reform in the U.S. to add private markets disclosure into DC plans.",1,0.9990700244712598,1,TP,0.9981484344972087,1
+C,Q1-2024,ir,So we want our customers to pay on time.,1,0.9993934005550784,1,TP,0.8637043564655762,1
+NVDA,Q4-2025,ir,"At CES, we announced Toyota, the world's largest auto maker will build its next-generation vehicles on NVIDIA Orin running the safety certified NVIDIA DriveOS.",1,0.9999496007438141,1,TP,0.997674428935057,1
+C,Q4-2025,ir,Banking had a record year including the best quarter and year for M&A revenues in Citi's history as we gained share in our target sectors as well as in leveraged finance and with sponsors resulting in an 11.3% RoTCE.,1,0.9996593921711545,1,TP,0.9984594497053576,1
+BLK,Q4-2024,executive,"Over the course of 2025, we'll be integrating and adding the high growth and earnings power of GIP, HPS and Preqin.",1,0.9999813880873656,1,TP,0.9981199739642564,1
+AMD,Q1-2024,ir,"Ryzen desktop CPU sales grew by a strong double-digit percentage year-over-year, and Ryzen mobile CPU sales nearly doubled year-over-year as new Ryzen 8040 notebook designs from Acer, Asus, HP, Lenovo and others ramped.",1,0.999993318353845,1,TP,0.9980974367126741,1
+AMD,Q4-2025,executive,"But in the longer term, you should expect each generation should have a higher gross margin.",1,0.9999818328230176,1,TP,0.9985052833882919,1
+WFC,Q4-2025,ir,Noninterest income increased $419 million or 5% from a year ago.,1,0.9999936910903235,1,TP,0.9982276169480601,1
+JPM,Q3-2024,analyst,But do you anticipate redeploying additional excess liquidity just amid the expectation for deeper rate cuts?,1,0.9999297588720604,1,TP,0.997852025793134,1
+FAST,Q1-2026,executive,"And before diving into the results, I want to take a moment to thank our entire Fastenal Blue Team across the world for their exceptional work driving the strong performance you're going to hear about today.",0,0.6369348699617542,0,TN,0.6284072509751681,0
+NVDA,Q4-2025,executive,"And so these things are enough for the faint of heart, as everybody knows now.",0,0.9995088876191852,1,FP,0.6640151821846176,0
+FAST,Q4-2023,executive,We didn't know if tax rates were going to go up in 2013 and figured we're sitting on a bunch of cash.,1,0.9999458845145188,1,TP,0.9945627738212425,1
+FDX,Q3-2024,executive,"As a result of their hard work and commitment, we once again delivered the best service offering in the industry.",1,0.9958939095259739,1,TP,0.9953450144436047,1
+NKE,Q4-2025,executive,And we expect the tax rate for the full year to be 19% to 20% due primarily to anticipated changes in earnings mix.,1,0.9999514214976544,1,TP,0.9984283822838298,1
+GS,Q4-2025,executive,The second one was there was an expectation that Basel III was going to put more capital on top of the stack.,1,0.99971108628973,1,TP,0.9980869783293163,1
+JNJ,Q2-2025,executive,"I will say and I'll say it very bluntly, we are confident that we have a highly competitive catheter in VARIPULSE.",1,0.999856459026839,1,TP,0.9980040683817544,1
+FDX,Q1-2026,executive,"So from a domestic perspective, we're not -- and I'm speaking specifically to parcel.",1,0.9975841605328651,1,TP,0.8137018872942876,1
+NKE,Q1-2025,executive,"All taken together, these trends drove a mid-single-digit headwind on Q1 revenue.",1,0.999989701815197,1,TP,0.9979087916040775,1
+INTC,Q1-2024,analyst,"Dave, I also wanted to ask about gross margin.",1,0.962663252760036,1,TP,0.9572506576870078,1
+GS,Q4-2024,executive,We're going to continue to use technology to make the firm more productive.,1,0.9979056561308164,1,TP,0.9947114913136914,1
+NKE,Q4-2024,executive,"Taking all of this into consideration, we now expect fiscal '25 reported revenue to be down mid-single digits with the first half down high single digits.",1,0.9988668001929464,1,TP,0.9974096382286508,1
+NVDA,Q4-2026,analyst,"Colette, I was wondering if you can talk about the deployment of capital.",1,0.9895789356932728,1,TP,0.8056414394338838,1
+NVDA,Q1-2025,ir,NVIDIA has full technology stack for deploying and running fast and efficient generative AI inference on GeForce RTX PCs.,1,0.9997413471268441,1,TP,0.998289724388264,1
+PLTR,Q4-2024,executive,"Our U.S. commercial business grew 64% year-over-year and 20% sequentially, and our U.S. government business grew 45% year-over-year and 7% sequentially.",1,0.9999953113634342,1,TP,0.9982778075642175,1
+AMD,Q1-2025,ir,Embedded demand continues to recover gradually.,1,0.9999342291436394,1,TP,0.9978702900024794,1
+JNJ,Q1-2026,executive,"And you will know that in August of last year, we saw a new data from the DanGer Shock shop randomized controlled trial published in the New England Journal of Medicine, and this really confirmed the long-term survival benefit of Impella.",1,0.9999101349457489,1,TP,0.998229492271232,1
+WFC,Q2-2025,ir,"As a demonstration of our appreciation from what we've accomplished, we gave a special award to all employees so they could own part of Wells Fargo and hopefully benefit from our future success.",1,0.908163141015792,1,TP,0.787430857656761,1
+INTC,Q2-2024,executive,We've worked closely with the CHIPS program office in the U.S. government.,1,0.9950267276566782,1,TP,0.9899116564843503,1
+JNJ,Q1-2025,executive,"Joaquin Duato, our Chairman and CEO, will open with a few comments on our performance and key catalysts for the company.",1,0.9808306938593815,1,TP,0.8093969991905462,1
+C,Q3-2024,ir,"Executives - CEO & Chair of the Board
+And all of this drives productivity and other benefits for our shareholders as well as making sure that we're strengthening Citi from the regulatory perspective.",1,0.6525186333394892,0,FN,0.7200426014588885,1
+AMD,Q2-2024,analyst,"I think in the past, you've talked about the business being accretive and improving further over time as you sort of work through the kinks, if you will.",1,0.9998078857690255,1,TP,0.998201367746403,1
+PLTR,Q3-2025,executive,But what you see is that they don't really understand it.,1,0.9775377422353833,1,TP,0.6971200432845516,1
+JPM,Q1-2026,executive,"I think you're right, that probably is contributing a little bit right now.",1,0.9919788721152968,1,TP,0.5869756975983285,0
+WFC,Q2-2024,ir,"At the beginning of the year, we expected 2024 net interest income to be approximately 7% to 9% lower than full year 2023.",1,0.9999637743019784,1,TP,0.9979329925514534,1
+PLTR,Q4-2025,executive,This eclipses our prior highest quarter of TCV bookings just last quarter by over $1.5 billion.,1,0.9999911164257173,1,TP,0.9973366092047995,1
+INTC,Q1-2025,ir,Q1 operating cash flow was $800 million.,1,0.9999695679191462,1,TP,0.9976444307415429,1
+FAST,Q2-2025,executive,And so I believe there's a huge win there for Fastenal in the years to come.,1,0.9999562803144579,1,TP,0.9957671562002084,1
+PLTR,Q4-2024,executive,"And luckily for the world, we're very long America, and we're doing it primarily here because it's powerful as f***.",1,0.7989227866223726,0,FN,0.8830891707875581,1
+AMD,Q1-2024,ir,We expanded gross margin by more than 2 percentage points and increased profitability as Data Center and Client segment sales each grew by more than 80% year-over-year.,1,0.999993101467599,1,TP,0.9985094915923444,1
+PLTR,Q3-2025,executive,Third quarter U.S. revenue grew 77% year-over-year and 20% sequentially to $883 million.,1,0.9999888756043013,1,TP,0.9981762049165896,1
+FAST,Q3-2025,executive,"The biggest, I think, complexity to the conversation is things like what's the court system going to say about it?",1,0.8605642038134675,1,TP,0.9440884786751248,1
+INTC,Q2-2024,analyst,"So I guess the real question is, are there any changes either to your competitiveness, the structure of the company, the long-term $100 billion target that -- you just saw weren't happening, and therefore, felt these cuts were necessary.",1,0.9999899786050775,1,TP,0.998167413949604,1
+BLK,Q4-2025,executive,"I'd start with the framing that, again, at our Investor Day, we discussed how our platform was going to target $400 billion in gross fundraising from 2025 through 2030.",1,0.9952703257778815,1,TP,0.9973508173450909,1
+FDX,Q4-2024,executive,"Actually, there was increased demand from a speed perspective within it.",1,0.9999905405871308,1,TP,0.998080674231816,1
+C,Q1-2024,ir,Expenses increased 11% largely driven by continued investments in technology and product innovation.,1,0.9999991594452615,1,TP,0.9981933736362401,1
+WFC,Q2-2025,executive,You're going to see more merchandising in our branches.,1,0.9999225774541125,1,TP,0.9979556388887418,1
+FDX,Q4-2024,ir,"I'm confident that under Wouter's leadership, the team will continue to advance DRIVE initiatives to support improved performance.",1,0.99982502061958,1,TP,0.9958195316156833,1
+NVDA,Q1-2025,ir,"Demand for H200 and Blackwell is well ahead of supply, and we expect demand may exceed supply well into next year.",1,0.9999954544404307,1,TP,0.998516139788007,1
+C,Q1-2024,ir,I mean it's -- we obviously have an internal base scenario we've run.,1,0.3235668184366432,0,FN,0.8306838282974873,1
+GS,Q4-2023,executive,We think the drag will be significantly reduced in 2024.,1,0.9999178136763635,1,TP,0.9983888891249763,1
+AMD,Q2-2025,analyst,"And then as a follow-up, I'm kind of thinking about the China, the MI308 opportunity.",1,0.9988714680890707,1,TP,0.9949537555375733,1
+PLTR,Q4-2025,executive,Full year U.S. government revenue grew 55% year-over-year to $1.855 billion.,1,0.9999769524332075,1,TP,0.9981452540481734,1
+NVDA,Q4-2026,analyst,"I think you mentioned that you now have growth visibility into calendar '27 also, and I think your purchase commitments kind of reflect that confidence.",1,0.999996553686562,1,TP,0.9984353281004994,1
+JPM,Q3-2024,executive,"In terms of priorities and investments, really nothing has changed.",0,0.9999580112182682,1,FP,0.984528087883296,1
+NVDA,Q2-2025,executive,"But we know how to design the AI infrastructure, provided the way that customers would like it and lets the ecosystem integrate it.",1,0.9999111693440692,1,TP,0.9973801791991207,1
+INTC,Q2-2024,executive,So that puts some negative pressure on the margins.,1,0.9981381833848298,1,TP,0.9937380305839237,1
+FDX,Q1-2026,executive,We did center on the midpoint of our range and I think it's fair to say that where we ultimately land will be determined by a variety of variables.,1,0.9999685548339262,1,TP,0.9972402752715401,1
+INTC,Q4-2025,ir,"Importantly, our PDK are now viewed by customers as industry standard.",1,0.999993075909399,1,TP,0.997897512403294,1
+JPM,Q3-2025,executive,"Executives - Chairman & CEO
+It's one example of like really bad accounting.",1,0.9695344087749965,1,TP,0.6675613639152369,1
+JNJ,Q2-2024,executive,"Now in vision, we initially announced in the first quarter some challenges with distributor stocking dynamics here in the U.S., some competitive pressures as well as some macroeconomic challenges in Japan.",1,0.9997467356747998,1,TP,0.9985280728746065,1
+JPM,Q1-2026,executive,So that driver of sort of long-term consumer deposit franchise growth is in place.,1,0.9999962691063958,1,TP,0.99830332759354,1
+PLTR,Q4-2023,executive,Do you want to handle that as the man on the frontline?,0,0.8107024984375705,0,TN,0.933523053569934,1
+PLTR,Q3-2025,executive,Third quarter adjusted earnings per share was $0.21.,1,0.9958029979578805,1,TP,0.9246380111286351,1
+C,Q2-2024,ir,"Fixed income was slightly down year-on-year due to lower FX and rates, but we had good issuance in loan growth in financing and securitization, an area which generates attractive returns.",1,0.9999567037036181,1,TP,0.9984470349007483,1
+C,Q4-2024,ir,"The one thing I will mention, and you mentioned already, is that we obviously have another CCAR process stress test that we will go through.",1,0.9999622914506439,1,TP,0.9979471410943169,1
+AMD,Q2-2024,ir,"Operating income was $1.3 billion, representing a 22% operating margin.",1,0.9999908550094155,1,TP,0.9978826568103225,1
+C,Q4-2025,ir,"But in investment revenues specifically, as it relates to your fee point, we saw good growth in client assets up about 14%, good growth in NNIA up about 8%, and that momentum is expected to continue in '26 as well.",1,0.9999995806987239,1,TP,0.9985787520608824,1
+FAST,Q2-2024,executive,Our efforts to accelerate our customer acquisition remain encouraging.,1,0.999981038635295,1,TP,0.9982004406153105,1
+C,Q4-2023,analyst,"On your NII guide, you talked about you're assuming 3 to 6 cuts.",1,0.9999187271900615,1,TP,0.9980202001684276,1
+INTC,Q4-2023,executive,"Longer term, we're also going to want to see that number go up, because it's going to drive us to the 60% gross margins, we ultimately want to attain.",1,0.9999490256527235,1,TP,0.996711534326033,1
+PLTR,Q3-2024,executive,"The market has been focused on AI supply, the models.",1,0.9996303293169154,1,TP,0.9982138638498489,1
+AVGO,Q4-2024,analyst,Because you gave us a mid-single digit for non-AI.,1,0.9998691187544401,1,TP,0.9982250159274152,1
+BLK,Q1-2024,executive,I guess maybe I can start with a little color on the multi-asset flows and then Larry can comment on LifePath Paycheck.,1,0.9995397675112531,1,TP,0.7916186773837615,1
+AMD,Q4-2024,executive,But that's kind of currently what we see.,0,0.9752113998382553,1,FP,0.6401388131112689,0
+JPM,Q4-2025,executive,"So one, it's worth saying, although it's not directly responsive to your question, that as a company, we've been quite involved in the whole blockchain technology space for some time and through our Kinexys offering are doing a bunch of kind of really cool stuff across both wholesale -- as you know, we launched the first -- our first tokenized money market fund.",1,0.9999931923779806,1,TP,0.9979244508087619,1
+PLTR,Q2-2024,executive,"Second quarter commercial TCV book was $377 million, representing 31% growth year-over-year.",1,0.9999974167123608,1,TP,0.9978524045021662,1
+NKE,Q4-2024,executive,"Most importantly, this includes time lines and pacing to manage marketplace supply of our classic footwear franchises; lower NIKE Digital growth, especially in the first half of the year due to lower traffic on fewer launches, planned declines of classic footwear franchises given Q4 trends as well as reduced promotional activity; increased macro uncertainty, particularly in Greater China, with uneven consumer trends continuing in EMEA and other markets around the world; and sell into wholesale partners as we scale product innovation and newness across the marketplace and finalize second half order books.",1,0.9999976755125712,1,TP,0.9979872767536253,1
+AMD,Q4-2025,executive,"First is right, sequentially, we guided a decline around 5%, but Data Center is actually going to be up.",1,0.9999852353296026,1,TP,0.998542136001805,1
+PLTR,Q4-2024,executive,Taking this from one company to a company that can install anywhere requires a very specialized dedicated product building culture with deep understandings of the enterprise.,1,0.9999280256564804,1,TP,0.9970329658613789,1
+WFC,Q2-2025,executive,"Once we get there, it's a good time to revisit where we go.",0,0.40096765549732594,0,TN,0.3485928940499673,0
+PLTR,Q4-2024,executive,And then the question that Shyam's is answering is also but why is it hard to build it.,1,0.9889185982986737,1,TP,0.9810458005216223,1
+FAST,Q1-2025,executive,"He led off with a question on tariffs, and he pointed at me each time.",0,0.6723648972634938,0,TN,0.5510619573326745,0
+C,Q1-2024,ir,Cost of credit was $64 million as net credit losses remain low.,1,0.9999924626199184,1,TP,0.9977811165983562,1
+FDX,Q2-2026,analyst,The B2B over half the revenue growth in 2Q.,1,0.9999960384239968,1,TP,0.9982959209700544,1
+GS,Q4-2025,executive,And there's just a different formulation and mix of expenses required to ensure that most important goal of safety and soundness.,1,0.9997751949769128,1,TP,0.9973487201213047,1
+JPM,Q2-2025,executive,"I want to say a couple of things, and then I want to clarify an aspect of your question, Glenn.",0,0.03455701750075302,0,TN,0.04069390902100469,0
+PLTR,Q3-2025,executive,"As net dollar retention does not include revenue from new customers that were acquired in the past 12 months, it does not yet fully capture the acceleration and velocity in our U.S. business over the past year.",1,0.9999955988396594,1,TP,0.9984892215706299,1
+PLTR,Q1-2025,executive,"We had the strongest quarter of U.S. commercial TCV booked at $810 million, representing growth of 183% year-over-year.",1,0.9999866516933571,1,TP,0.9983113905754244,1
+C,Q1-2024,ir,"If it's Citi Token Services, Citi Payment Express, 24/7 -- all of these different elements really mean that this business is utterly invaluable and indispensable to our clients, and the stickiness of the deposits and the operating deposits comes with that.",1,0.9993878961054286,1,TP,0.9975332505148042,1
+PLTR,Q1-2024,executive,We had a very strong quarter of commercial bookings.,1,0.9996655733723357,1,TP,0.9967154981307296,1
+FAST,Q3-2025,executive,But it's more expensive for us to break shipments down and divert it to the West Coast of Canada and bringing it in that way.,1,0.9998885174653456,1,TP,0.9981911953553306,1
+GS,Q2-2024,analyst,"So one, I want to confirm that, that's fair.",0,0.09367478942493249,0,TN,0.05297866581869411,0
+GS,Q4-2024,executive,"As I said last year, we believe this is a very conservative measurement because it's unlikely that every one of these businesses would ever hit a low point all at the same time.",1,0.9999975855080581,1,TP,0.998332269703266,1
+C,Q4-2024,ir,It's actually 7% for the full year for banking and on its way to the target that we've set of mid-teens for our banking business.,1,0.9999892906613621,1,TP,0.9982731239077676,1
+FAST,Q2-2025,executive,And I believe we have a lot of runway on that piece as we continue to improve our e-commerce capabilities.,1,0.9974443466220648,1,TP,0.9917276297201953,1
+WFC,Q2-2025,executive,And so we're not seeing that change in any significant way.,1,0.999959484324934,1,TP,0.9604637949706145,1
+JPM,Q4-2025,executive,"We have the best FICC business in the world, one of the best equity business in the world.",1,0.9930556197121917,1,TP,0.9965530916581218,1
+INTC,Q4-2024,executive,"And as I said, we'll be doing the same look across our data center portfolio as well.",1,0.9984668226617901,1,TP,0.9893926743077124,1
+AMD,Q2-2025,ir,"We returned $478 million to shareholders through share repurchase, resulting in $1.2 billion in share repurchases for the first half of 2025.",1,0.999952238553852,1,TP,0.9982784293603814,1
+FDX,Q3-2026,executive,They explain your year-over-year impact on the results.,1,0.9964067967540025,1,TP,0.9942626192786141,1
+PLTR,Q1-2025,executive,Our U.S. government business continues to achieve impressive growth as we deliver towards the vital missions of the agencies we support.,1,0.9999253344230685,1,TP,0.9982579797238283,1
+JNJ,Q3-2024,executive,"And also, we have had a decision of the court to keep the filing in Houston.",0,0.968098960842405,1,FP,0.7502678277218268,1
+FDX,Q4-2024,ir,"Currently, we expect U.S. domestic parcel and LTL volumes to continue to improve, with the year-over-year increase growing as the year progresses.",1,0.9999966728450576,1,TP,0.9984612360519514,1
+WFC,Q4-2024,ir,The business is more profitable today and opportunities remain to improve.,1,0.9999528450533357,1,TP,0.99820095539249,1
+AMD,Q3-2025,ir,"Client and gaming segment revenue was a record of $4 billion, up 73% year-over-year and 12% sequentially driven by strong demand for the latest generation of client and graphic processors and stronger sales of console gaming products.",1,0.9999984705809984,1,TP,0.9983431800423558,1
+NKE,Q3-2025,executive,"Within our fall order book in North America, EMEA and APLA, we see the declines in Classics Footwear franchises almost being offset by growth in performance dimensions of our portfolio, such as running, training and basketball as well as newness in sportswear.",1,0.9999905774881677,1,TP,0.9984996598681237,1
+JPM,Q4-2024,executive,We do have a few top-down areas of focus.,1,0.9996509706490044,1,TP,0.9963386967165754,1
+NVDA,Q3-2025,executive,"You need the throughput to be high so that the cost could be as low as possible, but you also need the latency to be low.",1,0.9999878719302846,1,TP,0.9983507604599676,1
+AVGO,Q3-2024,ir,We expect this level of revenue to sustain in Q4 and the year-on-year decline to moderate to 30%.,1,0.9999731669826278,1,TP,0.9984358779420536,1
+AMD,Q4-2023,executive,"In the data center, we see 2024 as a start of a multiyear AI adoption cycle with the market for data center AI accelerators growing to approximately $400 billion in 2027.",1,0.999975887921641,1,TP,0.9984548696982379,1
+INTC,Q2-2024,ir,"As a founding member of the Ultra Ethernet Consortium, we announced an array of AI-optimized scale-out ethernet solutions, including the Intel AI network interface card and foundry chiplets, which we'll launch next year.",1,0.9999945935052026,1,TP,0.9983206797552903,1
+NKE,Q4-2025,executive,All growth comparisons on the call today are presented on a year-over-year basis and are currency-neutral unless otherwise noted.,0,0.9999528640845784,1,FP,0.832712929353298,1
+JNJ,Q3-2025,executive,And we just filed for icotrokinra in plaque psoriasis.,1,0.9969817526405435,1,TP,0.9655587932840864,1
+JNJ,Q2-2025,executive,"We are pushing boundaries in diseases like schizophrenia, depression and Alzheimer's, which together affect 1 in 8 people worldwide.",1,0.9998017110859329,1,TP,0.9178783001098919,1
+NKE,Q2-2025,executive,"Footwear inventory declined, while apparel and accessories inventory increased to support marketplace growth.",1,0.9999696621260677,1,TP,0.9980792239172492,1
+WFC,Q4-2025,analyst,One is just on the markets commentary that we were discussing earlier around it's a lower ROA business.,1,0.9981718349303602,1,TP,0.997888873779256,1
+NVDA,Q1-2026,ir,DeepSeek also underscores the strategic value of open source AI.,1,0.9999984915502996,1,TP,0.9982718953315504,1
+BLK,Q1-2025,executive,"At BlackRock, we are -- we really challenge ourselves not to get mired down in all the negativity, but to navigate, to mitigate the move forward, to work with each and every client, to help each and every client.",1,0.9989924400511113,1,TP,0.9878316693134728,1
+PLTR,Q3-2024,executive,Years of foundational investments in our infrastructure and in ontology have positioned us uniquely to harness and deliver on AI demand.,1,0.9999627935758904,1,TP,0.998482022703722,1
+BLK,Q4-2025,executive,"When we look through the universe of BDC loans, the $400 billion across 20,000 loans sitting in the valuation databases, we see nonaccruals that are inside the historical average.",1,0.9999603507037377,1,TP,0.9982177877195586,1
+GS,Q3-2025,executive,"While we've made significant progress on our strategic priorities, we will continue to execute.",1,0.9956324624427058,1,TP,0.9689345266085858,1
+AMD,Q2-2025,analyst,"Lisa, if we look into 2026, right, that's when I think the sovereign opportunity could get quite meaningful for AMD.",1,0.9999395202528623,1,TP,0.9975460433656075,1
+JPM,Q1-2025,executive,"But our folks do a great job, and we're here to help our clients.",0,0.4487230037182798,0,TN,0.37428256893437,0
+FDX,Q1-2025,executive,"So in the ordinary course, it's important to note that this is a $4.7-plus billion spend line item.",1,0.9999938080615017,1,TP,0.9979495422136034,1
+GS,Q1-2026,executive,"We are, therefore, accelerating our investments in cloud migration, and in the accuracy, completeness and timeliness of our data.",1,0.9999668557268993,1,TP,0.9982998408527586,1
+JPM,Q1-2025,executive,"Current quarter included the significant item I mentioned upfront, while the prior year quarter included net securities losses of $336 million.",1,0.9999790965960317,1,TP,0.9981070138237282,1
+BLK,Q4-2023,executive,"We have the sourcing capabilities, but greater AUM scale will enable us to have more sizable positions.",1,0.9999778013016178,1,TP,0.9985001519523813,1
+C,Q4-2025,analyst,So good -- definitely good luck with your new -- next chapter.,0,0.5646582636773201,0,TN,0.17072214663727447,0
+JNJ,Q4-2025,executive,"And once again, we have doubled down and really focusing on Vision as one of our 3 priority areas within MedTech.",1,0.9999186687784156,1,TP,0.9982323630001855,1
+C,Q3-2024,ir,"And that is, in fact, what the resource review plan was that was in the amended consent order.",1,0.9992012828215171,1,TP,0.9879621346854275,1
+JPM,Q3-2025,analyst,"I guess, maybe, Jeremy, a broader question like when we read the quote from Jamie in the press release, customers are resilient, but there's still massive amounts of uncertainty.",1,0.9999038118409705,1,TP,0.9974731941114573,1
+JNJ,Q4-2025,analyst,"If you could tease that apart a little bit, and your views on the health of the contact lens market would be really welcome.",1,0.9996312768387975,1,TP,0.6759240235576588,1
+C,Q3-2025,ir,"This innovation alone saves considerable time and creates around 100,000 hours of weekly capacity that's a very meaningful productivity uplift.",1,0.9999533345575754,1,TP,0.9965817782026833,1
+C,Q4-2023,ir,Personal Banking for the fourth quarter and the full year.,1,0.9675124644993311,1,TP,0.7768754687030162,1
+JNJ,Q4-2023,executive,"We filed already for our Impella ECP, which is the smaller version of Impella CP.",1,0.9996893461598451,1,TP,0.998265342586968,1
+NVDA,Q1-2026,ir,"In Data Center, we anticipate the continued ramp of Blackwell to be partially offset by a decline in China revenue.",1,0.999978285926316,1,TP,0.9984950477208072,1
+AMD,Q2-2025,executive,"And then for the MI400 series, there are lots and lots of details in sort of full rack scale design implementation, and we're actively working with the largest customers right now on just ensuring that our Helios rack is fully compatible with their data center build-outs as we go into 2026.",1,0.9999394889707893,1,TP,0.9982371996206079,1
+WFC,Q1-2024,analyst,"And was that the same as last quarter, same assumption set?",1,0.9976134090083367,1,TP,0.9973281422646302,1
+C,Q4-2023,analyst,And just like how frame -- are you responsible to some of these [ unremidable ] corporate dividends.,1,0.9993663323561884,1,TP,0.9500950109613985,1
+AVGO,Q2-2025,analyst,Do you expect scale up to kind of go the same route?,1,0.9999794341971817,1,TP,0.9981592204368269,1
+WFC,Q1-2025,analyst,Give us a sense of how much of that improvement in the consumer business on ROE is a removal of the asset cap?,1,0.9999920043540356,1,TP,0.9982367798855654,1
+NKE,Q3-2024,executive,And so that's what's driving our growth we've made the necessary adjustments to bring the best of what's worked in our proven formula so that we move forward.,1,0.9999721318850011,1,TP,0.9980743133086151,1
+C,Q4-2025,ir,And total Markets revenues were down 1%.,1,0.9999945787061092,1,TP,0.9971489635440751,1
+FDX,Q4-2025,executive,"Executives - Vice President of Investor Relations
+Thanks, Raj.",0,0.01114469396159528,0,TN,0.014213519704279892,0
+PLTR,Q2-2025,executive,Software companies are re-platforming away from the highly unopinionated services and building blocks of the hyperscaler stack onto AIP with its highly opinionated building blocks that get you to value 10x faster.,1,0.9999989696421412,1,TP,0.9982115294863124,1
+NVDA,Q4-2025,analyst,But second half would have to ramp like 200 basis points per quarter to get to the mid-70s range that you're giving for the end of the fiscal year.,1,0.9999760050227835,1,TP,0.9984576827855273,1
+WFC,Q3-2025,executive,"But I would say that like what is -- we spend almost all of our time thinking about are the organic opportunities that we have, given how constrained we have been and our ability to think differently about those things now.",1,0.998158028969599,1,TP,0.9182821360985349,1
+C,Q2-2024,ir,"Executives - Executive Vice Chairman and Senior Executive Advisor to Chair & CEO
+And Mike, if I could just put one number into context because you played back the 11,000, which was a number of global regulatory reports across the landscape here.",1,0.8004989626214988,0,FN,0.8446289175649166,1
+GS,Q1-2025,executive,And we are meaningfully focused on those exposures that have high density versus low density.,1,0.9999009274182614,1,TP,0.998181759764942,1
+AVGO,Q2-2025,executive,"And frankly, as Kirsten has mentioned 3 months ago and 6 months ago during the last 2 earnings call, the first choice typically of the other part of the free cash flow is to bring down our debt to a more -- to a level that we feel closer to no more than 2 ratio of debt to EBITDA.",1,0.9999690080467476,1,TP,0.998476875659633,1
+BLK,Q2-2024,executive,But I'd say a couple of dynamics we've definitely seen in the platform.,1,0.9887637349592936,1,TP,0.9950943144319359,1
+FDX,Q2-2025,ir,"This bridge now reflects adjusted operating profit of $6.6 billion, equivalent to $19.50 of adjusted EPS.",1,0.9999767313754414,1,TP,0.9980105085533504,1
+FDX,Q4-2024,ir,"By way of illustration, we're using adjusted operating profit of $7.2 billion, equivalent to $21 of adjusted EPS, the midpoint of our outlook range.",1,0.9998721380097313,1,TP,0.9978559148723992,1
+AVGO,Q4-2024,executive,"But as you all can see, it's a very large, substantial market opportunity.",1,0.9963216235275693,1,TP,0.9845732041847969,1
+GS,Q1-2024,executive,"I think one of the most important things for this firm and the success of this firm is the time our people spend with clients, serving our clients, executing for our clients.",1,0.9997941058991853,1,TP,0.9915875107470578,1
+INTC,Q4-2024,executive,So we're in a kind of the pole position in that regard.,1,0.8294956930045675,1,TP,0.6912606515299224,1
+BLK,Q3-2024,executive,"So just the closing of GIP, it's a great milestone in BlackRock's history.",1,0.9992063252468949,1,TP,0.9889389883757673,1
+GS,Q3-2025,executive,"Intermediation results were driven by improved performance in rates, mortgages and commodities, partially offset by lower results in currencies and credit products.",1,0.9999987600319674,1,TP,0.9982638281557689,1
+FDX,Q2-2026,ir,"For the past 5 years, she served as our Asia Pacific Regional President.",1,0.997588192111177,1,TP,0.7137499031417114,1
+JNJ,Q4-2025,ir,"And with continued innovation in surgical instrumentation, including our recent launch of the ETHICON 4000 stapler, we anticipate continued growth as we reduce complications and elevate the surgical experience across specialties.",1,0.9999972783536801,1,TP,0.9983642812456932,1
+C,Q1-2025,ir,"I mean, a number of them have been clients for over a century.",0,0.9996006146064209,1,FP,0.8772358082172819,1
+AVGO,Q1-2025,ir,"Thank you, Sheri, and good afternoon, everyone.",0,0.006297848538149232,0,TN,0.023945454633405017,0
+WFC,Q2-2025,analyst,"And then my follow-up would be related to that, too.",0,0.7242966148051478,0,TN,0.35743649007396106,0
+C,Q2-2024,ir,"We've got assumed higher average betas in 2024, specifically on the non-U.S. side.",1,0.9998216719735592,1,TP,0.9758777394059523,1
+FDX,Q2-2025,ir,"FedEx Freight has deep relationships with customers, who turn to us for our reliability, simplicity and choice of services.",1,0.9999561887556612,1,TP,0.9971018680849731,1
+C,Q1-2025,ir,"Executives - CEO & Chair of the Board
+We've also -- I think 1 of the pieces [ Gonzalo ] and the team have done a good job with is they've been proactive and tightening risk and acquisitions and existing programs in the last couple of years.",1,0.9994711092331938,1,TP,0.9898106699931775,1
+AMD,Q4-2024,executive,We also built significant momentum with Forbes 2000 global businesses using EPYC in the cloud as enterprise customers activated more than doubled the number of EPYC cloud instances from the prior quarter.,1,0.9999361190405014,1,TP,0.998501445471612,1
+JPM,Q1-2025,executive,"So let's see how that plays out, but we're looking forward to continuing to engage constructively.",0,0.3907391899186855,0,TN,0.34486660281428516,0
+INTC,Q3-2025,analyst,"I know the whole road map is under review, but you did sound -- the company sounds fairly optimistic about Coral Rapids.",1,0.9999004107308397,1,TP,0.9973809357624799,1
+BLK,Q4-2025,executive,"Annual contract value, or ACV, increased 31% year-over-year, including the impact of Preqin.",1,0.9999925750284155,1,TP,0.9980839675262398,1
+AVGO,Q1-2024,executive,"And the investment continues vigorously with those -- with that segment comprising very few players but with a huge subscriber base, but with the scale to invest a lot.",1,0.9999989839479978,1,TP,0.998167659567535,1
+AMD,Q1-2024,analyst,"So is the $4 billion number a supply-constrained number, or is it a demand-constrained number?",1,0.9998350710508485,1,TP,0.9983424940998132,1
+NKE,Q1-2025,executive,"We also teamed up with Foot Locker to introduce a new concept, Home Court, in their doors with a shared vision to deliver a fresh, new multi-brand basketball experience.",1,0.9998910704644544,1,TP,0.9961379024578753,1
+PLTR,Q4-2024,executive,It is absolutely the longest path between point A and point B.,0,0.9996378524033634,1,FP,0.9941940990858804,1
+NKE,Q1-2026,executive,"This quarter, that included the England Women's National Team winning the European Championship, Sinner's Wimbledon title, Scottie's Open Championship title and Chelsea winning the Club World Cup.",1,0.9963382841436478,1,TP,0.8109871368993758,1
+JPM,Q1-2025,analyst,Any comments in terms of changing patterns on the consumer card spend?,1,0.9999509482798525,1,TP,0.998321642364947,1
+AVGO,Q2-2025,analyst,Like how do we get the confidence that these projects are going to turn into revenue in some reasonable time frame from now?,1,0.9999766983628997,1,TP,0.9985311472670277,1
+NKE,Q3-2025,executive,It will take time to reach the volume to replace the handful of classic franchises we over-indexed on.,1,0.9999679109050664,1,TP,0.9958264330245855,1
+AMD,Q1-2025,ir,The first notebooks powered by our new high-end Ryzen AI MAX+ and the first mainstream Ryzen AI 7 and 5 300 Series processors launched to very positive reviews.,1,0.9999875352412344,1,TP,0.9979740432967329,1
+JNJ,Q2-2024,executive,"For the remainder of the year, we will continue to advance our electrophysiology and cardiovascular pipelines as we prepare for the anticipated U.S. approval of VARIPULSE as well as the submission of Impella ECP for regulatory approval.",1,0.9514923419136558,1,TP,0.9884615217381635,1
+BLK,Q2-2024,operator,"My name is Jennifer, and I will be your conference facilitator today.",0,0.008075447400150926,0,TN,0.2156250495816156,0
+NVDA,Q1-2026,executive,"Now going forward, we did have other orders going forward that we will not be able to fulfill.",1,0.9994748113737744,1,TP,0.9947406396805849,1
+AMD,Q2-2025,executive,"And so there are a number of customers who, based on sort of the strong road map that we're showing, want to get familiar and really work with us earlier in the life cycle, which I think is, again, positive.",1,0.9999664865326164,1,TP,0.9961781196812666,1
+AMD,Q4-2025,ir,"As a result, the number of large businesses deploying EPYC on-prem more than doubled in 2025, and we exited the year with record server sell-through.",1,0.9999952783801279,1,TP,0.9984254705229164,1
+C,Q3-2024,analyst,"As we think about the gyrations in interest rate expectations globally, maybe remind us sort of is it fair to assume that Citi is asset-sensitive internationally and neutrally positioned domestically.",1,0.9997494689966725,1,TP,0.9951130046824535,1
+NVDA,Q3-2026,executive,We're the only architecture in the world that can claim that.,1,0.9824109930221939,1,TP,0.9468039637768662,1
+INTC,Q4-2024,ir,"This is a good segue into my other key areas of focus for Intel Foundry, improving our financials and making sure that we're deploying our capital appropriately.",1,0.9997591338783934,1,TP,0.9970456608694448,1
+NVDA,Q2-2025,executive,"And so because it's commoditized, there's already $1 trillion on the ground.",1,0.9999947627518244,1,TP,0.9956279824370551,1
+AMD,Q1-2025,analyst,"Should we assume that in the back half, with mix attributes to be considered, that you would see a return to that 54-plus percent gross margin in the second half of the year.",1,0.9998905240709313,1,TP,0.9984343161179277,1
+NKE,Q4-2025,executive,APLA delivered mixed results across countries with further work required to clean up inventory.,1,0.9999761580038128,1,TP,0.9961460899719443,1
+PLTR,Q4-2024,executive,And that's what we have to fight to keep.,1,0.4853754815447923,0,FN,0.36840936556383397,0
+NKE,Q1-2026,executive,"And so we're confident that once we get these pilots performing the way that we want to, both we and our partners are prepared to invest to turn the business in the direction that we want to head.",1,0.9932370548871428,1,TP,0.9935228614912359,1
+FAST,Q3-2024,executive,We haven't had those conversations to budget the CapEx.,1,0.9991038035972958,1,TP,0.9961560264902076,1
+FDX,Q4-2025,executive,I want to commend the entire organization for our focus on creating vast differentiation and showing up for our customers.,1,0.9971889350064268,1,TP,0.9964196762904212,1
+WFC,Q4-2023,executive,"But as we said, we expect buybacks to be bigger than last year.",1,0.999993480892399,1,TP,0.9981989500381276,1
+NKE,Q3-2024,executive,"So Jay, as I mentioned, we are making, and started 9 months ago, important adjustments in our offense.",1,0.9958737561932892,1,TP,0.9966788337801373,1
+WFC,Q3-2024,executive,"And whatever is required in that submission when we're done with the work, we submit it to them.",0,0.7190514108842464,0,TN,0.4755586993096822,0
+C,Q4-2023,ir,"As expected, loss rates are now back to pre-pandemic levels driven by customers in the lower FICO bands.",1,0.9996686363110697,1,TP,0.9983847101418883,1
+JNJ,Q3-2024,executive,It really sets what we believe is a new bar in terms of efficacy with the highest rate of endoscopic normalization.,1,0.9999219471567895,1,TP,0.9984828531185711,1
+WFC,Q1-2024,executive,And so I think that trend you saw a couple of years ago was definitely different.,1,0.9998779608951165,1,TP,0.9101456308320903,1
+FDX,Q2-2025,ir,"At FedEx Freight, we anticipate revenue to decline slightly in the second half due to continued softness in average daily shipments and modest yield improvement.",1,0.9999739957537221,1,TP,0.9984216652635572,1
+WFC,Q2-2024,analyst,"Is this a message that you feel like you've captured most of the CRE-related issues, of course, absent of a further deterioration in the economy?",1,0.9983367564010129,1,TP,0.8841137445642394,1
+AMD,Q1-2024,ir,"And our Ryzen Pro 8000 series desktop CPUs are the first processor to offer dedicated, on-chip AI accelerators in commercial desktop PCs.",1,0.9996019732113358,1,TP,0.9978447832340402,1
+FDX,Q1-2026,ir,"At FedEx Freight, we expect revenue to be flat to up modestly year-over-year, depending largely on the market conditions in the second half of the year.",1,0.9997625856239479,1,TP,0.9984678114254694,1

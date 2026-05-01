@@ -1,9 +1,14 @@
 # API keys — never commit
 .env
 
-# Large model binaries
+# Large model binaries / weights (too large for GitHub)
 saved_model/fasttext_model.bin
 saved_model/*.bin
+saved_model/**/*.safetensors
+saved_model/**/*.pt
+saved_model/**/optimizer.*
+saved_model/**/rng_state.*
+saved_model/**/scheduler.*
 
 # Old files
 old/
