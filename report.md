@@ -4,6 +4,35 @@
 
 ---
 
+## Contents
+
+1. [Introduction](#1-introduction)
+2. [Gold Labeling Methodology](#2-gold-labeling-methodology)
+   - 2.1 [Labeling Rubric](#21-labeling-rubric)
+   - 2.2 [LLM Judge Panel](#22-llm-judge-panel)
+   - 2.3 [Human Audit](#23-human-audit)
+3. [Feature Engineering](#3-feature-engineering)
+   - 3.1 [Sentence Embeddings](#31-sentence-embeddings-384-dims)
+   - 3.2 [Regex Feature Flags](#32-regex-feature-flags-25-dims)
+4. [Classifier Zoo](#4-classifier-zoo)
+   - 4.1 [Rules + Regex](#41-rules--regex-classifier-1)
+   - 4.2 [Logistic Regression](#42-logistic-regression-classifier-2)
+   - 4.3 [HistGradientBoosting](#43-histgradientboosting-classifier-3)
+   - 4.4 [FastText](#44-fasttext-classifier-4)
+   - 4.5 [FinBERT Fine-tuned](#45-finbert-fine-tuned-classifier-5)
+   - 4.6 [SetFit / MiniLM](#46-setfit--minilm-classifier-6)
+   - 4.7 & 4.8 [Ensembles](#47--48-ensembles-classifiers-7a-and-7b)
+5. [Recall-Constrained Threshold Tuning](#5-recall-constrained-threshold-tuning)
+6. [Test Set Results](#6-test-set-results)
+7. [Error Analysis](#7-error-analysis)
+   - 7.1 [False Negatives](#71-false-negatives-substantive-labelled-as-boilerplate)
+   - 7.2 [False Positives](#72-false-positives-boilerplate-labelled-as-substantive)
+   - 7.3 [Confusion Matrix](#73-confusion-matrix-histgbm-test-set)
+8. [GUI](#8-gui)
+9. [Reproducibility](#9-reproducibility)
+
+<div style="page-break-after: always;"></div>
+
 ## 1. Introduction
 
 Earnings-call transcripts mix two qualitatively different types of language. *Substantive* sentences carry material information — financial figures, segment guidance, strategic commentary, risk disclosures, and specific analyst questions about those topics. *Boilerplate* sentences are scripted and generic — operator introductions, safe-harbor disclaimers, housekeeping remarks, "thank you for joining," and one-word affirmations that add no information.
