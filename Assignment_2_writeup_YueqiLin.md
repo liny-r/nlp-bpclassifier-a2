@@ -1,38 +1,34 @@
-# BPClassifier — Write-up
-**NLP for Finance — Spring 2026 | Assignment 2**
-**Author:** Yueqi Lin
-
+---
+title: "Assignment 2 — BPClassifier — Write-up"
+author: "Yueqi Lin"
+date: "NLP for Finance — Spring 2026"
+fontsize: 10pt
+linestretch: 1.1
+geometry:
+  - margin=1in
+toc: false
+colorlinks: false
+header-includes: |
+  \usepackage{xcolor}
+  \usepackage{sectsty}
+  \usepackage{newunicodechar}
+  \usepackage{pifont}
+  \sectionfont{\color[HTML]{0B2545}}
+  \subsectionfont{\color[HTML]{1D4E89}}
+  \subsubsectionfont{\color[HTML]{1D4E89}}
+  \newunicodechar{✓}{\ding{51}}
+  \newunicodechar{✗}{\ding{55}}
+  \newunicodechar{≥}{$\geq$}
+  \newunicodechar{≤}{$\leq$}
+  \newunicodechar{≈}{$\approx$}
+  \newunicodechar{→}{$\rightarrow$}
 ---
 
-## Contents
+\newpage
+\tableofcontents
+\newpage
 
-1. [Introduction](#1-introduction)
-2. [Gold Labeling Methodology](#2-gold-labeling-methodology)
-   - 2.1 [Labeling Rubric](#21-labeling-rubric)
-   - 2.2 [LLM Judge Panel](#22-llm-judge-panel)
-   - 2.3 [Human Audit](#23-human-audit)
-3. [Feature Engineering](#3-feature-engineering)
-   - 3.1 [Sentence Embeddings](#31-sentence-embeddings-384-dims)
-   - 3.2 [Regex Feature Flags](#32-regex-feature-flags-25-dims)
-4. [Classifier Zoo](#4-classifier-zoo)
-   - 4.1 [Rules + Regex](#41-rules--regex-classifier-1)
-   - 4.2 [Logistic Regression](#42-logistic-regression-classifier-2)
-   - 4.3 [HistGradientBoosting](#43-histgradientboosting-classifier-3)
-   - 4.4 [FastText](#44-fasttext-classifier-4)
-   - 4.5 [FinBERT Fine-tuned](#45-finbert-fine-tuned-classifier-5)
-   - 4.6 [SetFit / MiniLM](#46-setfit--minilm-classifier-6)
-   - 4.7 & 4.8 [Ensembles](#47--48-ensembles-classifiers-7a-and-7b)
-5. [Recall-Constrained Threshold Tuning](#5-recall-constrained-threshold-tuning)
-6. [Test Set Results](#6-test-set-results)
-7. [Error Analysis](#7-error-analysis)
-   - 7.1 [False Negatives](#71-false-negatives-substantive-labelled-as-boilerplate)
-   - 7.2 [False Positives](#72-false-positives-boilerplate-labelled-as-substantive)
-   - 7.3 [Confusion Matrix](#73-confusion-matrix-histgbm-test-set)
-8. [GUI](#8-gui)
-9. [Reproducibility](#9-reproducibility)
-
-<div style="page-break-after: always;"></div>
-
+## Executive Summary
 ## 1. Introduction
 
 Earnings-call transcripts mix two qualitatively different types of language. *Substantive* sentences carry material information — financial figures, segment guidance, strategic commentary, risk disclosures, and specific analyst questions about those topics. *Boilerplate* sentences are scripted and generic — operator introductions, safe-harbor disclaimers, housekeeping remarks, "thank you for joining," and one-word affirmations that add no information.
@@ -47,7 +43,6 @@ The goal of this assignment is to build a binary sentence classifier (`boilerpla
 - Splits: train = 1,500 / val = 500 / test = 500 (seed = 42, stratified by label)
 - Label balance: BP = 257 (10.3%) / SB = 2,243 (89.7%)
 
----
 
 ## 2. Gold Labeling Methodology
 
@@ -86,7 +81,6 @@ The final label uses **majority vote of 5 active judges** (≥ 3/5 agree). Unani
 
 **Final gold set:** 2,500 sentences | BP = 257 (10.3%) | SB = 2,243 (89.7%)
 
----
 
 ## 3. Feature Engineering
 
@@ -111,7 +105,6 @@ Two feature groups are concatenated into a 409-dimensional feature matrix:
 
 FastText and FinBERT train directly on raw text and do not use this feature matrix.
 
----
 
 ## 4. Classifier Zoo
 
@@ -150,7 +143,6 @@ Two soft-vote ensembles combine the five learned classifiers (LogReg, HistGBM, F
 
 Each ensemble gets its own independently tuned threshold.
 
----
 
 ## 5. Recall-Constrained Threshold Tuning
 
@@ -172,7 +164,6 @@ Thresholds are tuned on **5-fold stratified OOF probabilities** on the train+val
 
 The rank-avg ensemble has a much lower threshold (0.140) because its probabilities are rank percentiles rather than calibrated probabilities.
 
----
 
 ## 6. Test Set Results
 
@@ -191,9 +182,8 @@ All eight classifiers are evaluated on the frozen 500-sentence test set using th
 
 **7 of 8 classifiers** clear the 0.96 SB recall floor on the test set. The rules baseline fails (SB recall = 0.898). FinBERT leads on macro-F1 (0.923) and accuracy (0.970).
 
-**Deployed model:** HistGBM retrained on train+val (threshold = 0.810). Chosen for compact size, fast CPU inference, and deterministic reproducibility without GPU requirements.
+**Deployed model:** HistGBM retrained on train+val (threshold = 0.810). FinBERT achieves the highest test macro-F1 (0.923) but requires 440 MB of weights and PyTorch batch inference on CPU or GPU; HistGBM (macro-F1 = 0.831) is saved as the deployment artifact for its compact size (~1.7 MB pkl), sub-second CPU inference via scikit-learn, and no GPU dependency.
 
----
 
 ## 7. Error Analysis
 
@@ -228,7 +218,6 @@ These are substantive sentences that "sound" vague or conversational:
 
 SB recall = 438/449 = **0.9755** ✓
 
----
 
 ## 8. GUI
 
@@ -248,7 +237,6 @@ To launch:
 /Users/yueqilin/anaconda3/bin/python -m streamlit run gui.py
 ```
 
----
 
 ## 9. Reproducibility
 
