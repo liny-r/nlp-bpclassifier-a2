@@ -34,8 +34,7 @@ A binary sentence classifier for earnings-call transcripts that distinguishes **
 │   ├── error_analysis_val.csv            # Val-set HistGBM/ensemble error analysis (development artifact)
 │   └── gold/
 │       ├── gold_labels.parquet           # 2,500-sentence gold set (5-judge MV + human audit)
-│       ├── human_review_final.csv        # Round 3 human audit template (255 close-call sentences; human_label col cleared)
-│       ├── human_review_recovered.csv    # 102 human corrections recovered from gold_labels.parquet (BP→SB: 93, SB→BP: 9)
+│       ├── human_review_final.csv        # Round 3 human audit (255 close-call sentences; 11 BP / 244 SB)
 │       ├── judge1_qwen3.parquet          # Removed judge (over-flagged boilerplate)
 │       ├── judge2_gemma3.parquet         # Removed judge (severe BP bias)
 │       ├── judge3_cogito.parquet
