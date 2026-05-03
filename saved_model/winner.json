@@ -1,0 +1,11 @@
+{
+  "winner_model": "FinBERT (ProsusAI/finbert, fine-tuned)",
+  "winner_criterion": "highest macro-F1 on test set under SB recall >= 0.96",
+  "test_macro_f1": 0.923,
+  "test_accuracy": 0.97,
+  "test_sb_recall": 0.976,
+  "threshold": 0.8200000000000001,
+  "threshold_method": "val-set sweep (OOF impractical at 21 sps)",
+  "checkpoint_path": "saved_model/finbert_finetuned",
+  "runner_up": "HistGBM (macro-F1=0.831) \u2014 saved as best_model.pkl for GUI serving (CPU-friendly)"
+}

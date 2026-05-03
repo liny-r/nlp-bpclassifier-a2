@@ -1,263 +1,263 @@
-llm_mv,n_bp,n_sb,speaker_type,section,ticker,j3_cogito,j4_qwen314b,j5_gemma12b,j6_ministral3,j7_cogito14b,text,human_label
-boilerplate,3,2,analyst,qa,FDX,1,1,0,0,0,And what has been the more challenging aspect of it all?,1
-boilerplate,3,2,analyst,qa,FDX,1,1,0,0,0,"So Brie, maybe just to follow up on the demand environment.",0
-boilerplate,3,2,analyst,qa,C,1,1,0,0,0,"There is seasonality, I know in markets.",1
-boilerplate,3,2,analyst,qa,FDX,1,1,0,0,0,"And as you think back, is there something that should have been done differently?",1
-boilerplate,3,2,analyst,qa,BLK,1,1,0,0,0,So kind of curious about what you're seeing in the market there on the back of that.,1
-boilerplate,3,2,analyst,qa,JPM,1,1,0,0,0,"But that being said, as Jamie noted, like we have no idea what the curve is going to look like, right?",1
-boilerplate,3,2,analyst,qa,AMD,1,0,0,1,0,"And for my follow-up, Lisa, back to the question on the PC market.",0
-boilerplate,3,2,analyst,qa,JPM,1,1,0,0,0,"We're, what, 9 months or so into this new administration with the new regulators.",1
-boilerplate,3,2,analyst,qa,GS,1,1,0,0,0,"On the comments you made, David, on Goldman Sachs 3.0, which obviously is very positive.",1
-boilerplate,3,2,analyst,qa,FAST,1,1,0,0,0,I was just curious what was the decision-making process to do that?,1
-boilerplate,3,2,analyst,qa,JPM,0,1,1,0,0,And we all know about the commercial real estate office.,1
-boilerplate,3,2,analyst,qa,FDX,1,1,0,0,0,And then if you can maybe just touch on Europe.,1
-boilerplate,3,2,analyst,qa,AMD,1,1,0,0,0,Do you think that you'll go in a different direction?,1
-boilerplate,3,2,analyst,qa,JPM,1,1,0,0,0,Just your comfort level in terms of the functioning of the treasury market.,1
-boilerplate,3,2,analyst,qa,C,1,1,0,0,0,"Just talk to us as we think about -- and I appreciate what you just said, but when we think about the binding constraint from standardized to advanced, how we should think about it?",1
-boilerplate,3,2,analyst,qa,C,0,1,1,0,0,And just like how frame -- are you responsible to some of these [ unremidable ] corporate dividends.,1
-boilerplate,3,2,analyst,qa,FAST,1,1,0,0,0,Or is there something different this time around?,1
-boilerplate,3,2,analyst,qa,C,1,1,0,0,0,"I didn't plan to ask this question, but this literally just hit the Bloomberg.",0
-boilerplate,3,2,executive,prepared,FAST,1,0,1,0,0,"But out on the printer, there's a sign, ""Help our branch and Onsites hit their sales goals in 2024.""",1
-boilerplate,3,2,executive,prepared,PLTR,0,1,1,0,0,"It's -- By the way, for those of you who are evaluating our company, we are going to invite all of you to our bootcamps.",1
-boilerplate,3,2,executive,prepared,NKE,1,1,0,0,0,"I was lucky enough to be at Augusta earlier that week, and I couldn't help but relate Rory's experience to NIKE's recent journey.",1
-boilerplate,3,2,executive,prepared,BLK,1,1,0,0,0,It's my pleasure to present results for the fourth quarter and full year 2024.,0
-boilerplate,3,2,executive,prepared,PLTR,1,0,0,1,0,"We, as a nation, must reindustrialize to prevent escalating conflict and regain deterrence.",1
-boilerplate,3,2,executive,prepared,PLTR,1,0,1,0,0,We have the most qualified interesting people heterodox on their beliefs.,1
-boilerplate,3,2,executive,prepared,JNJ,1,1,0,0,0,"Joaquin Duato, our Chairman and CEO, will open with a few comments on our performance and key catalysts for the company.",1
-boilerplate,3,2,executive,prepared,GS,1,1,0,0,0,"In closing, I feel very good about the trajectory of Goldman Sachs.",1
-boilerplate,3,2,executive,prepared,BLK,0,1,0,1,0,"With all this volatility, the markets have proven to be quite successful and worked quite well.",1
-boilerplate,3,2,executive,prepared,FAST,1,1,0,0,0,"So it makes it a lot easier for them if we could put up a strong quarter because it makes the call just a lot easier, it makes the Q&A a lot easier.",1
-boilerplate,3,2,executive,prepared,BLK,0,1,0,1,0,"Across our firm, we're delivering BlackRock to meet all our clients' individual needs.",1
-boilerplate,3,2,executive,prepared,NKE,1,1,0,0,0,"We, the entire NIKE team, feels a sense of urgency here.",1
-boilerplate,3,2,executive,prepared,FAST,1,1,0,0,0,"First off, for Jeff Watts, I suspect all of you saw the announcement we made in late December.",1
-boilerplate,3,2,executive,prepared,FAST,0,0,1,0,1,Product and customer mix played its customary role.,1
-boilerplate,3,2,executive,prepared,FDX,1,0,0,1,0,"As a result of their hard work and commitment, we once again delivered the best service offering in the industry.",1
-boilerplate,3,2,executive,prepared,NKE,1,0,0,1,0,"We're laser-focused on what we can control, inspiring and innovating for the 8 billion consumers we have the privilege to serve.",1
-boilerplate,3,2,executive,prepared,NKE,1,1,0,0,0,The first action is to ignite our winning culture.,1
-boilerplate,3,2,executive,prepared,PLTR,1,0,1,0,0,And that's what we have to fight to keep.,1
-boilerplate,3,2,executive,qa,AVGO,0,1,0,1,0,"I have indicated that I only have 2, really only have 2 seriously.",1
-boilerplate,3,2,executive,qa,BLK,1,1,0,0,0,And having this type of certainty really will alleviate some of the fear.,1
-boilerplate,3,2,executive,qa,INTC,1,1,0,0,0,So we're in a kind of the pole position in that regard.,1
-boilerplate,3,2,executive,qa,JPM,1,0,1,0,0,"So just think of branches, that does our private bank or things like that.",1
-boilerplate,3,2,executive,qa,WFC,0,1,1,0,0,"But again, it doesn't attract a lot of capital or bring with it.",1
-boilerplate,3,2,executive,qa,NVDA,1,1,0,0,0,You present that circumstance to a vision language model.,1
-boilerplate,3,2,executive,qa,FDX,1,0,0,1,0,"And I think the point that I would make to you is -- it's very, very difficult to predict what is going to happen over the next 30 to 60 days or even further.",1
-boilerplate,3,2,executive,qa,BLK,1,0,1,0,0,Those are companies that borrow in private credit.,1
-boilerplate,3,2,executive,qa,INTC,0,1,1,0,0,"And that, in the past, we didn't engage that.",1
-boilerplate,3,2,executive,qa,JPM,1,0,0,1,0,So some of the -- I'm going to give you some things that you can actually do.,1
-boilerplate,3,2,executive,qa,FDX,0,1,1,0,0,We also have a much smaller portion with regard to the change in our calendar fiscal year.,1
-boilerplate,3,2,executive,qa,JPM,1,1,0,0,0,"And as we see the various folks and the various agencies go through the confirmation process, it will be helpful to have people in seats and get to work on some of the things that we want to get done.",1
-boilerplate,3,2,executive,qa,WFC,1,0,0,1,0,I'll take a shot at that because there's a few pieces that I'll try to disaggregate for you.,1
-boilerplate,3,2,executive,qa,INTC,1,0,1,0,0,And so that's what's kind of pulling it in.,1
-boilerplate,3,2,executive,qa,FDX,1,0,1,0,0,We have customer relationships everywhere.,1
-boilerplate,3,2,executive,qa,JPM,1,1,0,0,0,And you all know that everybody is out there modeling these things and trading against these things.,1
-boilerplate,3,2,executive,qa,FAST,1,1,0,0,0,We saw no reason why we shouldn't share it.,1
-boilerplate,3,2,executive,qa,GS,1,1,0,0,0,"And I think that would be very, very good, both for the system and capital markets broadly.",1
-boilerplate,3,2,executive,qa,INTC,1,0,1,0,0,"Of course, revenue will be part of that.",1
-boilerplate,3,2,executive,qa,FDX,1,1,0,0,0,"I was just so delighted to see how well that they have done, the moral of the team and how the team is working together.",1
-boilerplate,3,2,executive,qa,JPM,1,0,1,0,0,There's just too many moving parts there.,0
-boilerplate,3,2,executive,qa,GS,1,0,0,1,0,"Performance matters, client experience matters.",1
-boilerplate,3,2,executive,qa,AMD,1,0,0,1,0,"But overall standpoint, it performed right where we would expect.",1
-boilerplate,3,2,executive,qa,JPM,1,0,1,0,0,"In some areas, we might have some disagreements at the margin.",1
-boilerplate,3,2,executive,qa,NKE,1,1,0,0,0,"You've already touched on it, that structural -- there are structural differences in the marketplace.",1
-boilerplate,3,2,executive,qa,AVGO,1,0,0,1,0,So that's the level of -- a lot of that optimization we do for each of them.,1
-boilerplate,3,2,executive,qa,INTC,1,1,0,0,0,"But as we progress through the year, we think things will get better and better.",1
-boilerplate,3,2,executive,qa,GS,1,1,0,0,0,We believe it's an important component of the Fed's mandate to really ensure the safety and soundness of the banking system.,1
-boilerplate,3,2,executive,qa,FAST,1,0,0,1,0,"And in fact, I had a conversation with a few of our directors yesterday on just this fact.",1
-boilerplate,3,2,executive,qa,GS,0,1,1,0,0,And so you can't look at the fourth quarter year-over-year.,1
-boilerplate,3,2,executive,qa,GS,1,1,0,0,0,But we have a zealous focus on finding opportunities to serve our clients.,1
-boilerplate,3,2,executive,qa,INTC,1,1,0,0,0,"I think this is a very positive sign, obviously, for us.",1
-boilerplate,3,2,executive,qa,WFC,1,0,0,1,0,"And as we're adding good people, we're also -- not necessary -- we're also making sure that we've got the right people in the right seats.",1
-boilerplate,3,2,executive,qa,JPM,1,1,0,0,0,"But I do remind people, we've had a bull market for a long time.",1
-boilerplate,3,2,executive,qa,WFC,1,0,1,0,0,We've got to see where this starts to go.,0
-boilerplate,3,2,executive,qa,JNJ,1,1,0,0,0,And we've got a lot of growth catalysts to be proud of.,1
-boilerplate,3,2,executive,qa,JNJ,0,1,1,0,0,And so those are really the major areas for [ disconnect ].,1
-boilerplate,3,2,executive,qa,INTC,1,0,0,1,0,"And as I said, we'll be doing the same look across our data center portfolio as well.",1
-boilerplate,3,2,executive,qa,NVDA,0,1,0,0,1,"Executives - Co-Founder, CEO & Director
-Vivek, probably the best way to think through it is that AI is several things.",1
-boilerplate,3,2,executive,qa,AVGO,1,1,0,0,0,We may see one more perhaps as a prospect.,1
-boilerplate,3,2,executive,qa,JPM,1,0,1,0,0,"And the short answer is that for us, it's pretty uncontroversially no.",1
-boilerplate,3,2,executive,qa,NVDA,1,1,0,0,0,"And all of those type of things that are common sense to you and I, but AIs have to go learn those physical effects.",1
-boilerplate,3,2,executive,qa,JPM,1,1,0,0,0,"But obviously, anyone should be thrilled to be in a partnership with Apple.",1
-boilerplate,3,2,executive,qa,NKE,1,1,0,0,0,"They're embracing the change, and we're ready for the challenge.",1
-boilerplate,3,2,executive,qa,GS,1,1,0,0,0,"It's a big, big tenet of what we're trying to do.",1
-boilerplate,3,2,ir,prepared,C,1,1,0,0,0,I am very proud of our senior leadership and the entire organization as we demonstrate the potential of our unique global franchise.,1
-boilerplate,3,2,ir,prepared,FDX,1,1,0,0,0,I'm excited to welcome Gina Adams into her new role as General Counsel and Secretary of FedEx effective September 24.,1
-boilerplate,3,2,ir,prepared,WFC,0,1,0,1,0,Turning to capital and liquidity on Slide 5.,0
-boilerplate,3,2,ir,prepared,C,1,1,0,0,0,I continue to be excited by the opportunities and the sheer potential of our franchise.,1
-boilerplate,3,2,ir,prepared,FDX,1,0,0,0,1,"For the past 5 years, she served as our Asia Pacific Regional President.",1
-boilerplate,3,2,ir,prepared,NVDA,1,0,0,1,0,"With every new platform shift, a wave of start-ups is created.",1
-boilerplate,3,2,ir,prepared,WFC,1,1,0,0,0,"Mike will talk more about our expectations for 2024, but I'd like to make a couple of points.",1
-boilerplate,3,2,ir,prepared,C,1,0,0,1,0,We will remain relentlessly focused on execution.,1
-boilerplate,3,2,ir,qa,C,1,1,0,0,0,"I think absolutely, a strong, strong performance.",1
-boilerplate,3,2,ir,qa,C,1,0,0,0,1,"Executives - CEO & Chair of the Board
-Let me just -- so let me just be clear about where the ones that we've just done and that we're working on through the organization simplification.",1
-boilerplate,3,2,ir,qa,C,1,1,0,0,0,"We're In a strong financial position, feel very good about the leadership team.",1
-boilerplate,3,2,ir,qa,C,1,0,1,0,0,And you can see that in the different drivers.,1
-boilerplate,3,2,ir,qa,C,1,0,1,0,0,So we want our customers to pay on time.,1
-boilerplate,3,2,ir,qa,C,1,0,0,1,0,And so feel -- how that evolves will be an important factor.,1
-boilerplate,3,2,ir,qa,C,0,1,1,0,0,"And that is, in fact, what the resource review plan was that was in the amended consent order.",1
-substantive,2,3,analyst,prepared,PLTR,1,1,1,0,0,Now everyone is really concerned about DOGE with the change of administration.,1
-substantive,2,3,analyst,qa,JPM,1,1,0,1,0,Can you just give us a sense of how you're thinking about the various options?,1
-substantive,2,3,analyst,qa,JPM,1,0,1,1,0,And maybe just on that point on volumes and deposits.,1
-substantive,2,3,analyst,qa,GS,1,1,1,0,0,Do you feel the business is managed better?,1
-substantive,2,3,analyst,qa,NKE,1,1,0,0,1,Are you happy with the mix of partners you have now?,1
-substantive,2,3,analyst,qa,NVDA,1,1,1,0,0,Or will these infrastructures remain fairly distinct?,1
-substantive,2,3,analyst,qa,AMD,1,1,0,0,1,Turin seems to be much more kind of ecosystem compatible.,1
-substantive,2,3,analyst,qa,GS,1,1,0,0,1,"David and Denis, a question just on kind of interplay between a recovery in investment banking versus trading intermediation.",1
-substantive,2,3,analyst,qa,JNJ,1,1,0,0,1,"If you could tease that apart a little bit, and your views on the health of the contact lens market would be really welcome.",1
-substantive,2,3,analyst,qa,WFC,1,1,1,0,0,"And I think you mentioned that even beyond 2026, you see that.",1
-substantive,2,3,analyst,qa,GS,1,1,1,0,0,I'm assuming that's to finance -- equity financing.,1
-substantive,2,3,analyst,qa,NVDA,1,1,0,1,0,"And as part of that, if you can kind of comment between network and data center would be very helpful.",1
-substantive,2,3,analyst,qa,NKE,1,1,1,0,0,Was the comment meant to absolutely all 3 of those line items?,1
-substantive,2,3,analyst,qa,INTC,1,1,0,0,1,"Lip-Bu, there's obviously a lot of excitement about your foundry business.",1
-substantive,2,3,analyst,qa,JPM,1,1,1,0,0,"I mean, obviously, we just had one cut and it's early.",1
-substantive,2,3,analyst,qa,INTC,1,1,1,0,0,I guess I just kind of wonder like how an external customer would continue to be engaged.,1
-substantive,2,3,analyst,qa,GS,1,1,0,1,0,"But just maybe thinking through what areas might be underperforming right now, if any, that could improve in a better environment versus just maybe the different components which are doing well and which are underperforming, if possible?",1
-substantive,2,3,analyst,qa,GS,1,1,0,0,1,"Is that someone from the Board currently, someone from outside Goldman Sachs, what type of person is the Board looking for?",1
-substantive,2,3,analyst,qa,WFC,1,1,0,0,1,"Analysts - Research Analyst
-Any thoughts on where card charge-offs go in '24?",1
-substantive,2,3,analyst,qa,JPM,1,1,0,0,1,"And so beyond the standard boilerplate questions you're going to get on buyback and organic growth, yada, yada, dividend increases, how should we think about JPMorgan deploying this capital?",1
-substantive,2,3,analyst,qa,AVGO,1,0,1,1,0,And then kind of part B of that is on the switching side.,1
-substantive,2,3,executive,prepared,PLTR,1,1,1,0,0,"There's a surprising amount of dimorphism that comes out of the ivory tower, the folks who are doing AI research.",1
-substantive,2,3,executive,prepared,NKE,1,1,0,1,0,"It was his for the taking, an amazing reminder for NIKE that no matter the situation we face, we're the leader in an exciting industry.",1
-substantive,2,3,executive,prepared,PLTR,1,1,0,1,0,"A and B, now that everyone knows this, this is by far the best credential in tech.",1
-substantive,2,3,executive,prepared,GS,1,1,0,1,0,"To that end, we are always seeking ways to enhance the client experience while improving efficiency.",1
-substantive,2,3,executive,prepared,FAST,1,1,0,1,0,"As I mentioned earlier, we believe we have the right balance for managing our costs and we continue to maintain this balance.",1
-substantive,2,3,executive,prepared,PLTR,0,1,1,1,0,"You could give underwriters unlimited time, 2, 3, 4 weeks.",1
-substantive,2,3,executive,prepared,PLTR,1,1,0,0,1,"I don't know all the efforts we're involved in, but to the extent we're involved in these efforts, I and most Palantirians are very proud of this.",1
-substantive,2,3,executive,prepared,PLTR,1,1,1,0,0,But what you see is that they don't really understand it.,1
-substantive,2,3,executive,prepared,NKE,1,1,0,1,0,"Our teams are moving with focus and urgency, and our foundation is getting even stronger.",1
-substantive,2,3,executive,prepared,FDX,1,1,0,0,1,I want to commend the entire organization for our focus on creating vast differentiation and showing up for our customers.,1
-substantive,2,3,executive,prepared,BLK,1,1,0,1,0,"And I look forward at BlackRock to be delivering on a significant broad base of opportunities across the world, across our platform, across all of our products and delivering the responsible fiduciary responsibilities that we provide to each and every client.",1
-substantive,2,3,executive,prepared,PLTR,1,1,1,0,0,"I think it's going to lead to a very different way of looking at our company in all areas, including financial areas because it's like when you're making assertions, you need avant-garde innovators to look at it and say, okay, well, this is something that's not quite there but I think it could work.",1
-substantive,2,3,executive,prepared,BLK,1,1,0,1,0,"Together, we know how to invest in, own them, improve on them and operate them.",1
-substantive,2,3,executive,prepared,PLTR,1,1,1,0,0,"And that M Day was yesterday, the time to mobilize comp.",1
-substantive,2,3,executive,prepared,JNJ,1,1,0,1,0,And I'd like to highlight a few noteworthy items that have changed compared to the same quarter a year ago.,1
-substantive,2,3,executive,prepared,PLTR,1,1,1,0,0,"You could think about, okay, what if I'm building enterprise software for many customers?",1
-substantive,2,3,executive,prepared,PLTR,1,1,1,0,0,And then the question that Shyam's is answering is also but why is it hard to build it.,1
-substantive,2,3,executive,prepared,FAST,1,1,0,1,0,And our digital footprint continues to expand.,1
-substantive,2,3,executive,prepared,JNJ,1,1,0,1,0,"Joe Wolk, our CFO, will then close by sharing an overview of our cash position, capital allocation priorities and guidance for 2025; Jennifer Taubert, Executive Vice President, Worldwide Chairman, Innovative Medicine; and Tim Schmid, Executive Vice President, Worldwide Chairman, MedTech, will be joining us for Q&A.",1
-substantive,2,3,executive,prepared,FAST,1,1,0,1,0,"Now before turning to Q&A, I wanted to offer a higher level perspective on the quarter.",1
-substantive,2,3,executive,prepared,NKE,1,0,0,1,1,"This quarter, that included the England Women's National Team winning the European Championship, Sinner's Wimbledon title, Scottie's Open Championship title and Chelsea winning the Club World Cup.",1
-substantive,2,3,executive,prepared,PLTR,1,1,0,0,1,"I think we could start by thinking about, if I was building software to solve problems for one company, well, you don't need an Ontology.",1
-substantive,2,3,executive,prepared,GS,1,1,0,1,0,We also remain committed to paying our shareholders a sustainable and growing dividend.,1
-substantive,2,3,executive,prepared,BLK,1,1,0,1,0,"Companies recognize the uniqueness of our global relationships, our brand and our expertise across businesses, markets and industries.",1
-substantive,2,3,executive,prepared,BLK,1,1,0,1,0,"We believe this will deepen our relationships with our clients and deliver value to you, our shareholders.",1
-substantive,2,3,executive,prepared,GS,1,1,0,0,1,"In closing, I'm very confident about the state of our client franchise.",1
-substantive,2,3,executive,prepared,PLTR,1,1,0,1,0,"Look at the nurses and the ICU who have more time to spend with their patients, less time munging around collecting the clinical notes to understand what care to deliver or the factory workers in the submarine industrial base who get back 3 days of quoting a part to actually spend time solving problems in production.",1
-substantive,2,3,executive,prepared,BLK,1,1,0,0,1,"At BlackRock, we are -- we really challenge ourselves not to get mired down in all the negativity, but to navigate, to mitigate the move forward, to work with each and every client, to help each and every client.",1
-substantive,2,3,executive,prepared,FAST,1,1,0,1,0,Now moving on to Slide 4 and looking at our customer site performance.,1
-substantive,2,3,executive,prepared,BLK,1,1,0,1,0,"We invested in our talent, which is fundamentally the most important thing that we invest in each and every year.",1
-substantive,2,3,executive,prepared,BLK,1,1,0,1,0,We design and deliver strategies and products that fit their unique long-term needs and aspirations.,1
-substantive,2,3,executive,qa,GS,1,1,0,1,0,"But the bar for doing something significant and transformational is very, very high.",1
-substantive,2,3,executive,qa,JPM,1,1,0,1,0,"And done properly, as we talk about on the slide, we're very happy to be lenders to them.",1
-substantive,2,3,executive,qa,FAST,1,1,0,1,0,"So -- but I also look at it and say, there might be some folks that just got through at this stage of 2024, and they're kind of like, it's been a mediocre year.",1
-substantive,2,3,executive,qa,JPM,1,1,0,1,0,"All these things should be done in light of looking at what kind of public markets you want, the kind of private markets you want, what do you want in the banking system, what do you want out of the banking system.",1
-substantive,2,3,executive,qa,JPM,1,1,0,1,0,We do have a few top-down areas of focus.,1
-substantive,2,3,executive,qa,NKE,1,1,0,1,0,"Because when it's all said and done, they want and need from us is to drive mutually profitable growth for them and for us, and that's exactly what we're going to get back to.",1
-substantive,2,3,executive,qa,FAST,1,1,1,0,0,And we were able to study all the containers coming in and had conversations.,1
-substantive,2,3,executive,qa,BLK,1,1,0,1,0,"And I do believe we will have, post-closing, some amazing opportunities and then, therefore, some amazing announcements.",1
-substantive,2,3,executive,qa,AMD,1,1,1,0,0,I wouldn't really pay attention to all that noise in the system.,1
-substantive,2,3,executive,qa,AMD,1,0,1,1,0,"I think -- I don't know about your model, but that is how we really look at the numbers, how we think about it.",1
-substantive,2,3,executive,qa,FDX,1,1,1,0,0,"In fact, the entire exec committee was in the continent in June to show support for the team.",1
-substantive,2,3,executive,qa,JNJ,1,1,0,0,1,"And as you said, it is a really exciting time to be in electrophysiology.",1
-substantive,2,3,executive,qa,AVGO,0,0,1,1,1,And the rest of the other market I consider is collectively lumped as enterprise.,1
-substantive,2,3,executive,qa,INTC,1,1,1,0,0,"And with that, we're improving our competitiveness.",1
-substantive,2,3,executive,qa,FAST,1,1,1,0,0,But the price fatigue is we all get tired of talking about that because we'd rather talk about growth.,1
-substantive,2,3,executive,qa,BLK,1,1,0,1,0,We've been at the forefront of advocacy for retirement solutions through our whole history.,1
-substantive,2,3,executive,qa,INTC,1,0,1,1,0,And then we're going to take a different approach.,1
-substantive,2,3,executive,qa,WFC,0,1,1,1,0,I think what we're seeing so far is exactly what we expected to see at the beginning of the year.,1
-substantive,2,3,executive,qa,JPM,1,1,0,1,0,"But I do think we need to be a little bit careful not to fall into the trap of saying that, that's like progress just because the original proposal was so dramatically higher than what anyone thought was reasonable.",1
-substantive,2,3,executive,qa,FAST,1,1,0,0,1,"We have a lot of customers in a lot of places that share a company, and we want to make sure that we weren't creating conflict in that regard.",1
-substantive,2,3,executive,qa,FDX,1,1,1,0,0,And so it really is a condensed peak period.,1
-substantive,2,3,executive,qa,JPM,0,1,1,0,1,"Executives - Chairman & CEO
-It's one example of like really bad accounting.",1
-substantive,2,3,executive,qa,JPM,1,1,1,0,0,So I won't give you the long speech about why G-SIB is completely poorly conceived.,1
-substantive,2,3,executive,qa,FAST,1,1,1,0,0,There's no math that you can make that work.,1
-substantive,2,3,executive,qa,FAST,1,1,0,1,0,"I don't know if he's nailed it down yet, but we'll be getting that information out shortly.",1
-substantive,2,3,executive,qa,FDX,1,1,0,1,0,They explain your year-over-year impact on the results.,1
-substantive,2,3,executive,qa,BLK,1,1,1,0,0,It's not the basis or driver of the strategy.,1
-substantive,2,3,executive,qa,GS,1,1,1,0,0,"So that is, I think, a large explain of the delta.",1
-substantive,2,3,executive,qa,AMD,1,1,1,0,0,So it's important to have those forecasts in early.,1
-substantive,2,3,executive,qa,GS,1,0,1,1,0,So I think that is something you can look out for in future periods.,1
-substantive,2,3,executive,qa,AVGO,1,1,0,0,1,"All I do say is I have no interest in going into a market where -- we have a philosophy in running our business, Broadcom, and maybe other people have a different philosophy.",1
-substantive,2,3,executive,qa,FDX,1,1,0,1,0,"So hopefully, that puts it in picture -- gives you a context and understanding of how we guided you for the full fiscal year.",1
-substantive,2,3,executive,qa,GS,1,1,0,1,0,"And so we're keenly focused on the evolution of that in the coming years, and that's something you'll hear us talk more about.",1
-substantive,2,3,executive,qa,BLK,1,1,1,0,0,I guess maybe I can start with a little color on the multi-asset flows and then Larry can comment on LifePath Paycheck.,1
-substantive,2,3,executive,qa,FAST,1,0,1,1,0,"I'm not getting into the business of predicting January, February and March DSRs.",1
-substantive,2,3,executive,qa,INTC,1,1,1,0,0,"Obviously, we want to have external customers.",1
-substantive,2,3,executive,qa,WFC,1,1,0,1,0,And so I think that trend you saw a couple of years ago was definitely different.,1
-substantive,2,3,executive,qa,FDX,1,1,1,0,0,I think the second half of the question was about some of the competitive changes that USPS has made in the market.,1
-substantive,2,3,executive,qa,JPM,1,1,0,1,0,"But I think what it sort of highlights is that during this transitional period and this elevated uncertainty, you might see some distortions in the data that make it hard to draw larger conclusions.",1
-substantive,2,3,executive,qa,FAST,1,1,1,0,0,And some of those are still up in the air based on what happens.,1
-substantive,2,3,executive,qa,AMD,1,1,0,1,0,"And so for all of those reasons, we're pleased with where the performance of the business is right now.",1
-substantive,2,3,executive,qa,JPM,1,1,0,1,0,"I mean that space is always very competitive, I would say, has been throughout this entire cycle.",1
-substantive,2,3,executive,qa,FAST,1,1,1,0,0,We're also making ourselves more efficient.,1
-substantive,2,3,executive,qa,NVDA,1,1,1,0,0,And all of it runs our entire software stack.,1
-substantive,2,3,executive,qa,FAST,1,1,0,1,0,We measure -- we are successful in the buckets that we're successful in because we bring something special to that type of customer.,1
-substantive,2,3,executive,qa,NKE,1,1,0,0,1,"Angela, who is our GM in Greater China, is now part of my SLT, Senior Leadership Team, and I look forward to working with her and the rest of our team more closely.",1
-substantive,2,3,executive,qa,JPM,1,1,1,0,0,And so we don't want regulators to need to make unusual corrections amid crises.,1
-substantive,2,3,executive,qa,NKE,1,1,1,0,0,We had some really good successes in running this quarter and then some basketball successes around Ja and LeBron.,1
-substantive,2,3,executive,qa,INTC,1,1,1,0,0,"We want to be doing more than what we promised to every turn, to every stakeholder, including investors, including customers, including suppliers, so what have you.",1
-substantive,2,3,executive,qa,FDX,1,1,0,1,0,"We have a terrific team that, after every rollout, we take the learnings and apply it to the next one and the next one and so on, so we get better going forward.",1
-substantive,2,3,executive,qa,INTC,0,1,1,0,1,We've worked closely with the CHIPS program office in the U.S. government.,1
-substantive,2,3,executive,qa,BLK,1,1,0,1,0,"In order to build an asset allocation portfolio that can mix stocks, bonds, crypto, commodities and the like.",1
-substantive,2,3,executive,qa,FAST,1,0,1,1,0,But knowing mathematically how much it's going to help and realizing that in actual activity aren't always the same 2 things.,1
-substantive,2,3,executive,qa,BLK,1,1,1,0,0,"And then ultimately, we have seen this business grow.",1
-substantive,2,3,executive,qa,FDX,0,1,0,1,1,"Executives - President, CEO & Director
-And on the broader point here, the trade as a percentage of GDP has essentially flatlined since about 2016.",1
-substantive,2,3,executive,qa,AMD,1,1,1,0,0,Just given where seasonality is for those businesses.,1
-substantive,2,3,executive,qa,NVDA,1,0,1,1,0,"With each generation, demand only grows.",1
-substantive,2,3,executive,qa,WFC,1,1,0,0,1,"Executives - CEO & Chairman
-Well, I guess I would start with -- we certainly have opportunities to think about things that we wouldn't have thought about in the past.",1
-substantive,2,3,executive,qa,JPM,1,1,1,0,0,The second thing is the why does that happen?,1
-substantive,2,3,executive,qa,NVDA,1,1,0,1,0,"If you don't have software, you can't open and enable new applications.",1
-substantive,2,3,executive,qa,GS,1,1,0,1,0,We try to create the right culture of focus and intensity that allows us to continue to deliver and execute for them.,1
-substantive,2,3,executive,qa,JPM,1,1,0,1,0,"Obviously, equity markets have been under a little bit of pressure the last few days.",1
-substantive,2,3,executive,qa,NVDA,1,1,0,1,0,"AI is transforming every industry, company and country.",1
-substantive,2,3,executive,qa,NKE,1,1,1,0,0,"Number two, we just got out of a rhythm of working closely with our wholesale partners.",1
-substantive,2,3,executive,qa,FDX,1,1,0,1,0,But we're always looking to fill the pipeline as well on additional opportunities.,1
-substantive,2,3,executive,qa,NVDA,1,1,0,1,0,"And so in those 4 -- the control plane of the network, which is used for storage, it's used for security.",1
-substantive,2,3,executive,qa,NVDA,1,1,0,1,0,"The world has -- the Internet has trillions of pieces of content, how could they possibly figure out what to put in front of you and your little tiny screen, unless they have really sophisticated recommender systems to do so.",1
-substantive,2,3,executive,qa,INTC,1,0,1,1,0,And I'd say we do believe that we'll have further updates there.,1
-substantive,2,3,executive,qa,JPM,1,1,0,1,0,"But yes, as Jamie points out, just remember that to the extent that the market is sufficient, which maybe it's not, but you can't really hedge ahead of cuts that are already priced in, right?",1
-substantive,2,3,executive,qa,JNJ,1,1,0,1,0,"Some of them are already approved, most of them submitted.",1
-substantive,2,3,executive,qa,FAST,1,1,1,0,0,Or is this something that's going to be announced on Wednesday and canceled on Friday?,1
-substantive,2,3,executive,qa,AVGO,1,1,1,0,0,"Just as well, you don't need to create new systems for the sake of doing something that you could easily be doing in networking in Ethernet.",1
-substantive,2,3,executive,qa,WFC,1,1,0,1,0,"And I think, Ed's super excited about both what we've done, but continuing to execute along the lines that we've laid out for you all.",1
-substantive,2,3,ir,prepared,C,1,1,0,1,0,And I'm excited to update you on our progress in greater detail and to outline the next phase of our journey at our Investor Day on May 7.,1
-substantive,2,3,ir,prepared,WFC,1,1,0,1,0,Their unwavering commitment to our customers and to our transformation is what positions us to become a best-in-class company.,1
-substantive,2,3,ir,prepared,WFC,1,1,0,1,0,"I want to close by turning to Slide 11, repeating how excited I am about the momentum we are building and for all the opportunities we have to produce higher growth and returns.",1
-substantive,2,3,ir,prepared,AMD,1,1,0,1,0,Now turning to our third quarter 2024 outlook.,0
-substantive,2,3,ir,prepared,C,1,1,0,1,0,"I'm going to start with the firm-wide financial results, focusing on year-over-year comparisons for the third quarter, unless I indicate otherwise, and then spend a little more time on the businesses.",1
-substantive,2,3,ir,prepared,NVDA,0,1,0,1,1,"Our products are designed and sold for beneficial commercial use, and every license sale we make will benefit the U.S. economy, the U.S. leadership.",1
-substantive,2,3,ir,prepared,C,1,1,0,1,0,"I'm going to start with the fourth quarter and full year firm-wide financial results, focusing on year-over-year comparisons, unless I indicate otherwise.",1
-substantive,2,3,ir,prepared,C,1,1,0,1,0,"And the best part is, there is much more upside ahead.",1
-substantive,2,3,ir,prepared,WFC,1,1,0,1,0,"We continue to move forward with confidence and believe we have the right culture, team, discipline and sense of urgency to complete the work that's required.",1
-substantive,2,3,ir,prepared,AMD,1,1,0,1,0,Turning to our broader Data Center portfolio.,0
-substantive,2,3,ir,prepared,C,1,1,0,1,0,"Now turning to the left side of the slide, where we show our financial results for the full FERC.",1
-substantive,2,3,ir,prepared,AMD,1,1,0,1,0,I'll start with a review of our financial results and then provide our outlook for the third quarter of fiscal 2025.,0
-substantive,2,3,ir,prepared,FDX,1,1,0,1,0,"In closing, we delivered a strong quarter while successfully navigating a dynamic environment.",1
-substantive,2,3,ir,prepared,FDX,1,1,0,1,0,Now turning to our outlook for fiscal year '25.,0
-substantive,2,3,ir,prepared,INTC,1,1,0,1,0,We do not take this lightly and we have carefully considered the impact this will have on the Intel family.,1
-substantive,2,3,ir,prepared,C,1,1,0,1,0,"Amidst all these dynamics, we continue to focus on executing against our strategy and delivering the best of Citi to all our stakeholders.",1
-substantive,2,3,ir,prepared,AVGO,1,1,0,1,0,"During the prepared comments, Hock and Kirsten will be providing details of our second quarter fiscal year 2024 results, guidance for our fiscal year 2024 as well as commentary regarding the business environment.",1
-substantive,2,3,ir,prepared,C,1,1,0,1,0,We appreciate the administration taking a fresh look at regulations across all industries to unlock growth.,1
-substantive,2,3,ir,prepared,FDX,1,1,0,1,0,I'm very pleased with how our teams are navigating a condensed period between Thanksgiving and Christmas.,1
-substantive,2,3,ir,qa,C,1,0,1,1,0,And those 2 have been our North Stars as we've been going through this process.,1
-substantive,2,3,ir,qa,C,1,1,0,1,0,And I am highly confident in our ability to get the remaining work done.,1
-substantive,2,3,ir,qa,C,1,1,1,0,0,I was just talking about the payments piece.,1
-substantive,2,3,ir,qa,C,1,1,0,1,0,"Executives - Executive Vice Chairman and Senior Executive Advisor to Chair & CEO
-And Mike, if I could just put one number into context because you played back the 11,000, which was a number of global regulatory reports across the landscape here.",1
-substantive,2,3,ir,qa,C,1,1,0,1,0,That includes market conditions with the ultimate goal of maximizing value for shareholders.,1
-substantive,2,3,ir,qa,C,1,1,0,1,0,"But yes, we have to get the work done, validate it, and then hand it over to the regulators in the process we talked about.",1
-substantive,2,3,ir,qa,C,1,1,0,1,0,There's a path with the combination of those levers that I've mentioned.,1
-substantive,2,3,ir,qa,C,1,1,0,1,0,"We keep a close eye on execution, making sure we've got the right level of resourcing and expertise.",1
-substantive,2,3,ir,qa,C,1,1,0,1,0,And it will be beneficial for both our growth and our returns.,1
-substantive,2,3,ir,qa,C,1,1,1,0,0,These things just don't work out as intended.,1
-substantive,2,3,ir,qa,C,1,1,0,1,0,We have been and we will be transparent when we have issues and how we are addressing them.,1
-substantive,2,3,ir,qa,C,1,1,1,0,0,But I'd just close by saying I couldn't agree with you more about geopolitical risks and fragility.,1
-substantive,2,3,ir,qa,C,1,1,0,1,0,And so we're mindful of how tight they're running.,1
-substantive,2,3,ir,qa,C,1,0,0,1,1,We've been bringing in some great new talent.,1
-substantive,2,3,ir,qa,C,1,1,1,0,0,And enough for us to kind of see a more normal level of credit.,1
+text,speaker_type,section,j3_cogito,j4_qwen314b,j5_gemma12b,j6_ministral3,j7_cogito14b,n_bp,n_sb,llm_mv,human_label
+Can you just give us a sense of how you're thinking about the various options?,analyst,qa,1,1,0,1,0,2,3,1,
+And maybe just on that point on volumes and deposits.,analyst,qa,1,0,1,1,0,2,3,1,
+And what has been the more challenging aspect of it all?,analyst,qa,1,1,0,0,0,3,2,1,
+Now everyone is really concerned about DOGE with the change of administration.,analyst,prepared,1,1,1,0,0,2,3,1,
+Do you feel the business is managed better?,analyst,qa,1,1,1,0,0,2,3,1,
+Are you happy with the mix of partners you have now?,analyst,qa,1,1,0,0,1,2,3,1,
+"So Brie, maybe just to follow up on the demand environment.",analyst,qa,1,1,0,0,0,3,2,0,
+Or will these infrastructures remain fairly distinct?,analyst,qa,1,1,1,0,0,2,3,1,
+"There is seasonality, I know in markets.",analyst,qa,1,1,0,0,0,3,2,1,
+"And as you think back, is there something that should have been done differently?",analyst,qa,1,1,0,0,0,3,2,1,
+So kind of curious about what you're seeing in the market there on the back of that.,analyst,qa,1,1,0,0,0,3,2,1,
+Turin seems to be much more kind of ecosystem compatible.,analyst,qa,1,1,0,0,1,2,3,1,
+"David and Denis, a question just on kind of interplay between a recovery in investment banking versus trading intermediation.",analyst,qa,1,1,0,0,1,2,3,1,
+"But that being said, as Jamie noted, like we have no idea what the curve is going to look like, right?",analyst,qa,1,1,0,0,0,3,2,1,
+"And for my follow-up, Lisa, back to the question on the PC market.",analyst,qa,1,0,0,1,0,3,2,0,
+"If you could tease that apart a little bit, and your views on the health of the contact lens market would be really welcome.",analyst,qa,1,1,0,0,1,2,3,1,
+"And I think you mentioned that even beyond 2026, you see that.",analyst,qa,1,1,1,0,0,2,3,1,
+"We're, what, 9 months or so into this new administration with the new regulators.",analyst,qa,1,1,0,0,0,3,2,1,
+I'm assuming that's to finance -- equity financing.,analyst,qa,1,1,1,0,0,2,3,1,
+"And as part of that, if you can kind of comment between network and data center would be very helpful.",analyst,qa,1,1,0,1,0,2,3,1,
+"On the comments you made, David, on Goldman Sachs 3.0, which obviously is very positive.",analyst,qa,1,1,0,0,0,3,2,1,
+Was the comment meant to absolutely all 3 of those line items?,analyst,qa,1,1,1,0,0,2,3,1,
+I was just curious what was the decision-making process to do that?,analyst,qa,1,1,0,0,0,3,2,1,
+"Lip-Bu, there's obviously a lot of excitement about your foundry business.",analyst,qa,1,1,0,0,1,2,3,1,
+And we all know about the commercial real estate office.,analyst,qa,0,1,1,0,0,3,2,1,
+"I mean, obviously, we just had one cut and it's early.",analyst,qa,1,1,1,0,0,2,3,1,
+I guess I just kind of wonder like how an external customer would continue to be engaged.,analyst,qa,1,1,1,0,0,2,3,1,
+"But just maybe thinking through what areas might be underperforming right now, if any, that could improve in a better environment versus just maybe the different components which are doing well and which are underperforming, if possible?",analyst,qa,1,1,0,1,0,2,3,1,
+"Is that someone from the Board currently, someone from outside Goldman Sachs, what type of person is the Board looking for?",analyst,qa,1,1,0,0,1,2,3,1,
+And then if you can maybe just touch on Europe.,analyst,qa,1,1,0,0,0,3,2,1,
+"Analysts - Research Analyst
+Any thoughts on where card charge-offs go in '24?",analyst,qa,1,1,0,0,1,2,3,1,
+Do you think that you'll go in a different direction?,analyst,qa,1,1,0,0,0,3,2,1,
+Just your comfort level in terms of the functioning of the treasury market.,analyst,qa,1,1,0,0,0,3,2,1,
+"Just talk to us as we think about -- and I appreciate what you just said, but when we think about the binding constraint from standardized to advanced, how we should think about it?",analyst,qa,1,1,0,0,0,3,2,1,
+"And so beyond the standard boilerplate questions you're going to get on buyback and organic growth, yada, yada, dividend increases, how should we think about JPMorgan deploying this capital?",analyst,qa,1,1,0,0,1,2,3,1,
+And just like how frame -- are you responsible to some of these [ unremidable ] corporate dividends.,analyst,qa,0,1,1,0,0,3,2,1,
+Or is there something different this time around?,analyst,qa,1,1,0,0,0,3,2,1,
+And then kind of part B of that is on the switching side.,analyst,qa,1,0,1,1,0,2,3,1,
+"I didn't plan to ask this question, but this literally just hit the Bloomberg.",analyst,qa,1,1,0,0,0,3,2,0,
+"But the bar for doing something significant and transformational is very, very high.",executive,qa,1,1,0,1,0,2,3,1,
+"I have indicated that I only have 2, really only have 2 seriously.",executive,qa,0,1,0,1,0,3,2,1,
+And having this type of certainty really will alleviate some of the fear.,executive,qa,1,1,0,0,0,3,2,1,
+"And done properly, as we talk about on the slide, we're very happy to be lenders to them.",executive,qa,1,1,0,1,0,2,3,1,
+"So -- but I also look at it and say, there might be some folks that just got through at this stage of 2024, and they're kind of like, it's been a mediocre year.",executive,qa,1,1,0,1,0,2,3,1,
+"All these things should be done in light of looking at what kind of public markets you want, the kind of private markets you want, what do you want in the banking system, what do you want out of the banking system.",executive,qa,1,1,0,1,0,2,3,1,
+We do have a few top-down areas of focus.,executive,qa,1,1,0,1,0,2,3,1,
+So we're in a kind of the pole position in that regard.,executive,qa,1,1,0,0,0,3,2,1,
+"But out on the printer, there's a sign, ""Help our branch and Onsites hit their sales goals in 2024.""",executive,prepared,1,0,1,0,0,3,2,1,
+"It's -- By the way, for those of you who are evaluating our company, we are going to invite all of you to our bootcamps.",executive,prepared,0,1,1,0,0,3,2,1,
+"Because when it's all said and done, they want and need from us is to drive mutually profitable growth for them and for us, and that's exactly what we're going to get back to.",executive,qa,1,1,0,1,0,2,3,1,
+"I was lucky enough to be at Augusta earlier that week, and I couldn't help but relate Rory's experience to NIKE's recent journey.",executive,prepared,1,1,0,0,0,3,2,1,
+And we were able to study all the containers coming in and had conversations.,executive,qa,1,1,1,0,0,2,3,1,
+"So just think of branches, that does our private bank or things like that.",executive,qa,1,0,1,0,0,3,2,1,
+"And I do believe we will have, post-closing, some amazing opportunities and then, therefore, some amazing announcements.",executive,qa,1,1,0,1,0,2,3,1,
+I wouldn't really pay attention to all that noise in the system.,executive,qa,1,1,1,0,0,2,3,1,
+"There's a surprising amount of dimorphism that comes out of the ivory tower, the folks who are doing AI research.",executive,prepared,1,1,1,0,0,2,3,1,
+"But again, it doesn't attract a lot of capital or bring with it.",executive,qa,0,1,1,0,0,3,2,1,
+"I think -- I don't know about your model, but that is how we really look at the numbers, how we think about it.",executive,qa,1,0,1,1,0,2,3,1,
+It's my pleasure to present results for the fourth quarter and full year 2024.,executive,prepared,1,1,0,0,0,3,2,0,
+"In fact, the entire exec committee was in the continent in June to show support for the team.",executive,qa,1,1,1,0,0,2,3,1,
+"We, as a nation, must reindustrialize to prevent escalating conflict and regain deterrence.",executive,prepared,1,0,0,1,0,3,2,1,
+"And as you said, it is a really exciting time to be in electrophysiology.",executive,qa,1,1,0,0,1,2,3,1,
+You present that circumstance to a vision language model.,executive,qa,1,1,0,0,0,3,2,1,
+And the rest of the other market I consider is collectively lumped as enterprise.,executive,qa,0,0,1,1,1,2,3,1,
+"It was his for the taking, an amazing reminder for NIKE that no matter the situation we face, we're the leader in an exciting industry.",executive,prepared,1,1,0,1,0,2,3,1,
+"And with that, we're improving our competitiveness.",executive,qa,1,1,1,0,0,2,3,1,
+"A and B, now that everyone knows this, this is by far the best credential in tech.",executive,prepared,1,1,0,1,0,2,3,1,
+We have the most qualified interesting people heterodox on their beliefs.,executive,prepared,1,0,1,0,0,3,2,1,
+But the price fatigue is we all get tired of talking about that because we'd rather talk about growth.,executive,qa,1,1,1,0,0,2,3,1,
+"And I think the point that I would make to you is -- it's very, very difficult to predict what is going to happen over the next 30 to 60 days or even further.",executive,qa,1,0,0,1,0,3,2,1,
+Those are companies that borrow in private credit.,executive,qa,1,0,1,0,0,3,2,1,
+We've been at the forefront of advocacy for retirement solutions through our whole history.,executive,qa,1,1,0,1,0,2,3,1,
+"To that end, we are always seeking ways to enhance the client experience while improving efficiency.",executive,prepared,1,1,0,1,0,2,3,1,
+"And that, in the past, we didn't engage that.",executive,qa,0,1,1,0,0,3,2,1,
+And then we're going to take a different approach.,executive,qa,1,0,1,1,0,2,3,1,
+So some of the -- I'm going to give you some things that you can actually do.,executive,qa,1,0,0,1,0,3,2,1,
+I think what we're seeing so far is exactly what we expected to see at the beginning of the year.,executive,qa,0,1,1,1,0,2,3,1,
+"But I do think we need to be a little bit careful not to fall into the trap of saying that, that's like progress just because the original proposal was so dramatically higher than what anyone thought was reasonable.",executive,qa,1,1,0,1,0,2,3,1,
+We also have a much smaller portion with regard to the change in our calendar fiscal year.,executive,qa,0,1,1,0,0,3,2,1,
+"As I mentioned earlier, we believe we have the right balance for managing our costs and we continue to maintain this balance.",executive,prepared,1,1,0,1,0,2,3,1,
+"And as we see the various folks and the various agencies go through the confirmation process, it will be helpful to have people in seats and get to work on some of the things that we want to get done.",executive,qa,1,1,0,0,0,3,2,1,
+"We have a lot of customers in a lot of places that share a company, and we want to make sure that we weren't creating conflict in that regard.",executive,qa,1,1,0,0,1,2,3,1,
+And so it really is a condensed peak period.,executive,qa,1,1,1,0,0,2,3,1,
+"Joaquin Duato, our Chairman and CEO, will open with a few comments on our performance and key catalysts for the company.",executive,prepared,1,1,0,0,0,3,2,1,
+"Executives - Chairman & CEO
+It's one example of like really bad accounting.",executive,qa,0,1,1,0,1,2,3,1,
+So I won't give you the long speech about why G-SIB is completely poorly conceived.,executive,qa,1,1,1,0,0,2,3,1,
+There's no math that you can make that work.,executive,qa,1,1,1,0,0,2,3,1,
+"I don't know if he's nailed it down yet, but we'll be getting that information out shortly.",executive,qa,1,1,0,1,0,2,3,1,
+They explain your year-over-year impact on the results.,executive,qa,1,1,0,1,0,2,3,1,
+I'll take a shot at that because there's a few pieces that I'll try to disaggregate for you.,executive,qa,1,0,0,1,0,3,2,1,
+And so that's what's kind of pulling it in.,executive,qa,1,0,1,0,0,3,2,1,
+We have customer relationships everywhere.,executive,qa,1,0,1,0,0,3,2,1,
+It's not the basis or driver of the strategy.,executive,qa,1,1,1,0,0,2,3,1,
+"In closing, I feel very good about the trajectory of Goldman Sachs.",executive,prepared,1,1,0,0,0,3,2,1,
+"With all this volatility, the markets have proven to be quite successful and worked quite well.",executive,prepared,0,1,0,1,0,3,2,1,
+"So that is, I think, a large explain of the delta.",executive,qa,1,1,1,0,0,2,3,1,
+"You could give underwriters unlimited time, 2, 3, 4 weeks.",executive,prepared,0,1,1,1,0,2,3,1,
+And you all know that everybody is out there modeling these things and trading against these things.,executive,qa,1,1,0,0,0,3,2,1,
+So it's important to have those forecasts in early.,executive,qa,1,1,1,0,0,2,3,1,
+So I think that is something you can look out for in future periods.,executive,qa,1,0,1,1,0,2,3,1,
+"All I do say is I have no interest in going into a market where -- we have a philosophy in running our business, Broadcom, and maybe other people have a different philosophy.",executive,qa,1,1,0,0,1,2,3,1,
+"So hopefully, that puts it in picture -- gives you a context and understanding of how we guided you for the full fiscal year.",executive,qa,1,1,0,1,0,2,3,1,
+"I don't know all the efforts we're involved in, but to the extent we're involved in these efforts, I and most Palantirians are very proud of this.",executive,prepared,1,1,0,0,1,2,3,1,
+But what you see is that they don't really understand it.,executive,prepared,1,1,1,0,0,2,3,1,
+"Our teams are moving with focus and urgency, and our foundation is getting even stronger.",executive,prepared,1,1,0,1,0,2,3,1,
+We saw no reason why we shouldn't share it.,executive,qa,1,1,0,0,0,3,2,1,
+"And so we're keenly focused on the evolution of that in the coming years, and that's something you'll hear us talk more about.",executive,qa,1,1,0,1,0,2,3,1,
+"And I think that would be very, very good, both for the system and capital markets broadly.",executive,qa,1,1,0,0,0,3,2,1,
+I want to commend the entire organization for our focus on creating vast differentiation and showing up for our customers.,executive,prepared,1,1,0,0,1,2,3,1,
+I guess maybe I can start with a little color on the multi-asset flows and then Larry can comment on LifePath Paycheck.,executive,qa,1,1,1,0,0,2,3,1,
+"And I look forward at BlackRock to be delivering on a significant broad base of opportunities across the world, across our platform, across all of our products and delivering the responsible fiduciary responsibilities that we provide to each and every client.",executive,prepared,1,1,0,1,0,2,3,1,
+"I'm not getting into the business of predicting January, February and March DSRs.",executive,qa,1,0,1,1,0,2,3,1,
+"I think it's going to lead to a very different way of looking at our company in all areas, including financial areas because it's like when you're making assertions, you need avant-garde innovators to look at it and say, okay, well, this is something that's not quite there but I think it could work.",executive,prepared,1,1,1,0,0,2,3,1,
+"Of course, revenue will be part of that.",executive,qa,1,0,1,0,0,3,2,1,
+"I was just so delighted to see how well that they have done, the moral of the team and how the team is working together.",executive,qa,1,1,0,0,0,3,2,1,
+"Together, we know how to invest in, own them, improve on them and operate them.",executive,prepared,1,1,0,1,0,2,3,1,
+"Obviously, we want to have external customers.",executive,qa,1,1,1,0,0,2,3,1,
+And so I think that trend you saw a couple of years ago was definitely different.,executive,qa,1,1,0,1,0,2,3,1,
+I think the second half of the question was about some of the competitive changes that USPS has made in the market.,executive,qa,1,1,1,0,0,2,3,1,
+"But I think what it sort of highlights is that during this transitional period and this elevated uncertainty, you might see some distortions in the data that make it hard to draw larger conclusions.",executive,qa,1,1,0,1,0,2,3,1,
+And some of those are still up in the air based on what happens.,executive,qa,1,1,1,0,0,2,3,1,
+"And that M Day was yesterday, the time to mobilize comp.",executive,prepared,1,1,1,0,0,2,3,1,
+And I'd like to highlight a few noteworthy items that have changed compared to the same quarter a year ago.,executive,prepared,1,1,0,1,0,2,3,1,
+There's just too many moving parts there.,executive,qa,1,0,1,0,0,3,2,0,
+"You could think about, okay, what if I'm building enterprise software for many customers?",executive,prepared,1,1,1,0,0,2,3,1,
+"So it makes it a lot easier for them if we could put up a strong quarter because it makes the call just a lot easier, it makes the Q&A a lot easier.",executive,prepared,1,1,0,0,0,3,2,1,
+"Performance matters, client experience matters.",executive,qa,1,0,0,1,0,3,2,1,
+"And so for all of those reasons, we're pleased with where the performance of the business is right now.",executive,qa,1,1,0,1,0,2,3,1,
+"But overall standpoint, it performed right where we would expect.",executive,qa,1,0,0,1,0,3,2,1,
+"I mean that space is always very competitive, I would say, has been throughout this entire cycle.",executive,qa,1,1,0,1,0,2,3,1,
+"In some areas, we might have some disagreements at the margin.",executive,qa,1,0,1,0,0,3,2,1,
+"You've already touched on it, that structural -- there are structural differences in the marketplace.",executive,qa,1,1,0,0,0,3,2,1,
+We're also making ourselves more efficient.,executive,qa,1,1,1,0,0,2,3,1,
+So that's the level of -- a lot of that optimization we do for each of them.,executive,qa,1,0,0,1,0,3,2,1,
+And all of it runs our entire software stack.,executive,qa,1,1,1,0,0,2,3,1,
+And then the question that Shyam's is answering is also but why is it hard to build it.,executive,prepared,1,1,1,0,0,2,3,1,
+"But as we progress through the year, we think things will get better and better.",executive,qa,1,1,0,0,0,3,2,1,
+We believe it's an important component of the Fed's mandate to really ensure the safety and soundness of the banking system.,executive,qa,1,1,0,0,0,3,2,1,
+We measure -- we are successful in the buckets that we're successful in because we bring something special to that type of customer.,executive,qa,1,1,0,1,0,2,3,1,
+"And in fact, I had a conversation with a few of our directors yesterday on just this fact.",executive,qa,1,0,0,1,0,3,2,1,
+"Angela, who is our GM in Greater China, is now part of my SLT, Senior Leadership Team, and I look forward to working with her and the rest of our team more closely.",executive,qa,1,1,0,0,1,2,3,1,
+And so we don't want regulators to need to make unusual corrections amid crises.,executive,qa,1,1,1,0,0,2,3,1,
+"Across our firm, we're delivering BlackRock to meet all our clients' individual needs.",executive,prepared,0,1,0,1,0,3,2,1,
+We had some really good successes in running this quarter and then some basketball successes around Ja and LeBron.,executive,qa,1,1,1,0,0,2,3,1,
+And our digital footprint continues to expand.,executive,prepared,1,1,0,1,0,2,3,1,
+"Joe Wolk, our CFO, will then close by sharing an overview of our cash position, capital allocation priorities and guidance for 2025; Jennifer Taubert, Executive Vice President, Worldwide Chairman, Innovative Medicine; and Tim Schmid, Executive Vice President, Worldwide Chairman, MedTech, will be joining us for Q&A.",executive,prepared,1,1,0,1,0,2,3,1,
+And so you can't look at the fourth quarter year-over-year.,executive,qa,0,1,1,0,0,3,2,1,
+"We want to be doing more than what we promised to every turn, to every stakeholder, including investors, including customers, including suppliers, so what have you.",executive,qa,1,1,1,0,0,2,3,1,
+But we have a zealous focus on finding opportunities to serve our clients.,executive,qa,1,1,0,0,0,3,2,1,
+"We have a terrific team that, after every rollout, we take the learnings and apply it to the next one and the next one and so on, so we get better going forward.",executive,qa,1,1,0,1,0,2,3,1,
+"We, the entire NIKE team, feels a sense of urgency here.",executive,prepared,1,1,0,0,0,3,2,1,
+We've worked closely with the CHIPS program office in the U.S. government.,executive,qa,0,1,1,0,1,2,3,1,
+"I think this is a very positive sign, obviously, for us.",executive,qa,1,1,0,0,0,3,2,1,
+"Now before turning to Q&A, I wanted to offer a higher level perspective on the quarter.",executive,prepared,1,1,0,1,0,2,3,1,
+"In order to build an asset allocation portfolio that can mix stocks, bonds, crypto, commodities and the like.",executive,qa,1,1,0,1,0,2,3,1,
+But knowing mathematically how much it's going to help and realizing that in actual activity aren't always the same 2 things.,executive,qa,1,0,1,1,0,2,3,1,
+"And as we're adding good people, we're also -- not necessary -- we're also making sure that we've got the right people in the right seats.",executive,qa,1,0,0,1,0,3,2,1,
+"And then ultimately, we have seen this business grow.",executive,qa,1,1,1,0,0,2,3,1,
+"But I do remind people, we've had a bull market for a long time.",executive,qa,1,1,0,0,0,3,2,1,
+"This quarter, that included the England Women's National Team winning the European Championship, Sinner's Wimbledon title, Scottie's Open Championship title and Chelsea winning the Club World Cup.",executive,prepared,1,0,0,1,1,2,3,1,
+We've got to see where this starts to go.,executive,qa,1,0,1,0,0,3,2,0,
+And we've got a lot of growth catalysts to be proud of.,executive,qa,1,1,0,0,0,3,2,1,
+"I think we could start by thinking about, if I was building software to solve problems for one company, well, you don't need an Ontology.",executive,prepared,1,1,0,0,1,2,3,1,
+We also remain committed to paying our shareholders a sustainable and growing dividend.,executive,prepared,1,1,0,1,0,2,3,1,
+"First off, for Jeff Watts, I suspect all of you saw the announcement we made in late December.",executive,prepared,1,1,0,0,0,3,2,1,
+And so those are really the major areas for [ disconnect ].,executive,qa,0,1,1,0,0,3,2,1,
+"Executives - President, CEO & Director
+And on the broader point here, the trade as a percentage of GDP has essentially flatlined since about 2016.",executive,qa,0,1,0,1,1,2,3,1,
+Just given where seasonality is for those businesses.,executive,qa,1,1,1,0,0,2,3,1,
+"With each generation, demand only grows.",executive,qa,1,0,1,1,0,2,3,1,
+Product and customer mix played its customary role.,executive,prepared,0,0,1,0,1,3,2,1,
+"Companies recognize the uniqueness of our global relationships, our brand and our expertise across businesses, markets and industries.",executive,prepared,1,1,0,1,0,2,3,1,
+"Executives - CEO & Chairman
+Well, I guess I would start with -- we certainly have opportunities to think about things that we wouldn't have thought about in the past.",executive,qa,1,1,0,0,1,2,3,1,
+"We believe this will deepen our relationships with our clients and deliver value to you, our shareholders.",executive,prepared,1,1,0,1,0,2,3,1,
+"And as I said, we'll be doing the same look across our data center portfolio as well.",executive,qa,1,0,0,1,0,3,2,1,
+"In closing, I'm very confident about the state of our client franchise.",executive,prepared,1,1,0,0,1,2,3,1,
+The second thing is the why does that happen?,executive,qa,1,1,1,0,0,2,3,1,
+"Look at the nurses and the ICU who have more time to spend with their patients, less time munging around collecting the clinical notes to understand what care to deliver or the factory workers in the submarine industrial base who get back 3 days of quoting a part to actually spend time solving problems in production.",executive,prepared,1,1,0,1,0,2,3,1,
+"If you don't have software, you can't open and enable new applications.",executive,qa,1,1,0,1,0,2,3,1,
+We try to create the right culture of focus and intensity that allows us to continue to deliver and execute for them.,executive,qa,1,1,0,1,0,2,3,1,
+"Obviously, equity markets have been under a little bit of pressure the last few days.",executive,qa,1,1,0,1,0,2,3,1,
+"At BlackRock, we are -- we really challenge ourselves not to get mired down in all the negativity, but to navigate, to mitigate the move forward, to work with each and every client, to help each and every client.",executive,prepared,1,1,0,0,1,2,3,1,
+Now moving on to Slide 4 and looking at our customer site performance.,executive,prepared,1,1,0,1,0,2,3,1,
+"Executives - Co-Founder, CEO & Director
+Vivek, probably the best way to think through it is that AI is several things.",executive,qa,0,1,0,0,1,3,2,1,
+We may see one more perhaps as a prospect.,executive,qa,1,1,0,0,0,3,2,1,
+"AI is transforming every industry, company and country.",executive,qa,1,1,0,1,0,2,3,1,
+"Number two, we just got out of a rhythm of working closely with our wholesale partners.",executive,qa,1,1,1,0,0,2,3,1,
+"And the short answer is that for us, it's pretty uncontroversially no.",executive,qa,1,0,1,0,0,3,2,1,
+"And all of those type of things that are common sense to you and I, but AIs have to go learn those physical effects.",executive,qa,1,1,0,0,0,3,2,1,
+"We invested in our talent, which is fundamentally the most important thing that we invest in each and every year.",executive,prepared,1,1,0,1,0,2,3,1,
+"As a result of their hard work and commitment, we once again delivered the best service offering in the industry.",executive,prepared,1,0,0,1,0,3,2,1,
+But we're always looking to fill the pipeline as well on additional opportunities.,executive,qa,1,1,0,1,0,2,3,1,
+"But obviously, anyone should be thrilled to be in a partnership with Apple.",executive,qa,1,1,0,0,0,3,2,1,
+"And so in those 4 -- the control plane of the network, which is used for storage, it's used for security.",executive,qa,1,1,0,1,0,2,3,1,
+"The world has -- the Internet has trillions of pieces of content, how could they possibly figure out what to put in front of you and your little tiny screen, unless they have really sophisticated recommender systems to do so.",executive,qa,1,1,0,1,0,2,3,1,
+We design and deliver strategies and products that fit their unique long-term needs and aspirations.,executive,prepared,1,1,0,1,0,2,3,1,
+"We're laser-focused on what we can control, inspiring and innovating for the 8 billion consumers we have the privilege to serve.",executive,prepared,1,0,0,1,0,3,2,1,
+And I'd say we do believe that we'll have further updates there.,executive,qa,1,0,1,1,0,2,3,1,
+"But yes, as Jamie points out, just remember that to the extent that the market is sufficient, which maybe it's not, but you can't really hedge ahead of cuts that are already priced in, right?",executive,qa,1,1,0,1,0,2,3,1,
+"Some of them are already approved, most of them submitted.",executive,qa,1,1,0,1,0,2,3,1,
+"They're embracing the change, and we're ready for the challenge.",executive,qa,1,1,0,0,0,3,2,1,
+"It's a big, big tenet of what we're trying to do.",executive,qa,1,1,0,0,0,3,2,1,
+Or is this something that's going to be announced on Wednesday and canceled on Friday?,executive,qa,1,1,1,0,0,2,3,1,
+The first action is to ignite our winning culture.,executive,prepared,1,1,0,0,0,3,2,1,
+And that's what we have to fight to keep.,executive,prepared,1,0,1,0,0,3,2,1,
+"Just as well, you don't need to create new systems for the sake of doing something that you could easily be doing in networking in Ethernet.",executive,qa,1,1,1,0,0,2,3,1,
+"And I think, Ed's super excited about both what we've done, but continuing to execute along the lines that we've laid out for you all.",executive,qa,1,1,0,1,0,2,3,1,
+And those 2 have been our North Stars as we've been going through this process.,ir,qa,1,0,1,1,0,2,3,1,
+And I am highly confident in our ability to get the remaining work done.,ir,qa,1,1,0,1,0,2,3,1,
+"I think absolutely, a strong, strong performance.",ir,qa,1,1,0,0,0,3,2,1,
+I was just talking about the payments piece.,ir,qa,1,1,1,0,0,2,3,1,
+And I'm excited to update you on our progress in greater detail and to outline the next phase of our journey at our Investor Day on May 7.,ir,prepared,1,1,0,1,0,2,3,1,
+"Executives - Executive Vice Chairman and Senior Executive Advisor to Chair & CEO
+And Mike, if I could just put one number into context because you played back the 11,000, which was a number of global regulatory reports across the landscape here.",ir,qa,1,1,0,1,0,2,3,1,
+Their unwavering commitment to our customers and to our transformation is what positions us to become a best-in-class company.,ir,prepared,1,1,0,1,0,2,3,1,
+I am very proud of our senior leadership and the entire organization as we demonstrate the potential of our unique global franchise.,ir,prepared,1,1,0,0,0,3,2,1,
+"Executives - CEO & Chair of the Board
+Let me just -- so let me just be clear about where the ones that we've just done and that we're working on through the organization simplification.",ir,qa,1,0,0,0,1,3,2,1,
+"I want to close by turning to Slide 11, repeating how excited I am about the momentum we are building and for all the opportunities we have to produce higher growth and returns.",ir,prepared,1,1,0,1,0,2,3,1,
+That includes market conditions with the ultimate goal of maximizing value for shareholders.,ir,qa,1,1,0,1,0,2,3,1,
+Now turning to our third quarter 2024 outlook.,ir,prepared,1,1,0,1,0,2,3,0,
+"But yes, we have to get the work done, validate it, and then hand it over to the regulators in the process we talked about.",ir,qa,1,1,0,1,0,2,3,1,
+"I'm going to start with the firm-wide financial results, focusing on year-over-year comparisons for the third quarter, unless I indicate otherwise, and then spend a little more time on the businesses.",ir,prepared,1,1,0,1,0,2,3,1,
+"Our products are designed and sold for beneficial commercial use, and every license sale we make will benefit the U.S. economy, the U.S. leadership.",ir,prepared,0,1,0,1,1,2,3,1,
+"I'm going to start with the fourth quarter and full year firm-wide financial results, focusing on year-over-year comparisons, unless I indicate otherwise.",ir,prepared,1,1,0,1,0,2,3,1,
+"We're In a strong financial position, feel very good about the leadership team.",ir,qa,1,1,0,0,0,3,2,1,
+I'm excited to welcome Gina Adams into her new role as General Counsel and Secretary of FedEx effective September 24.,ir,prepared,1,1,0,0,0,3,2,1,
+Turning to capital and liquidity on Slide 5.,ir,prepared,0,1,0,1,0,3,2,0,
+I continue to be excited by the opportunities and the sheer potential of our franchise.,ir,prepared,1,1,0,0,0,3,2,1,
+There's a path with the combination of those levers that I've mentioned.,ir,qa,1,1,0,1,0,2,3,1,
+"For the past 5 years, she served as our Asia Pacific Regional President.",ir,prepared,1,0,0,0,1,3,2,1,
+"We keep a close eye on execution, making sure we've got the right level of resourcing and expertise.",ir,qa,1,1,0,1,0,2,3,1,
+And you can see that in the different drivers.,ir,qa,1,0,1,0,0,3,2,1,
+And it will be beneficial for both our growth and our returns.,ir,qa,1,1,0,1,0,2,3,1,
+These things just don't work out as intended.,ir,qa,1,1,1,0,0,2,3,1,
+"And the best part is, there is much more upside ahead.",ir,prepared,1,1,0,1,0,2,3,1,
+"We continue to move forward with confidence and believe we have the right culture, team, discipline and sense of urgency to complete the work that's required.",ir,prepared,1,1,0,1,0,2,3,1,
+Turning to our broader Data Center portfolio.,ir,prepared,1,1,0,1,0,2,3,0,
+So we want our customers to pay on time.,ir,qa,1,0,1,0,0,3,2,1,
+"Now turning to the left side of the slide, where we show our financial results for the full FERC.",ir,prepared,1,1,0,1,0,2,3,1,
+And so feel -- how that evolves will be an important factor.,ir,qa,1,0,0,1,0,3,2,1,
+"With every new platform shift, a wave of start-ups is created.",ir,prepared,1,0,0,1,0,3,2,1,
+"Mike will talk more about our expectations for 2024, but I'd like to make a couple of points.",ir,prepared,1,1,0,0,0,3,2,1,
+We will remain relentlessly focused on execution.,ir,prepared,1,0,0,1,0,3,2,1,
+I'll start with a review of our financial results and then provide our outlook for the third quarter of fiscal 2025.,ir,prepared,1,1,0,1,0,2,3,0,
+"In closing, we delivered a strong quarter while successfully navigating a dynamic environment.",ir,prepared,1,1,0,1,0,2,3,1,
+Now turning to our outlook for fiscal year '25.,ir,prepared,1,1,0,1,0,2,3,0,
+We have been and we will be transparent when we have issues and how we are addressing them.,ir,qa,1,1,0,1,0,2,3,1,
+But I'd just close by saying I couldn't agree with you more about geopolitical risks and fragility.,ir,qa,1,1,1,0,0,2,3,1,
+We do not take this lightly and we have carefully considered the impact this will have on the Intel family.,ir,prepared,1,1,0,1,0,2,3,1,
+"Amidst all these dynamics, we continue to focus on executing against our strategy and delivering the best of Citi to all our stakeholders.",ir,prepared,1,1,0,1,0,2,3,1,
+"And that is, in fact, what the resource review plan was that was in the amended consent order.",ir,qa,0,1,1,0,0,3,2,1,
+"During the prepared comments, Hock and Kirsten will be providing details of our second quarter fiscal year 2024 results, guidance for our fiscal year 2024 as well as commentary regarding the business environment.",ir,prepared,1,1,0,1,0,2,3,1,
+And so we're mindful of how tight they're running.,ir,qa,1,1,0,1,0,2,3,1,
+We've been bringing in some great new talent.,ir,qa,1,0,0,1,1,2,3,1,
+We appreciate the administration taking a fresh look at regulations across all industries to unlock growth.,ir,prepared,1,1,0,1,0,2,3,1,
+I'm very pleased with how our teams are navigating a condensed period between Thanksgiving and Christmas.,ir,prepared,1,1,0,1,0,2,3,1,
+And enough for us to kind of see a more normal level of credit.,ir,qa,1,1,1,0,0,2,3,1,

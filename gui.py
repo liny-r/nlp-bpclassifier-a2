@@ -4,220 +4,264 @@ BPClassifier GUI — Streamlit app for inline boilerplate tagging.
 Run:
     streamlit run gui.py
 
-Loads saved_model/best_model.pkl at startup. Accepts a .txt earnings-call
-transcript via file upload or text paste; displays every sentence in its
-original position with boilerplate highlighted in red.
+Loads the winning model (FinBERT fine-tuned) from saved_model/finbert_finetuned/
+and its threshold from saved_model/winner.json.
 """
 
-import pickle, re, html as _html
+import json, html as _html
 from pathlib import Path
 
 import numpy as np
 import streamlit as st
+import streamlit.components.v1 as _components
 
-# ── Load model once ───────────────────────────────────────────────────────────
-MODEL_PATH = Path(__file__).parent / 'saved_model' / 'best_model.pkl'
+# ── Paths ─────────────────────────────────────────────────────────────────────
+ROOT         = Path(__file__).parent
+WINNER_PATH  = ROOT / 'saved_model' / 'winner.json'
+FINBERT_PATH = ROOT / 'saved_model' / 'finbert_finetuned'
 
+# ── Load winner model once ────────────────────────────────────────────────────
 @st.cache_resource
-def load_model():
-    with open(MODEL_PATH, 'rb') as f:
-        return pickle.load(f)
+def load_winner():
+    winner = json.loads(WINNER_PATH.read_text())
+    threshold = float(winner['threshold'])
 
-@st.cache_resource
-def load_embedder(model_name: str):
-    from sentence_transformers import SentenceTransformer
-    return SentenceTransformer(model_name)
+    from transformers import AutoTokenizer, AutoModelForSequenceClassification
+    tokenizer = AutoTokenizer.from_pretrained(str(FINBERT_PATH))
+    model     = AutoModelForSequenceClassification.from_pretrained(str(FINBERT_PATH))
+    model.eval()
+    return tokenizer, model, threshold
 
-# ── Feature helpers (must match notebook §5) ──────────────────────────────────
-REGEX_FEATURES = [
-    ('f_operator_phrase',   r'(?i)(\bmy name is\b|conference operator|welcome everyone|welcome to nvidia|welcome to the)'),
-    ('f_safe_harbor',       r'(?i)(forward[- ]looking|safe[- ]harbor|actual results may differ|risks and uncertainties)'),
-    ('f_sec_filing',        r'(?i)(form 10-[kq]|sec filing|securities and exchange|8-k|annual report)'),
-    ('f_webcast',           r'(?i)(webcast|replay until|investor relations website|ir website)'),
-    ('f_generic_thanks',    r'(?i)\b(thank you|thanks)\b(?!.{0,30}(revenue|guidance|earnings|results|growth))'),
-    ('f_question_intro',    r'(?i)(our next question|your line is (open|now)|goes to the line of|you may (begin|proceed|go ahead))'),
-    ('f_analyst_firm',      r'(?i)\b(Goldman|Morgan Stanley|JPMorgan|Citi(group)?|UBS|Wells Fargo|Deutsche Bank|Barclays|BofA|Bernstein|Cowen|Jefferies|Piper Sandler|Evercore|Oppenheimer|Mizuho)\b'),
-    ('f_call_close',        r'(?i)(no further questions|this concludes|thank you for (your time|participating|joining))'),
-    ('f_nongaap',           r'(?i)(non-gaap|reconciliation|gaap (to|and) non-gaap)'),
-    ('f_short_affirm',      r'(?i)^(sure\.?|great\.?|okay\.?|yes\.?|absolutely\.?|of course\.?|thank you\.?)\s*$'),
-    ('f_operator_instr',    r'(?i)\[operator instructions\]'),
-    ('f_turn_over',         r'(?i)(turn (the call|it) over|let me (now )?turn|i.d like to (now )?turn)'),
-    ('f_dollar_amount',     r'\$[\d,\.]+\s*(billion|million|thousand|[BbMmKk])?'),
-    ('f_percentage',        r'\b\d+(\.\d+)?\s*%'),
-    ('f_revenue_mention',   r'(?i)\b(revenue|net (income|loss|sales)|total (sales|revenue))\b'),
-    ('f_margin_mention',    r'(?i)\b(gross margin|operating margin|ebitda margin|profit margin)\b'),
-    ('f_eps_mention',       r'(?i)\b(earnings per share|eps|diluted eps|non-gaap eps)\b'),
-    ('f_guidance_word',     r'(?i)\b(guidance|outlook|forecast|expect(s|ed)?|anticipate[sd]?|project(s|ed)?|full[- ]year)\b'),
-    ('f_raised_lowered',    r'(?i)\b(raised?|lowered?|increased?|decreased?|reaffirmed?)\s+(guidance|outlook|revenue|earnings|estimate)'),
-    ('f_yoy_qoq',           r'(?i)\b(year[- ]over[- ]year|sequentially|quarter[- ]over[- ]quarter|yoy|qoq|vs\. prior)\b'),
-    ('f_record_quarter',    r'(?i)\b(record (revenue|quarter|sales|profit|high)|all[- ]time (high|record))\b'),
-    ('f_product_launch',    r'(?i)\b(launched?|announced?|introduced?|released?|shipped?|ramped?)\s+(new |our |the )?\w+ (platform|product|system|service|model|chip|GPU|CPU)'),
-    ('f_customer_mention',  r'(?i)\b(customer(s)?|client(s)?|partner(s)?)\s+(include|such as|like|across|with)'),
-    ('f_sentence_short',    None),
-    ('f_has_digits',        r'\b\d+\b'),
-]
-COMPILED = [(name, re.compile(pat) if pat else None) for name, pat in REGEX_FEATURES]
+# ── FinBERT inference ─────────────────────────────────────────────────────────
+def predict(sentences, tokenizer, model, threshold, batch_size=32):
+    import torch
+    all_probas = []
+    for i in range(0, len(sentences), batch_size):
+        batch = sentences[i : i + batch_size]
+        enc = tokenizer(batch, truncation=True, max_length=128,
+                        padding=True, return_tensors='pt')
+        with torch.no_grad():
+            logits = model(**enc).logits
+        probas = torch.softmax(logits, dim=-1)[:, 1].cpu().numpy()
+        all_probas.extend(probas.tolist())
+    probas = np.array(all_probas)
+    return (probas >= threshold).astype(int), probas
 
-def build_regex_features(texts):
-    rows = []
-    for text in texts:
-        row = []
-        for name, pattern in COMPILED:
-            if name == 'f_sentence_short':
-                row.append(1 if len(text.split()) < 10 else 0)
-            else:
-                row.append(1 if pattern.search(text) else 0)
-        rows.append(row)
-    return np.array(rows, dtype=np.float32)
-
-def predict_sentences(sentences, payload):
-    if not sentences:
-        return np.array([], dtype=int), np.array([], dtype=float)
-    embedder = load_embedder(payload['embed_model'])
-    emb = embedder.encode(sentences, batch_size=128, show_progress_bar=False,
-                          convert_to_numpy=True, normalize_embeddings=True)
-    reg = build_regex_features(sentences)
-    X   = np.hstack([emb, reg])
-    probas = payload['model'].predict_proba(X)[:, 1]
-    labels = (probas >= payload['threshold']).astype(int)
-    return labels, probas
-
-# ── Sentence splitter ─────────────────────────────────────────────────────────
-def split_sentences(text: str, min_chars: int = 40):
+# ── Paragraph-aware sentence splitter ────────────────────────────────────────
+def split_preserving_lines(text: str, min_chars: int = 40):
     import nltk
-    nltk.download('punkt', quiet=True)
     nltk.download('punkt_tab', quiet=True)
     from nltk.tokenize import sent_tokenize
-    sentences, kept = [], []
-    for sent in sent_tokenize(text):
-        s = sent.strip()
-        if len(s) >= min_chars:
-            kept.append(s)
-        sentences.append((s, len(s) >= min_chars))
-    return sentences, kept
 
-# ── Streamlit UI ──────────────────────────────────────────────────────────────
-st.set_page_config(page_title='BPClassifier', layout='wide')
-st.title('Boilerplate vs. Substantive Sentence Classifier')
-st.caption('NLP for Finance — Spring 2026 | Assignment 2')
+    tokens = []  # ('sentence', keep, text) | ('break',)
+    kept   = []
 
-# Sidebar
-with st.sidebar:
-    st.header('About')
-    st.markdown("""
-    **Red background** = boilerplate
-    (scripted intros, safe-harbor, housekeeping)
+    for line in text.splitlines():
+        line = line.strip()
+        if not line:
+            tokens.append(('break',))
+            continue
+        for s in sent_tokenize(line):
+            s = s.strip()
+            if not s:
+                continue
+            keep = len(s) >= min_chars
+            tokens.append(('sentence', keep, s))
+            if keep:
+                kept.append(s)
+        tokens.append(('break',))
 
-    **No highlight** = substantive
-    (financials, guidance, strategy, Q&A specifics)
+    return tokens, kept
 
-    **Recall constraint:** substantive recall ≥ 0.96
-    **Model:** HistGBM + sentence embeddings + 25 regex flags
-    """)
-    st.divider()
-    if MODEL_PATH.exists():
-        st.success('Model loaded ✓')
-    else:
-        st.error(f'Model not found at {MODEL_PATH}')
-        st.stop()
+# ── Page config ───────────────────────────────────────────────────────────────
+st.set_page_config(page_title='Boilerplate Detector', layout='wide')
 
-# Input
-ECT_DIR = Path(__file__).parent / 'ECT'
+# Reduce default Streamlit top padding
+st.markdown(
+    '<style>.block-container{padding-top:3rem;padding-bottom:1rem;}</style>',
+    unsafe_allow_html=True,
+)
+
+# ── Session state ─────────────────────────────────────────────────────────────
+if 'raw_text'     not in st.session_state: st.session_state.raw_text     = ''
+if 'source_label' not in st.session_state: st.session_state.source_label = ''
+
+# ── Compact header ────────────────────────────────────────────────────────────
+hdr_col, clear_col = st.columns([8, 1])
+with hdr_col:
+    st.markdown(
+        '<p style="margin:0;font-size:24px;font-weight:700;">Boilerplate Detector'
+        '<span style="font-size:12px;color:#888;font-weight:normal;margin-left:10px;">'
+        'FinBERT &nbsp;·&nbsp; ProsusAI/finbert (fine-tuned) &nbsp;·&nbsp; test macro-F1 = 0.923'
+        '</span></p>'
+        '<p style="margin:0 0 8px;font-size:12px;color:#888;">'
+        'Highlights scripted intros, safe-harbor language, and operator chatter in earnings-call transcripts.</p>',
+        unsafe_allow_html=True,
+    )
+with clear_col:
+    st.markdown('<div style="margin-top:6px"></div>', unsafe_allow_html=True)
+    if st.button('✕ Clear', use_container_width=True):
+        st.session_state.raw_text    = ''
+        st.session_state.source_label = ''
+        st.rerun()
+
+# ── Input tabs (Upload | Paste | ECT library) ─────────────────────────────────
+ECT_DIR   = ROOT / 'ECT'
 ect_files = sorted(ECT_DIR.glob('*.txt')) if ECT_DIR.exists() else []
 
-st.subheader('Load transcript')
-tab_ect, tab_upload, tab_paste = st.tabs(['ECT library', 'Upload .txt file', 'Paste text'])
+tab_upload, tab_paste, tab_ect = st.tabs(['Upload .txt file', 'Paste text', 'ECT library'])
 
-raw_text = ''
+with tab_upload:
+    uploaded = st.file_uploader('Choose a .txt earnings-call transcript', type=['txt'],
+                                label_visibility='collapsed')
+    if uploaded:
+        st.session_state.raw_text    = uploaded.read().decode('utf-8', errors='ignore')
+        st.session_state.source_label = uploaded.name
+
+with tab_paste:
+    pasted = st.text_area('', height=160, label_visibility='collapsed',
+                          placeholder='Paste raw earnings-call transcript here…')
+    if pasted.strip():
+        st.session_state.raw_text    = pasted
+        st.session_state.source_label = 'pasted text'
+
 with tab_ect:
     if ect_files:
-        labels = [f.name for f in ect_files]
-        choice = st.selectbox('Select transcript', ['— choose —'] + labels)
+        choice = st.selectbox('Select transcript', ['— choose —'] + [f.name for f in ect_files],
+                              label_visibility='collapsed')
         if choice != '— choose —':
-            raw_text = (ECT_DIR / choice).read_text(encoding='utf-8', errors='ignore')
-            st.caption(f'Loaded: {choice}  ({len(raw_text):,} chars)')
+            st.session_state.raw_text    = (ECT_DIR / choice).read_text(encoding='utf-8', errors='ignore')
+            st.session_state.source_label = choice
     else:
         st.warning('ECT/ directory not found next to gui.py.')
 
-with tab_upload:
-    uploaded = st.file_uploader('Choose a .txt earnings-call transcript', type=['txt'])
-    if uploaded:
-        raw_text = uploaded.read().decode('utf-8', errors='ignore')
-
-with tab_paste:
-    pasted = st.text_area('Paste transcript text here', height=200)
-    if pasted.strip():
-        raw_text = pasted
+raw_text = st.session_state.raw_text
 
 if not raw_text.strip():
-    st.info('Select a transcript from ECT, upload a file, or paste text to begin.')
+    st.info('Select a transcript from the ECT library, upload a .txt file, or paste text above.')
     st.stop()
 
-# Run classifier
-with st.spinner('Classifying sentences...'):
-    payload = load_model()
-    all_sents, kept_sents = split_sentences(raw_text)
+# ── Classify ──────────────────────────────────────────────────────────────────
+with st.spinner('Classifying with FinBERT…'):
+    tokenizer, model, threshold = load_winner()
+    tokens, kept_sents = split_preserving_lines(raw_text)
     if not kept_sents:
-        st.warning('No sentences long enough to classify (min 40 characters).')
+        st.warning('No sentences long enough to classify (min 40 chars).')
         st.stop()
-    labels, probas = predict_sentences(kept_sents, payload)
+    labels_arr, probas_arr = predict(kept_sents, tokenizer, model, threshold)
 
-# Map labels back to all sentences
 label_map = {}
 proba_map = {}
 idx = 0
-for sent, keep in all_sents:
-    if keep:
-        label_map[sent] = int(labels[idx])
-        proba_map[sent]  = float(probas[idx])
+for tok in tokens:
+    if tok[0] == 'sentence' and tok[1]:
+        label_map[tok[2]] = int(labels_arr[idx])
+        proba_map[tok[2]] = float(probas_arr[idx])
         idx += 1
 
-# Statistics panel
-n_bp = sum(1 for v in label_map.values() if v == 0)
-n_sb = sum(1 for v in label_map.values() if v == 1)
+n_bp    = sum(1 for v in label_map.values() if v == 0)
+n_sb    = sum(1 for v in label_map.values() if v == 1)
 n_total = len(label_map)
 
-st.subheader('Statistics')
-col1, col2, col3 = st.columns(3)
-col1.metric('Total sentences', n_total)
-col2.metric('Boilerplate', f'{n_bp} ({n_bp/n_total*100:.1f}%)')
-col3.metric('Substantive', f'{n_sb} ({n_sb/n_total*100:.1f}%)')
+# ── Stats bar ─────────────────────────────────────────────────────────────────
+sc1, sc2, sc3 = st.columns([1, 2, 2])
+sc1.metric('Total', n_total)
+sc2.metric('Boilerplate', f'{n_bp}  ({n_bp/n_total*100:.1f}%)')
+sc3.metric('Substantive', f'{n_sb}  ({n_sb/n_total*100:.1f}%)')
 
-# Inline document view
-st.divider()
-st.subheader('Tagged transcript')
+bp_pct = n_bp / n_total * 100
+st.markdown(
+    f'<div style="height:6px;border-radius:3px;overflow:hidden;margin:2px 0 10px;">'
+    f'<div style="width:{bp_pct:.1f}%;background:#e05252;height:100%;display:inline-block;"></div>'
+    f'<div style="width:{100-bp_pct:.1f}%;background:#52a852;height:100%;display:inline-block;"></div>'
+    f'</div>',
+    unsafe_allow_html=True,
+)
 
-bp_style   = 'background-color: #ffcccc; padding: 2px 4px; border-radius: 2px;'
-sb_style   = ''
-short_style = 'color: #aaaaaa; font-style: italic;'
+if 'view_mode' not in st.session_state:
+    st.session_state.view_mode = 'All'
 
-import streamlit.components.v1 as _components
+lc0, lc1, lc2, lc3, lc_src = st.columns([0.6, 1.4, 1.4, 1.6, 4])
 
-html_parts = ['<div style="font-family: sans-serif; line-height: 1.8; font-size: 14px; padding: 4px;">']
-for sent, keep in all_sents:
-    s = _html.escape(sent.replace('\n', ' ').replace('\r', ' '))
-    if not keep:
-        html_parts.append(f'<span style="{short_style}">{s}</span> ')
+with lc0:
+    if st.button('All',
+                 type='primary' if st.session_state.view_mode == 'All' else 'secondary',
+                 use_container_width=True):
+        st.session_state.view_mode = 'All'; st.rerun()
+
+with lc1:
+    if st.button('🔴 Boilerplate',
+                 type='primary' if st.session_state.view_mode == 'BP only' else 'secondary',
+                 use_container_width=True):
+        st.session_state.view_mode = 'BP only'; st.rerun()
+
+with lc2:
+    if st.button('🟢 Substantive',
+                 type='primary' if st.session_state.view_mode == 'Sub only' else 'secondary',
+                 use_container_width=True):
+        st.session_state.view_mode = 'Sub only'; st.rerun()
+
+with lc3:
+    if st.button('Short / filtered',
+                 type='primary' if st.session_state.view_mode == 'Short only' else 'secondary',
+                 use_container_width=True):
+        st.session_state.view_mode = 'Short only'; st.rerun()
+
+with lc_src:
+    st.markdown(
+        f'<p style="margin:8px 0 0;font-size:12px;color:#aaa;text-align:right;">'
+        f'{st.session_state.source_label}</p>',
+        unsafe_allow_html=True,
+    )
+
+view_mode = st.session_state.view_mode
+
+# ── Document view ─────────────────────────────────────────────────────────────
+bp_style    = 'background-color:#ffcccc;padding:1px 3px;border-radius:2px;'
+short_style = 'color:#aaaaaa;font-style:italic;'
+
+html_parts = ['<div style="font-family:sans-serif;font-size:14px;line-height:1.9;padding:4px;">']
+pending_breaks = 0
+
+for tok in tokens:
+    if tok[0] == 'break':
+        pending_breaks += 1
         continue
-    lbl = label_map.get(sent, 1)
-    prob = proba_map.get(sent, 0.5)
-    style = bp_style if lbl == 0 else sb_style
-    tag   = 'BP' if lbl == 0 else ''
+
+    _, keep, s = tok
+    se = _html.escape(s)
+
+    if pending_breaks > 0:
+        html_parts.append('<br>' * min(pending_breaks, 2))
+        pending_breaks = 0
+
+    lbl   = label_map.get(s, 1)
+    prob  = proba_map.get(s, 0.5)
     title = f'P(substantive)={prob:.3f}'
+
+    if not keep:
+        if view_mode in ('All', 'Short only'):
+            html_parts.append(f'<span style="{short_style}" title="too short">{se}</span> ')
+        continue
+
+    if view_mode == 'Short only': continue
+    if view_mode == 'BP only'  and lbl != 0: continue
+    if view_mode == 'Sub only' and lbl != 1: continue
+
     if lbl == 0:
         html_parts.append(
-            f'<span style="{style}" title="{title}">'
-            f'<sup style="font-size:9px;color:#cc0000">{tag}</sup>'
-            f'{s}</span> '
+            f'<span style="{bp_style}" title="{title}">'
+            f'<sup style="font-size:9px;color:#c00;">BP</sup>{se}</span> '
         )
     else:
-        html_parts.append(f'<span title="{title}">{s}</span> ')
+        html_parts.append(f'<span title="{title}">{se}</span> ')
+
 html_parts.append('</div>')
 
-est_height = max(600, len(all_sents) * 28)
+est_height = max(500, len([t for t in tokens if t[0] == 'sentence']) * 26)
 _components.html(''.join(html_parts), height=est_height, scrolling=True)
 
-# Download tagged results as CSV
+# ── Download ──────────────────────────────────────────────────────────────────
 import pandas as pd, io
 out_df = pd.DataFrame([
     {'sentence': s, 'label': 'boilerplate' if l == 0 else 'substantive',

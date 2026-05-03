@@ -22,6 +22,8 @@ header-includes: |
   \newunicodechar{≤}{$\leq$}
   \newunicodechar{≈}{$\approx$}
   \newunicodechar{→}{$\rightarrow$}
+  \usepackage{float}
+  \floatplacement{figure}{H}
 ---
 
 \newpage
@@ -30,7 +32,7 @@ header-includes: |
 
 ## Executive Summary
 
-This report builds a binary boilerplate-vs-substantive sentence classifier for earnings-call transcripts. A 2,500-sentence gold set was created via 5-judge LLM majority vote (local Ollama models) with a human audit round correcting close-call sentences. Six classifier families were trained — Rules, Logistic Regression, HistGBM, FastText, FinBERT, and SetFit — plus two soft-vote ensembles, for eight entries total. Thresholds were tuned via 5-fold OOF cross-validation with a 0.97 substantive-recall safety margin above the 0.96 constraint. **7 of 8 classifiers meet the 0.96 test-set recall floor.** FinBERT achieves the highest test macro-F1 (0.923); the mean-probability ensemble is second (0.889). HistGBM is saved as the deployment artifact for its compact size and sub-second CPU inference.
+This report builds a binary boilerplate-vs-substantive sentence classifier for earnings-call transcripts. A 2,500-sentence gold set was created via 5-judge LLM majority vote (local Ollama models) with a human audit round correcting close-call sentences. Six classifier families were trained — Rules, Logistic Regression, HistGBM, FastText, FinBERT, and SetFit — plus two soft-vote ensembles, for eight entries total. Thresholds were tuned via 5-fold OOF cross-validation with a 0.97 substantive-recall safety margin above the 0.96 constraint. **7 of 8 classifiers meet the 0.96 test-set recall floor.** FinBERT achieves the highest test macro-F1 (0.923) and is the rubric winner; its checkpoint and threshold are saved to `saved_model/finbert_finetuned/` and `winner.json`. The Streamlit GUI loads the FinBERT checkpoint directly and runs batched CPU inference.
 
 ## 1. Introduction
 
@@ -123,49 +125,7 @@ j4 (qwen3:14b) is the most consistent judge — it disagrees with the majority o
 
 ### 2.4 Human-Review Corrections — Selected Examples
 
-The following sentences illustrate the most instructive disagreements between the LLM panel and the human auditor.
-
-**Category A — Analyst Q&A questions (LLM: boilerplate → Human: substantive)**
-
-These were the most common correction type. LLMs flagged short, conversational questions as generic filler; the human auditor recognized that even brief analyst questions are substantive because they probe a specific topic on the analyst's research agenda.
-
-| Sentence | Votes (j3–j7) | Why substantive |
-|----------|--------------|-----------------|
-| "And what has been the more challenging aspect of it all?" | 1,1,0,0,0 | Analyst asking FedEx management to diagnose operational difficulties — a specific follow-up, not a social filler |
-| "Just your comfort level in terms of the functioning of the treasury market." | 1,1,0,0,0 | Probing JPMorgan's risk view on treasury market liquidity — material to investors |
-| "But that being said, as Jamie noted, like we have no idea what the curve is going to look like, right?" | 1,1,0,0,0 | JPMorgan analyst referencing Jamie Dimon's prior comments and pressing on rate curve uncertainty |
-| "We're, what, 9 months or so into this new administration with the new regulators." | 1,1,0,0,0 | Analyst framing a question about the regulatory timeline — substantive political/regulatory context |
-| "And we all know about the commercial real estate office." | 0,1,1,0,0 | Analyst acknowledging CRE stress as setup for a material question on exposure |
-
-**Category B — Executive statements that sound generic but carry strategic content (LLM: boilerplate → Human: substantive)**
-
-The LLM panel mis-classified these as boilerplate because they lack numerical anchors and use hedged first-person language. The human auditor applied rule 3 (closing sentiments are substantive) and rule 5 (hedged executive answers carry strategic intent).
-
-| Sentence | Votes (j3–j7) | Why substantive |
-|----------|--------------|-----------------|
-| "In closing, I feel very good about the trajectory of Goldman Sachs." | 1,1,0,0,0 | CEO forward-looking assessment of company direction — an analyst would quote this; not a scripted goodbye |
-| "We believe it's an important component of the Fed's mandate to really ensure the safety and soundness of the banking system." | 1,1,0,0,0 | Goldman Sachs executive expressing a view on regulatory policy — material regulatory commentary |
-| "Product and customer mix played its customary role." | 0,0,1,0,1 | References specific financial margin drivers (mix effects) — standard earnings-call shorthand for a segment result |
-| "And as we see the various folks and various agencies go through the confirmation process, it will be helpful to have people in seats." | 1,1,0,0,0 | JPMorgan executive commenting on regulatory transition timeline — specific operational context |
-| "But as we progress through the year, we think things will get better and better." | 1,1,0,0,0 | Intel executive giving a directional outlook on full-year improvement — substantive guidance language |
-
-**Category C — Personnel announcements (LLM: boilerplate → Human: substantive)**
-
-| Sentence | Votes (j3–j7) | Why substantive |
-|----------|--------------|-----------------|
-| "I'm excited to welcome Gina Adams into her new role as General Counsel and Secretary of FedEx effective September 24." | 1,1,0,0,0 | Material corporate event: new C-suite legal officer appointment with an effective date |
-| "For the past 5 years, she served as our Asia Pacific Regional President." | 1,0,0,0,1 | Background on an executive appointment — provides material context for the personnel announcement |
-
-**Category D — Slide transitions and agenda phrases (LLM: substantive → Human: boilerplate)**
-
-Four corrections ran the other direction. The LLM panel was distracted by topic keywords ("Data Center", "outlook") and missed that these are structural navigation phrases, not content sentences.
-
-| Sentence | Votes (j3–j7) | Why boilerplate |
-|----------|--------------|-----------------|
-| "Now turning to our third quarter 2024 outlook." | 1,1,0,1,0 | Slide-transition signal only; the actual outlook numbers appear in the following sentences |
-| "Turning to our broader Data Center portfolio." | 1,1,0,1,0 | Navigation phrase introducing a segment — no data of its own |
-| "I'll start with a review of our financial results and then provide our outlook for the third quarter of fiscal 2025." | 1,1,0,1,0 | Agenda-setting sentence that structures the prepared remarks — the content follows; this phrase has none |
-| "Now turning to our outlook for fiscal year '25." | 1,1,0,1,0 | Same pattern: slide-navigation intro for FedEx full-year outlook section |
+Selected sentence-level examples illustrating the four main correction categories (analyst Q&A questions, executive strategic statements, personnel announcements, and slide-transition phrases) are in **Appendix A**.
 
 
 ## 3. Feature Engineering
@@ -176,18 +136,9 @@ Two feature groups are concatenated into a 409-dimensional feature matrix:
 
 `all-MiniLM-L6-v2` from sentence-transformers encodes each sentence into a 384-dimensional L2-normalized embedding. Embeddings are computed once and cached. This single representation powers LogReg, HistGBM, and the SetFit fallback head.
 
-### 3.2 Regex Feature Flags (25 dims)
+### 3.2 Hand-Crafted Regex Feature Flags (25 dims)
 
-25 binary indicators capture surface patterns that strongly predict class membership:
-
-**Boilerplate signals:**
-`f_operator_phrase`, `f_safe_harbor`, `f_sec_filing`, `f_webcast`, `f_generic_thanks`, `f_question_intro`, `f_analyst_firm`, `f_call_close`, `f_short_affirm`, `f_operator_instr`, `f_turn_over`
-
-**Substantive signals:**
-`f_dollar_amount`, `f_percentage`, `f_revenue_mention`, `f_margin_mention`, `f_eps_mention`, `f_guidance_word`, `f_raised_lowered`, `f_yoy_qoq`, `f_record_quarter`, `f_product_launch`, `f_customer_mention`
-
-**Neutral/length:**
-`f_nongaap`, `f_sentence_short` (< 10 words), `f_has_digits`
+25 binary indicators target earnings-call-specific surface patterns: 12 boilerplate signals (operator phrases, safe-harbor language, Q&A transitions, call-close lines, etc.) and 11 substantive signals (dollar amounts, percentages, KPI keywords, guidance language, YoY comparisons, etc.), plus 2 structural flags (sentence length, digit presence). All flags use case-insensitive matching. Full definitions are in **Appendix B**.
 
 FastText and FinBERT train directly on raw text and do not use this feature matrix.
 
@@ -206,7 +157,7 @@ A deterministic rule applied directly to the 25 regex flags: a sentence is boile
 
 ### 4.3 HistGradientBoosting (Classifier 3)
 
-`sklearn.ensemble.HistGradientBoostingClassifier` with 500 estimators, max depth 6, class-balanced weights. Training takes 7.9 s; inference 20.9K sps. **Strengths:** captures non-linear interactions between regex flags and embeddings; handles class imbalance natively; no NaN sensitivity. **Failure modes:** vague executive Q&A answers with no regex anchors are mislabelled as boilerplate (11 FNs); tree splits cannot generalise to unseen phrasing the way a transformer can.
+`sklearn.ensemble.HistGradientBoostingClassifier` with 300 estimators, max depth 6, class-balanced weights. Training takes 7.9 s; inference 20.9K sps. **Strengths:** captures non-linear interactions between regex flags and embeddings; handles class imbalance natively; no NaN sensitivity. **Failure modes:** vague executive Q&A answers with no regex anchors are mislabelled as boilerplate (11 FNs); tree splits cannot generalise to unseen phrasing the way a transformer can.
 
 ### 4.4 FastText (Classifier 4)
 
@@ -236,19 +187,28 @@ Each model's default 0.5 threshold is replaced by a threshold that:
 1. **Meets the recall floor:** SB recall ≥ 0.97 on out-of-fold predictions (1% safety margin above the 0.96 assignment constraint, to absorb train→test generalization gap)
 2. **Maximizes macro-F1** among all thresholds that meet the floor
 
-Thresholds are tuned on **5-fold stratified OOF probabilities** on the train+val pool (n=2,000), rather than the validation set directly, to avoid single-split noise. The OOF HistGBM per-fold thresholds were [0.580, 0.685, 0.850, 0.945, 0.580] (mean=0.728, std=0.147), indicating high fold-to-fold variance and motivating the 0.97 safety margin.
+Thresholds for LogReg, HistGBM, FastText, and SetFit are tuned on **5-fold stratified OOF probabilities** on the train+val pool (n=2,000), to avoid single-split jitter. FinBERT OOF is impractical (21 sps × 5 folds ≈ 40 min), so its threshold is tuned on the validation set. Both ensemble thresholds are also val-set-tuned because they include FinBERT probabilities as a component, making full OOF infeasible.
 
-| Model | OOF threshold |
-|-------|--------------|
-| LogReg | 0.045 |
-| HistGBM | 0.810 |
-| FastText | 0.855 |
-| FinBERT | 0.820 |
-| SetFit | 0.220 |
-| Ensemble (mean-prob) | 0.615 |
-| Ensemble (rank-avg) | 0.140 |
+Before test evaluation, all four feature-matrix classifiers (LogReg, HistGBM, FastText, SetFit) are **retrained on the full train+val pool** — the same pool used for OOF calibration — so the test model matches the data distribution the threshold was calibrated against. FinBERT is the only exception: retraining on train+val would take ~40 min at 21 sps and the gain over train-only is marginal given the already high recall floor.
 
-The rank-avg ensemble has a much lower threshold (0.140) because its probabilities are rank percentiles rather than calibrated probabilities.
+| Model | Threshold | Tuning method | Fold std |
+|-------|-----------|---------------|----------|
+| LogReg | 0.045 | OOF (5-fold) | 0.034 |
+| HistGBM | 0.810 | OOF (5-fold) | 0.147 |
+| FastText | 0.890 | OOF (5-fold) | 0.098 |
+| FinBERT | 0.820 | Val-set (OOF impractical at 21 sps) | N/A |
+| SetFit | 0.215 | OOF (5-fold) | 0.026 |
+| Ensemble (mean-prob) | 0.615 | Val-set (FinBERT component) | N/A |
+| Ensemble (rank-avg) | 0.145 | Val-set (FinBERT component) | N/A |
+
+Per-fold thresholds (each fold's recall-constrained optimum, used to compute fold std):
+
+- **HistGBM:** [0.580, 0.685, 0.850, 0.945, 0.580] — mean=0.728, std=0.147. Highest variance of all models; motivates the 0.97 safety margin.
+- **FastText:** [0.705, 0.705, 0.890, 0.945, 0.850] — mean=0.819, std=0.098. Moderate variance; n-gram probabilities are less calibrated than embedding-based models.
+- **SetFit:** [0.210, 0.210, 0.265, 0.270, 0.230] — mean=0.237, std=0.026. Tightest variance of all OOF-tuned models, consistent with well-calibrated LR probabilities on cached embeddings.
+- **LogReg:** [0.100, 0.030, 0.010, 0.025, 0.010] — mean=0.035, std=0.034. Fold 3 could not achieve 0.97 recall at any threshold and fell back to the highest-recall threshold (0.010, recall=0.961); this explains both the very low pooled threshold (0.045) and the fold-to-fold spread.
+
+The rank-avg ensemble threshold (0.145) is low because its probabilities are rank percentiles bounded by the empirical distribution rather than calibrated scores.
 
 
 ## 6. Results
@@ -259,81 +219,124 @@ All classifiers are first evaluated on the validation set (500 sentences, never 
 
 | Rank | Model | Accuracy | Macro-F1 | BP F1 | SB F1 | SB Recall | Meets Floor | Train (s) | Throughput (sps) |
 |------|-------|----------|----------|-------|-------|-----------|-------------|-----------|-----------------|
-| 1 | **5-FinBERT-FT** | **0.970** | **0.922** | 0.860 | 0.983 | 0.980 | ✓ | — | 21 |
-| 2 | 7a-Ensemble(mean-prob) | 0.942 | 0.837 | 0.707 | 0.968 | 0.973 | ✓ | — | — |
+| 1 | **5-FinBERT-FT** | **0.970** | **0.922** | 0.860 | 0.983 | 0.980 | ✓ | ~900 | 21 |
+| 2 | 7a-Ensemble(mean-prob) | 0.942 | 0.837 | 0.707 | 0.968 | 0.973 | ✓ | — | ~21 |
 | 3 | 3-HistGBM(emb+regex) | 0.938 | 0.816 | 0.667 | 0.966 | 0.978 | ✓ | 7.9 | 20,922 |
-| 4 | 6-SetFit | 0.928 | 0.789 | 0.617 | 0.960 | 0.971 | ✓ | — | 83,429 |
-| 5 | 7b-Ensemble(rank-avg) | 0.926 | 0.781 | 0.602 | 0.959 | 0.971 | ✓ | — | — |
+| 4 | 6-SetFit | 0.928 | 0.789 | 0.617 | 0.960 | 0.971 | ✓ | 0.1 | 83,429 |
+| 4 | 7b-Ensemble(rank-avg) | 0.928 | 0.789 | 0.617 | 0.960 | 0.971 | ✓ | — | ~21 |
 | 6 | 2-LogReg(emb+regex) | 0.916 | 0.727 | 0.500 | 0.954 | 0.975 | ✓ | 2.6 | 16,711 |
 | 7 | 4-FastText | 0.912 | 0.701 | 0.450 | 0.952 | 0.978 | ✓ | 1.4 | 587 |
-| 8 | 1-Rules+Regex | 0.828 | 0.599 | 0.295 | 0.902 | 0.884 | **✗** | — | 25,591 |
+| 8 | 1-Rules+Regex | 0.828 | 0.599 | 0.295 | 0.902 | 0.884 | **✗** | 0 | 25,591 |
 
-FinBERT leads on both macro-F1 and SB recall. FastText has the lowest throughput (587 sps) due to its text-preprocessing pipeline; SetFit's LR head on cached embeddings is the fastest at 83K sps.
+FinBERT leads on both macro-F1 and SB recall. SetFit and rank-avg ensemble tie at rank 4 on the val set. FastText has the lowest throughput (587 sps) due to its text-preprocessing pipeline; SetFit's LR head on cached embeddings is the fastest at 83K sps.
 
-![Val + Test leaderboard](figures/leaderboard.png)
+![Val-set leaderboard](figures/leaderboard.png){width=95%}
 
 ### 6.2 Final Test Set Leaderboard
 
-All eight classifiers are evaluated on the frozen 500-sentence test set using thresholds from §5.
+All eight classifiers are evaluated on the frozen 500-sentence test set using OOF/val-set thresholds from §5. Feature-matrix classifiers (LogReg, HistGBM, FastText, SetFit) are retrained on the full train+val pool before inference; FinBERT uses the train-only checkpoint.
 
 | Rank | Model | Acc | Macro-F1 | BP F1 | SB F1 | SB Recall | Floor | Train (s) | Throughput (sps) | Threshold |
 |------|-------|-----|----------|-------|-------|-----------|-------|-----------|-----------------|-----------|
 | 1 | **5-FinBERT-FT** | **0.970** | **0.923** | 0.862 | 0.983 | 0.976 | ✓ | ~900 | 21 | 0.820 |
-| 2 | 7a-Ensemble(mean-prob) | 0.960 | 0.889 | 0.800 | 0.978 | 0.980 | ✓ | — | — | 0.615 |
-| 3 | 6-SetFit | 0.950 | 0.846 | 0.719 | 0.973 | 0.987 | ✓ | — | 83,429 | 0.220 |
-| 4 | 3-HistGBM(emb+regex) | 0.942 | 0.831 | 0.695 | 0.968 | 0.976 | ✓ | 7.9 | 20,922 | 0.810 |
-| 5 | 7b-Ensemble(rank-avg) | 0.942 | 0.828 | 0.688 | 0.968 | 0.978 | ✓ | — | — | 0.140 |
-| 6 | 2-LogReg(emb+regex) | 0.938 | 0.813 | 0.659 | 0.966 | 0.978 | ✓ | 2.6 | 16,711 | 0.045 |
-| 7 | 4-FastText | 0.916 | 0.715 | 0.475 | 0.954 | 0.978 | ✓ | 1.4 | 587 | 0.855 |
+| 2 | 7a-Ensemble(mean-prob) | 0.960 | 0.889 | 0.800 | 0.978 | 0.980 | ✓ | — | ~21 | 0.615 |
+| 3 | 6-SetFit | 0.950 | 0.846 | 0.719 | 0.973 | 0.987 | ✓ | 0.1 | 83,429 | 0.215 |
+| 4 | 7b-Ensemble(rank-avg) | 0.946 | 0.843 | 0.716 | 0.970 | 0.978 | ✓ | — | ~21 | 0.145 |
+| 5 | 3-HistGBM(emb+regex) | 0.942 | 0.831 | 0.695 | 0.968 | 0.976 | ✓ | 7.9 | 20,922 | 0.810 |
+| 6 | 2-LogReg(emb+regex) | 0.936 | 0.805 | 0.644 | 0.965 | 0.978 | ✓ | 2.6 | 16,711 | 0.045 |
+| 7 | 4-FastText | 0.916 | 0.744 | 0.533 | 0.954 | 0.967 | ✓ | 1.4 | 587 | 0.890 |
 | 8 | 1-Rules+Regex | 0.856 | 0.664 | 0.410 | 0.918 | 0.898 | **✗** | 0 | 25,591 | — |
 
-**7 of 8 classifiers** clear the 0.96 SB recall floor on the test set. The rules baseline fails (SB recall = 0.898). FinBERT leads on macro-F1 (0.923) and accuracy (0.970).
+**7 of 8 classifiers** clear the 0.96 SB recall floor on the test set. The rules baseline fails (SB recall = 0.898). FinBERT leads on macro-F1 (0.923) and accuracy (0.970). Compared to the val leaderboard, the rank-avg ensemble rises to rank 4 on test (beating HistGBM), and FastText improves from BP F1 0.475→0.533 after retraining on the larger train+val pool.
 
-**Deployed model:** HistGBM retrained on train+val (threshold = 0.810). FinBERT achieves the highest test macro-F1 (0.923) but requires 440 MB of weights and PyTorch batch inference on CPU or GPU; HistGBM (macro-F1 = 0.831) is saved as the deployment artifact for its compact size (~1.7 MB pkl), sub-second CPU inference via scikit-learn, and no GPU dependency.
+**Winner:** FinBERT — highest test macro-F1 (0.923) under the SB recall ≥ 0.96 constraint. The fine-tuned checkpoint is saved at `saved_model/finbert_finetuned/` with threshold 0.820 recorded in `saved_model/winner.json`.
+
+**GUI serving model:** the Streamlit GUI loads the FinBERT winner checkpoint directly (`saved_model/finbert_finetuned/`, threshold 0.820) and runs batched CPU inference via HuggingFace `transformers`. HistGBM is also saved as `saved_model/best_model.pkl` (macro-F1 = 0.831, ~21K sps) as a lightweight fallback artifact.
 
 
 ## 7. Error Analysis
 
-Error analysis is performed on the HistGBM model (test set, t=0.810): 11 false negatives (SB→BP) and 18 false positives (BP→SB).
+Error analysis is performed on all misclassifications by the winning model, FinBERT (test set, t=0.820): **11 false negatives** (SB→BP) and **4 false positives** (BP→SB). Each is categorised into one of three error types:
 
-### 7.1 False Negatives (substantive labelled as boilerplate)
+- **Feature gap** — gold label is correct; the model lacks a signal for this pattern (e.g., hedged first-person language with no numerical anchors, or negated guidance keywords)
+- **Hard case** — genuinely ambiguous; a different annotator might reasonably disagree
+- **Pipeline gap** — a pre-processing artefact caused the misclassification, not a modelling failure
 
-These are substantive sentences that "sound" vague or conversational (all 11 shown):
+Full annotated output (all 15 errors, with P(SB)) is produced by notebook §9.
 
-> *"I don't know if he's nailed it down yet, but we'll be getting that information out shortly."*
-> *"I don't know all the efforts we're involved in, but to the extent we're involved in these efforts, I and most Palantirians feel very positive about it."*
-> *"I was just so delighted to see how well they have done, the morale of the team and how the team is working together."*
-> *"I continue to be excited by the opportunities and the sheer potential of our franchise."*
-> *"In Converse, the team took some decisive steps this quarter to bring the brand back to a healthy business."*
-> *"And done properly, as we talk about on the slide, we're very happy to be lenders to them."*
-> *"So we're in kind of the pole position in that regard."*
-> *"Let me just be clear about where the ones that we've just done are heading…"*
+### 7.1 False Negatives — substantive labelled as boilerplate (11 total)
 
-**Pattern:** executive Q&A answers with real strategic intent expressed through first-person hedging language. None trigger the dollar/percentage/guidance regex flags, and the embeddings land near other hedged executive statements regardless of substance. **Error type: feature gap** — the model lacks a signal for strategic intent without numerical anchors. These are not label-noise cases; the gold labels are correct.
+| # | P(SB) | Error type | Sentence |
+|---|-------|------------|----------|
+| 1 | 0.120 | Hard case | *"We continue to provide additional information detailing our CRE exposure."* |
+| 2 | 0.134 | Feature gap | *"I was just sort of hearing that from some of the feedback and was just curious if the RVPs were hearing that."* |
+| 3 | 0.148 | Feature gap | *"I don't know if he's nailed it down yet, but we'll be getting that information out shortly."* |
+| 4 | 0.151 | Hard case | *"So from a domestic perspective, we're not — and I'm speaking specifically to parcel."* |
+| 5 | 0.301 | Feature gap | *"We have received the final numbers from the government."* |
+| 6 | 0.342 | Feature gap | *"So I was hoping you could update us on your strategy time line."* |
+| 7 | 0.351 | Hard case | *"I don't know all the efforts we're involved in, but… most Palantirians are very proud of this."* |
+| 8 | 0.473 | Feature gap | *"I'm not going to give guidance for 2025."* |
+| 9 | 0.575 | Feature gap | *"About your question, though, around whether we'll prioritize other things in the portfolio, absolutely not."* |
+| 10 | 0.700 | Hard case | *"And most of all, we are doing a better job of listening to our customers to ensure we meet their needs."* |
+| 11 | 0.778 | Hard case | *"I was just so delighted to see how well that they have done, the moral of the team and how the team is working together."* |
 
-### 7.2 False Positives (boilerplate labelled as substantive)
+**Per-example explanations:**
 
-> *"That's one of the priorities that the team has had now for a while is to continue to do more."*
-> *"So I have a good recollection of some of the steps and changes how we told the story over time."*
-> *"And before diving into the results, I want to take a moment to thank our entire Fastenal Blue Team across the world."*
-> *"We have a very healthy ecosystem as well."*
-> *"A lot of people are spending a lot of time on it."*
-> *"Turning to capital and liquidity on Slide 5."*
-> *"Custom silicon market."* (speaker label fragment mis-tokenised as a sentence)
-> *"At the golf majors with Rory and Scottie; with A'ja to kick off a new WNBA season; at the Champions League final with PSG."*
+1. Filler-sounding structure ("we continue to provide") wraps a specific ongoing CRE disclosure; no substantive regex flag fires on either "CRE" or "exposure."
+2. Analyst bridging question referencing RVPs (Regional Vice Presidents) — a domain-specific role abbreviation with no regex match and no financial anchor.
+3. Executive flagging an upcoming material disclosure ("getting that information out shortly"); first-person hedging opener ("I don't know") dominates the model's representation.
+4. Tokeniser fragment: mid-answer clarification about the FedEx parcel segment, structurally incomplete (trailing em-dash) — lacks standalone content.
+5. Receipt of final government contract figures is a material event, but the plain declarative phrasing triggers no dollar, percentage, or guidance flag.
+6. Analyst probing a specific strategic timeline; polite-request opener ("I was hoping you could") is identical in surface form to social filler.
+7. Possibly label noise: Palantir executive expressing collective pride in a specific initiative; stripping the sentiment wrapper leaves no factual claim — rule 8 does not rescue this sentence.
+8. Explicit non-guidance refusal is itself material to analysts, but positive `guidance`-flag patterns do not fire on negated constructions.
+9. Direct executive answer to a portfolio strategy question; P(SB)=0.575 shows model uncertainty, but negation ("absolutely not") has no surface anchor the model recognises.
+10. Generic customer-focus rhetoric; stripping the frame leaves nothing factual — borderline label. P(SB)=0.700, close to threshold.
+11. Team-morale commentary with zero financial content; P(SB)=0.778, only 0.042 below threshold. Possibly label noise.
 
-**Pattern:** two distinct failure modes — (a) **feature gap:** vague positive statements that pattern-match to executive commentary in embedding space but carry no material information ("We have a very healthy ecosystem"); (b) **pipeline gap:** slide-transition phrases ("Turning to capital and liquidity on Slide 5") and speaker-label fragments ("Custom silicon market.") that survived the 40-char filter — these are parsing artefacts that better sentence-boundary detection would eliminate. None are clear label-noise cases.
+**Dominant pattern (6 of 11):** feature-gap FNs share a common structure — substantive intent (forthcoming disclosure, analyst question, strategic answer) framed in first-person hedging language with no numerical anchor. The model has learned the surface form of substantive sentences but not the pragmatic signal of strategic intent expressed through negation, hedging, or casual phrasing.
 
-### 7.3 Confusion Matrix (HistGBM, test set)
+### 7.2 False Positives — boilerplate labelled as substantive (4 total)
+
+| # | P(SB) | Error type | Sentence |
+|---|-------|------------|----------|
+| 1 | 0.988 | Pipeline gap | *"Executives - CFO & Treasurer / And on the investing front, it's like it is quality engineering, right?"* |
+| 2 | 0.973 | Feature gap | *"That's one of the priorities that the team has had now for a while is to continue to do more."* |
+| 3 | 0.938 | Feature gap | *"We have a very healthy ecosystem as well."* |
+| 4 | 0.903 | Hard case | *"So there has been a round or two of going back and forth."* |
+
+**Per-example explanations:**
+
+1. Speaker-label artefact ("Executives - CFO & Treasurer") prepended by the tokeniser to the next sentence; the combined string looks like a named executive making a strategic statement, driving P(SB) to 0.988.
+2. "Priorities" and "team" pattern-match to executive-commentary clusters in embedding space; stripping the framing leaves "to continue to do more" — zero propositional content.
+3. "Ecosystem" consistently co-occurs with competitive-advantage statements in training data; used here generically with no specific partners, products, or metrics.
+4. Process description that could reference a specific M&A or contract negotiation — genuinely ambiguous without surrounding context; P(SB)=0.903 shows the model commits strongly to substantive.
+
+### 7.3 Error-Type Summary
+
+| Error type | FN | FP | Total |
+|------------|----|----|-------|
+| Feature gap | 6 | 2 | **8** |
+| Hard case | 5 | 1 | **6** |
+| Pipeline gap | 0 | 1 | **1** |
+| **Total** | **11** | **4** | **15** |
+
+No misclassification is confidently label noise — the hard-case FNs (7, 10, 11) are borderline but the gold labels are defensible. The pipeline-gap FP (speaker-label artefact) is a pre-processing failure that would be eliminated by a transcript-aware sentence splitter. The 8 feature-gap errors define the core modelling gap: substantive intent expressed without numerical anchors.
+
+### 7.4 Confusion Matrix and Per-Class Metrics (FinBERT, test set)
 
 |  | Predicted BP | Predicted SB |
 |--|-------------|-------------|
-| **True BP** | 33 | 18 |
+| **True BP** | 47 | 4 |
 | **True SB** | 11 | 438 |
 
-SB recall = 438/449 = **0.9755** ✓ | BP precision = 33/44 = **0.750** | BP recall = 33/51 = **0.647**
+| Class | Precision | Recall | F1 |
+|-------|-----------|--------|----|
+| Boilerplate (0) | 47/58 = **0.810** | 47/51 = **0.922** | **0.862** |
+| Substantive (1) | 438/442 = **0.991** | 438/449 = **0.976** ✓ | **0.983** |
+| **Macro avg** | | | **0.923** |
 
-![Confusion matrix heatmap](figures/confusion_matrix.png)
+![Confusion matrix heatmap](figures/confusion_matrix.png){width=60%}
 
 
 ## 8. What We Would Try Next
@@ -346,30 +349,64 @@ Given more time, the three highest-leverage improvements would be:
 
 3. **Speaker-type conditioning.** Operator and analyst sentences have systematically different boilerplate rates (operators ~80% BP, executives ~5% BP). Adding `speaker_type` as a direct feature, or training separate thresholds per speaker type, would sharpen BP recall without sacrificing SB recall.
 
+4. **Larger finance-domain embeddings.** LogReg, HistGBM, and SetFit all run on 384-dim `all-MiniLM-L6-v2` embeddings. The FN analysis shows the remaining errors cluster in vague first-person executive language with no regex anchors — a pattern that MiniLM's small representation space conflates with boilerplate. Replacing MiniLM with a larger encoder such as `e5-large-v2` or using FinBERT's hidden states directly as embeddings would give these models a richer geometric separation between hedged-but-substantive and scripted-generic sentences, likely closing a meaningful share of the gap between HistGBM (0.831) and FinBERT (0.923) without requiring fine-tuning.
+
+## 9. Unseen-Transcript Verification
+
+To assess out-of-domain generalization, FinBERT (t=0.820) is applied to two full earnings-call transcripts from tickers **not** present in the 2,500-sentence gold set: **AAPL Q2-2026** and **MSFT Q3-2026** (stored in `ECT_unseen/`). Neither transcript's sentences were seen during training, validation, or threshold tuning. The verification code is in notebook §10.
+
+> **Note on provenance:** these two transcripts were sourced manually from [Seeking Alpha](https://seekingalpha.com) and are **not** part of the `ECT.zip` corpus provided with the assignment. They are stored in `ECT_unseen/` at the repository root. The `ECT_unseen/` folder must be included when uploading to GitHub and in the final submission zip so that notebook §10 and the GUI's ECT library can locate them.
+
+| Transcript | Total (≥40 chars) | Boilerplate | Substantive |
+|------------|-------------------|-------------|-------------|
+| AAPL Q2-2026 | 423 | 104 (24.6%) | 319 (75.4%) |
+| MSFT Q3-2026 | 431 |  77 (17.9%) | 354 (82.1%) |
+
+The boilerplate rates (18–25%) are higher than the gold-set class balance (10.3% BP) because the gold sample was stratified by speaker type, under-representing operator-turn language; full transcripts include proportionally more operator intros and housekeeping remarks.
+
+**High-confidence boilerplate (P(SB) < 0.03):**
+
+> *"Good afternoon, and welcome to the Apple Q2 Fiscal Year 2026 Earnings Conference Call."* [P(SB)=0.025]
+> *"[Operator Instructions] Operator, may we have the first question, please?"* [P(SB)=0.026]
+> *"Greetings, and welcome to the Microsoft Fiscal Year 2026 Third Quarter Earnings Conference Call."* [P(SB)=0.022]
+> *"Good afternoon, and thank you for joining us today."* [P(SB)=0.029]
+
+**High-confidence substantive (P(SB) = 0.997):**
+
+> *"For the June quarter and what's embedded in the guidance that Kevan went through earlier, we expect significant…"*
+> *"M365 Consumer Cloud revenue growth should be in the low 20% range, down sequentially as we start to lap the…"*
+> *"In M365 Commercial Cloud, on an adjusted basis, we expect revenue growth to be between 15% and 16% in constant…"*
+
+**Near-boundary cases (|P(SB) − 0.820| < 0.05):** 10 sentences in AAPL, 8 in MSFT. Representative examples:
+
+> *"These statements involve risks and uncertainties that may cause actual results or trends to differ materially…"* [P(SB)=0.839] — safe-harbor disclaimer with forward-looking phrasing; likely a false positive
+> *"In my view, Tim is one of the greatest business leaders of all time."* [P(SB)=0.854] — executive closing sentiment; consistent with §2.1 rule 3 (executive closing sentiments are substantive)
+
+**Qualitative assessment:** textbook boilerplate (operator welcomes, `[Operator Instructions]`, replay logistics) is classified with high confidence (P(SB) < 0.03). Specific financial guidance and segment metrics are classified as substantive with equal confidence (P(SB) = 0.997). Near-boundary errors cluster around the same ambiguous patterns identified in §7 — safe-harbor language with forward-looking phrasing and hedged executive commentary without numerical anchors. The model generalizes to new tickers and new quarters while preserving the same systematic uncertainty profile seen on the test set.
+
+
 ## 10. GUI
 
-A Streamlit application (`gui.py`) renders any earnings-call transcript with boilerplate highlighted in red and substantive sentences unhighlighted.
+A Streamlit application (`gui.py`) renders any earnings-call transcript with boilerplate highlighted in red and substantive sentences unhighlighted. The GUI loads the winning model — FinBERT fine-tuned (`saved_model/finbert_finetuned/`, threshold 0.820 from `winner.json`) — and runs batched CPU inference.
 
 **Features:**
-- **ECT library tab**: dropdown of all 131 transcripts for one-click loading
-- **Upload tab**: upload any `.txt` transcript
-- **Paste tab**: paste raw text directly
-- Statistics panel showing total classified sentences, BP count/%, SB count/%
-- Hover tooltip on each sentence showing P(substantive)
-- Download button for a CSV of all sentence classifications
+- **Compact header bar** — model identity (`FinBERT · ProsusAI/finbert (fine-tuned) · test macro-F1 = 0.923`) displayed inline with the title
+- **ECT library dropdown** — one-click loading of any of the 131 training-pool transcripts
+- **Upload button** — upload any `.txt` transcript file
+- **Paste expander** — paste raw transcript text directly
+- **Clear button** — resets the loaded transcript and results
+- **Stats bar** — Total / Boilerplate / Substantive counts and percentages; red-green proportion bar
+- **All / BP only / Sub only filter** — narrows the document view to one class
+- **Document view** — every sentence rendered in its original line position; boilerplate highlighted in red with a `BP` superscript; hover tooltip shows P(substantive)
+- **Legend** — inline colour key above the document view
+- **Download button** — exports all sentence classifications as CSV
 
-**Screenshot 1** — statistics panel and boilerplate highlighting (Citi Q4-2023, 695 sentences, 16.1% BP):
-
-![GUI screenshot — statistics panel](figures/gui_screenshot1.png)
-
-**Screenshot 2** — tagged transcript view showing inline boilerplate (red) and substantive sentences:
-
-![GUI screenshot — tagged transcript](figures/gui_screenshot2.png)
+Screenshots showing the stats bar and tagged-transcript view on both seen (AVGO) and unseen (AAPL, MSFT) transcripts are in **Appendix C**.
 
 **Launch command:**
 
 ```bash
-/Users/yueqilin/anaconda3/bin/python -m streamlit run gui.py
+streamlit run gui.py
 ```
 
 ## 11. Reproducibility
@@ -393,5 +430,114 @@ python run_gold_judges.py           # full run (~60 min)
 
 **Run the GUI:**
 ```bash
-/Users/yueqilin/anaconda3/bin/python -m streamlit run gui.py
+streamlit run gui.py
 ```
+
+**LLM assistance disclosure:** Claude (Anthropic, claude-sonnet-4-6) was used as a coding and writing assistant throughout this project. Specifically: iterative prose drafting and editing across all sections of this write-up; debugging notebook cells (FinBERT inference loop, threshold-sweep logic, error-analysis cell); and generating the Streamlit GUI (`gui.py`). All analytical decisions — rubric design, judge selection, model choices, threshold strategy, error categorisation — were made by the author. The gold labels, classifier training, and all numerical results were produced by running the notebook.
+
+
+## Appendix A — Human-Review Correction Examples
+
+The following sentences illustrate the four main correction categories from the §2.3 human audit of 255 close-call (3–2 split) sentences.
+
+**Category A — Analyst Q&A questions (LLM: boilerplate → Human: substantive)**
+
+LLMs flagged short, conversational questions as generic filler; the human auditor recognized that even brief analyst questions are substantive because they probe a specific topic on the analyst's research agenda.
+
+| Sentence | Votes (j3–j7) | Why substantive |
+|----------|--------------|-----------------|
+| "And what has been the more challenging aspect of it all?" | 1,1,0,0,0 | Analyst asking FedEx management to diagnose operational difficulties — a specific follow-up, not social filler |
+| "Just your comfort level in terms of the functioning of the treasury market." | 1,1,0,0,0 | Probing JPMorgan's risk view on treasury market liquidity — material to investors |
+| "But that being said, as Jamie noted, like we have no idea what the curve is going to look like, right?" | 1,1,0,0,0 | JPMorgan analyst referencing Jamie Dimon's prior comments and pressing on rate curve uncertainty |
+| "We're, what, 9 months or so into this new administration with the new regulators." | 1,1,0,0,0 | Analyst framing a question about the regulatory timeline — substantive political/regulatory context |
+| "And we all know about the commercial real estate office." | 0,1,1,0,0 | Analyst acknowledging CRE stress as setup for a material question on exposure |
+
+**Category B — Executive statements that sound generic but carry strategic content (LLM: boilerplate → Human: substantive)**
+
+The LLM panel mis-classified these because they lack numerical anchors and use hedged first-person language. The human auditor applied rule 3 (closing sentiments are substantive) and rule 5 (hedged executive answers carry strategic intent).
+
+| Sentence | Votes (j3–j7) | Why substantive |
+|----------|--------------|-----------------|
+| "In closing, I feel very good about the trajectory of Goldman Sachs." | 1,1,0,0,0 | CEO forward-looking assessment of company direction — an analyst would quote this; not a scripted goodbye |
+| "We believe it's an important component of the Fed's mandate to really ensure the safety and soundness of the banking system." | 1,1,0,0,0 | Goldman Sachs executive expressing a view on regulatory policy — material regulatory commentary |
+| "Product and customer mix played its customary role." | 0,0,1,0,1 | References specific financial margin drivers (mix effects) — standard earnings-call shorthand for a segment result |
+| "And as we see the various folks and various agencies go through the confirmation process, it will be helpful to have people in seats." | 1,1,0,0,0 | JPMorgan executive commenting on regulatory transition timeline — specific operational context |
+| "But as we progress through the year, we think things will get better and better." | 1,1,0,0,0 | Intel executive giving a directional outlook on full-year improvement — substantive guidance language |
+
+**Category C — Personnel announcements (LLM: boilerplate → Human: substantive)**
+
+| Sentence | Votes (j3–j7) | Why substantive |
+|----------|--------------|-----------------|
+| "I'm excited to welcome Gina Adams into her new role as General Counsel and Secretary of FedEx effective September 24." | 1,1,0,0,0 | Material corporate event: new C-suite legal officer appointment with an effective date |
+| "For the past 5 years, she served as our Asia Pacific Regional President." | 1,0,0,0,1 | Background on an executive appointment — provides material context for the personnel announcement |
+
+**Category D — Slide transitions and agenda phrases (LLM: substantive → Human: boilerplate)**
+
+Four corrections ran the other direction. The LLM panel was distracted by topic keywords ("Data Center", "outlook") and missed that these are structural navigation phrases, not content sentences.
+
+| Sentence | Votes (j3–j7) | Why boilerplate |
+|----------|--------------|-----------------|
+| "Now turning to our third quarter 2024 outlook." | 1,1,0,1,0 | Slide-transition signal only; the actual outlook numbers appear in the following sentences |
+| "Turning to our broader Data Center portfolio." | 1,1,0,1,0 | Navigation phrase introducing a segment — no data of its own |
+| "I'll start with a review of our financial results and then provide our outlook for the third quarter of fiscal 2025." | 1,1,0,1,0 | Agenda-setting sentence that structures the prepared remarks — the content follows; this phrase has none |
+| "Now turning to our outlook for fiscal year '25." | 1,1,0,1,0 | Same pattern: slide-navigation intro for FedEx full-year outlook section |
+
+
+## Appendix B — Hand-Crafted Regex Feature Flags
+
+25 binary indicators used by LogReg, HistGBM, and the Rules baseline. All flags use case-insensitive matching unless noted. BP = boilerplate signal; SB = substantive signal; structural = neither class directly.
+
+| Flag | Signal | Fires when… |
+|------|--------|-------------|
+| `f_operator_phrase` | BP | Contains "my name is", "conference operator", "welcome everyone", or "welcome to [company]" — operator self-introduction lines |
+| `f_safe_harbor` | BP | Contains "forward-looking", "safe harbor", "actual results may differ", or "risks and uncertainties" — legal disclaimer boilerplate |
+| `f_sec_filing` | BP | Contains "Form 10-K/Q", "SEC filing", "securities and exchange", "8-K", or "annual report" — filing-reference language |
+| `f_webcast` | BP | Contains "webcast", "replay until", "investor relations website", or "IR website" — replay/logistics notices |
+| `f_generic_thanks` | BP | Contains "thank you"/"thanks" **not** followed within 30 chars by revenue/guidance/earnings/results/growth — social filler, not financial acknowledgement |
+| `f_question_intro` | BP | Contains "our next question", "your line is open/now", "goes to the line of", or "you may begin/proceed/go ahead" — operator Q&A transition |
+| `f_analyst_firm` | BP | Contains a sell-side bank name (Goldman, Morgan Stanley, JPMorgan, Citi, UBS, Wells Fargo, Deutsche Bank, Barclays, BofA, Bernstein, Cowen, Jefferies, Piper Sandler, Evercore, Oppenheimer, Mizuho) — analyst-intro lines |
+| `f_call_close` | BP | Contains "no further questions", "this concludes", or "thank you for your time/participating/joining" — call-closing lines |
+| `f_nongaap` | BP | Contains "non-GAAP", "reconciliation", or "GAAP to/and non-GAAP" — standard disclaimer/reconciliation language |
+| `f_short_affirm` | BP | **Entire sentence** is a one-word/phrase affirmation: "Sure.", "Great.", "Okay.", "Yes.", "Absolutely.", "Of course.", or "Thank you." — zero-content filler |
+| `f_operator_instr` | BP | Exact literal `[Operator Instructions]` — the standard Q&A-open marker |
+| `f_turn_over` | BP | Contains "turn the call/it over", "let me now turn", or "I'd like to now turn" — speaker-handoff phrases |
+| `f_dollar_amount` | SB | Dollar figure with optional scale: $26 billion, $1.2B, $500M, $3K — quantitative financial anchor |
+| `f_percentage` | SB | Percentage figure: 18%, 3.5% — quantitative financial anchor |
+| `f_revenue_mention` | SB | Contains "revenue", "net income", "net loss", "net sales", "total sales", or "total revenue" — top-line KPI language |
+| `f_margin_mention` | SB | Contains "gross margin", "operating margin", "EBITDA margin", or "profit margin" — profitability KPI language |
+| `f_eps_mention` | SB | Contains "earnings per share", "EPS", "diluted EPS", or "non-GAAP EPS" — per-share KPI language |
+| `f_guidance_word` | SB | Contains "guidance", "outlook", "forecast", "expects/expected", "anticipates/anticipated", "projects/projected", or "full-year" — forward-looking commentary |
+| `f_raised_lowered` | SB | Revision verb (raised/lowered/increased/decreased/reaffirmed) immediately before guidance/outlook/revenue/earnings/estimate — explicit guidance revision |
+| `f_yoy_qoq` | SB | Contains "year-over-year", "sequentially", "quarter-over-quarter", "YoY", "QoQ", or "vs. prior" — period-comparison phrasing |
+| `f_record_quarter` | SB | Contains "record revenue/quarter/sales/profit/high" or "all-time high/record" — superlative results language |
+| `f_product_launch` | SB | Launch verb (launched/announced/introduced/released/shipped/ramped) followed by a product type (platform/product/system/service/model/chip/GPU/CPU) — product event commentary |
+| `f_customer_mention` | SB | Contains "customers/clients/partners include/such as/like/across/with" — customer-enumeration language |
+| `f_sentence_short` | structural | Sentence has **fewer than 10 words** — length proxy for transitional filler |
+| `f_has_digits` | structural | Any digit sequence present — broader quantitative presence than the dollar/percentage flags alone |
+
+
+## Appendix C — GUI Screenshots
+
+**Screenshot 1** — stats bar and boilerplate highlighting on a seen transcript (AVGO Q4-2024, in training pool):
+
+![GUI screenshot — seen transcript stats panel](figures/GUI_screenshot_seen1_AVGO.png){width=95%}
+
+**Screenshot 2** — full tagged view on a seen transcript (AVGO Q4-2024):
+
+![GUI screenshot — seen transcript tagged view](figures/GUI_screenshot_seen2_AVGO.png){width=95%}
+
+**Screenshot 3** — stats bar on an unseen transcript (AAPL Q1-2025, outside training pool):
+
+![GUI screenshot — unseen transcript stats panel](figures/GUI_screenshot_unseen1_AAPL.png){width=95%}
+
+**Screenshot 4** — full tagged view on an unseen transcript (AAPL Q1-2025):
+
+![GUI screenshot — unseen transcript tagged view](figures/GUI_screenshot_unseen2_AAPL.png){width=95%}
+
+**Screenshot 5** — stats bar on a second unseen transcript (MSFT Q2-2025):
+
+![GUI screenshot — second unseen transcript stats panel](figures/GUI_screenshot_unseen3_MSFT.png){width=95%}
+
+**Screenshot 6** — full tagged view on a second unseen transcript (MSFT Q2-2025):
+
+![GUI screenshot — second unseen transcript tagged view](figures/GUI_screenshot_unseen4_MSFT.png){width=95%}
