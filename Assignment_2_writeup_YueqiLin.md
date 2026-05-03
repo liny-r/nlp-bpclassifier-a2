@@ -411,12 +411,28 @@ streamlit run gui.py
 
 ## 11. Reproducibility
 
-Complete steps from a clean clone to a running GUI:
+### From the submission zip (recommended)
 
-**Step 1 — Clone and install:**
+The zip includes all trained model weights. Install dependencies and start the GUI immediately:
+
 ```bash
-git clone https://github.com/liny-r/nlp-bpclassifier-a2.git
-cd nlp-bpclassifier-a2
+pip install -r requirements.txt
+streamlit run gui.py
+```
+
+To re-run the full pipeline from scratch (retrains all classifiers including FinBERT, ~15 min on GPU):
+
+```bash
+jupyter nbconvert --to notebook --execute --inplace \
+    --ExecutePreprocessor.timeout=7200 Assignment_2_BPClassifier.ipynb
+```
+
+### From a git clone
+
+`saved_model/finbert_finetuned/model.safetensors` (~440 MB) and `saved_model/fasttext_model.bin` exceed GitHub's 100 MB file-size limit and are excluded via `.gitignore`. The notebook must be run before the GUI will load.
+
+**Step 1 — Install:**
+```bash
 pip install -r requirements.txt
 ```
 
@@ -425,12 +441,12 @@ pip install -r requirements.txt
 unzip ECT.zip -d ECT/
 ```
 
-**Step 3 — (Optional) Reproduce gold labels** — skip if using the cached labels already in `cache/gold/`. Requires Ollama with five models pulled:
+**Step 3 — (Optional) Reproduce gold labels** — skip to use cached labels in `cache/gold/`. Requires Ollama:
 ```bash
 ollama pull cogito:8b && ollama pull qwen3:14b && ollama pull gemma3:12b \
     && ollama pull ministral-3:8b && ollama pull cogito:14b
-python run_gold_judges.py --smoke   # connectivity check (~2 min)
-python run_gold_judges.py           # full labeling run (~60 min)
+python run_gold_judges.py --smoke   # connectivity check
+python run_gold_judges.py           # full run (~60 min)
 ```
 
 **Step 4 — Run the notebook** (trains all classifiers, saves FinBERT weights, writes `winner.json`):
@@ -438,9 +454,7 @@ python run_gold_judges.py           # full labeling run (~60 min)
 jupyter nbconvert --to notebook --execute --inplace \
     --ExecutePreprocessor.timeout=7200 Assignment_2_BPClassifier.ipynb
 ```
-All expensive steps (sentence extraction, embeddings, FinBERT fine-tuning) are cached — re-runs skip completed work automatically. FinBERT fine-tuning takes ~15 min on a GPU or ~40 min on CPU (M1 Pro, forced CPU).
-
-> **Note on large model files:** `saved_model/finbert_finetuned/model.safetensors` (~440 MB) and `saved_model/fasttext_model.bin` are excluded from the repository by `.gitignore` (GitHub's 100 MB file-size limit). Running the notebook regenerates both files. The GUI cannot load until Step 4 is complete.
+All steps are cached — re-runs skip completed work. FinBERT fine-tuning takes ~15 min on GPU or ~40 min on CPU.
 
 **Step 5 — Start the GUI:**
 ```bash

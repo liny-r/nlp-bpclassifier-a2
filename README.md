@@ -9,6 +9,7 @@
 
 A binary sentence classifier for earnings-call transcripts that distinguishes **boilerplate** (scripted, generic, non-material) from **substantive** (financials, guidance, strategy, risks) sentences. Built on 131 transcripts covering 15 tickers (AMD, AVGO, BLK, C, FAST, FDX, GS, INTC, JNJ, JPM, NKE, NVDA, PLTR, WFC).
 
+**Winner:** FinBERT fine-tuned (`ProsusAI/finbert`) — test macro-F1 = **0.923**, SB recall = **0.976**  
 **Hard constraint:** substantive recall ≥ 0.96 on the held-out test set.
 
 ---
@@ -16,40 +17,104 @@ A binary sentence classifier for earnings-call transcripts that distinguishes **
 ## Repository Structure
 
 ```
-├── Assignment_2_BPClassifier.ipynb   # Main pipeline notebook (§1–§9)
-├── report.md                         # Full write-up
-├── run_gold_judges.py                # Reproduce gold labels via Ollama
-├── gui.py                            # Streamlit tagging app
+├── Assignment_2_BPClassifier.ipynb       # Main pipeline notebook (end-to-end)
+├── Assignment_2_writeup_YueqiLin.pdf     # Project write-up (PDF)
+├── Assignment_2_writeup_YueqiLin.md      # Write-up source (Markdown)
+├── run_gold_judges.py                    # Reproduce gold labels via Ollama
+├── gui.py                                # Streamlit tagging app
+├── requirements.txt                      # Python dependencies
 ├── figures/
 │   ├── leaderboard.png                   # Test leaderboard chart
-│   └── confusion_matrix.png              # HistGBM test confusion matrix
+│   ├── confusion_matrix.png              # FinBERT test confusion matrix
+│   └── GUI_screenshot_*.png              # GUI screenshots (seen + unseen transcripts)
 ├── cache/
-│   ├── sentence_pool.parquet         # 53,236 unique sentences (≥40 chars)
-│   ├── splits.pkl                    # Train/val/test splits (60/20/20, seed=42)
-│   ├── embeddings_gold.pkl           # all-MiniLM-L6-v2 embeddings (384-dim)
-│   ├── error_analysis_val.csv        # Misclassification examples
+│   ├── sentence_pool.parquet             # 53,236 unique sentences (≥40 chars)
+│   ├── splits.pkl                        # Train/val/test splits (60/20/20, seed=42)
+│   ├── embeddings_gold.pkl               # all-MiniLM-L6-v2 embeddings (384-dim)
 │   └── gold/
-│       ├── gold_labels.parquet       # 2,500-sentence gold set (5-judge MV + human round 3)
-│       ├── human_review_v3.csv       # Round 3 human audit (255 labels — only round used)
-│       ├── human_review.csv          # Round 1 audit (archived — contained errors, not used)
-│       ├── human_review_round2.csv   # Round 2 audit (archived — contained errors, not used)
+│       ├── gold_labels.parquet           # 2,500-sentence gold set (5-judge MV + human audit)
+│       ├── human_review_final.csv        # Round 3 human audit (255 labels — only round used)
 │       ├── judge3_cogito.parquet
 │       ├── judge4_qwen314b.parquet
 │       ├── judge5_gemma12b.parquet
 │       ├── judge6_ministral3.parquet
-│       ├── judge7_cogito14b.parquet
-│       ├── judge1_qwen3.parquet      # Archived — removed judge (over-flagged BP)
-│       └── judge2_gemma3.parquet     # Archived — removed judge (severe BP bias)
+│       └── judge7_cogito14b.parquet
 ├── saved_model/
-│   └── best_model.pkl                # HistGBM + threshold=0.810 (deployment artifact)
-└── ECT/                              # Raw earnings-call transcripts (131 files)
+│   ├── finbert_finetuned/                # FinBERT winner checkpoint
+│   │   ├── config.json
+│   │   ├── tokenizer.json
+│   │   ├── tokenizer_config.json
+│   │   └── model.safetensors             # ~440 MB — included in zip, gitignored on GitHub
+│   ├── best_model.pkl                    # HistGBM fallback artifact
+│   ├── fasttext_model.bin                # FastText model — included in zip, gitignored on GitHub
+│   └── winner.json                       # {"model": "finbert_finetuned", "threshold": 0.820}
+├── ECT/                                  # Raw earnings-call transcripts (131 files, from ECT.zip)
+└── ECT_unseen/                           # Two unseen transcripts for §9 verification
+    ├── AAPL_Q2-2026.txt                  # Sourced from Seeking Alpha (not in ECT.zip)
+    └── MSFT_Q3-2026.txt                  # Sourced from Seeking Alpha (not in ECT.zip)
+```
+
+> **GitHub vs. zip:** `model.safetensors` (~440 MB) and `fasttext_model.bin` exceed GitHub's 100 MB file-size limit and are excluded from this repository. The submission zip includes both files — if you are working from the zip, skip to **Quick start** below.
+
+---
+
+## Quick Start (from submission zip)
+
+Model weights are included in the zip. Just install dependencies and run:
+
+```bash
+pip install -r requirements.txt
+streamlit run gui.py
+```
+
+To re-run the full pipeline (retrains all classifiers including FinBERT):
+
+```bash
+jupyter nbconvert --to notebook --execute --inplace \
+    --ExecutePreprocessor.timeout=7200 Assignment_2_BPClassifier.ipynb
+```
+
+---
+
+## Setup from Git Clone
+
+The model weights are not in the repository. You must run the notebook to regenerate them before the GUI will work.
+
+**1. Install dependencies:**
+```bash
+pip install -r requirements.txt
+```
+
+**2. Add the ECT corpus** (provided separately as `ECT.zip`):
+```bash
+unzip ECT.zip -d ECT/
+```
+
+**3. (Optional) Reproduce gold labels** — skip if using the cached labels in `cache/gold/`. Requires Ollama:
+```bash
+ollama pull cogito:8b && ollama pull qwen3:14b && ollama pull gemma3:12b \
+    && ollama pull ministral-3:8b && ollama pull cogito:14b
+python run_gold_judges.py --smoke   # connectivity check
+python run_gold_judges.py           # full run (~60 min)
+```
+
+**4. Run the notebook** (trains FinBERT, saves weights, writes `winner.json`):
+```bash
+jupyter nbconvert --to notebook --execute --inplace \
+    --ExecutePreprocessor.timeout=7200 Assignment_2_BPClassifier.ipynb
+```
+FinBERT fine-tuning takes ~15 min on GPU or ~40 min on CPU. All steps are cached — re-runs skip completed work.
+
+**5. Start the GUI:**
+```bash
+streamlit run gui.py
 ```
 
 ---
 
 ## Gold Labeling Methodology
 
-2,500 sentences sampled from the pool (stratified by `speaker_type`) are labeled by a **5-judge LLM majority vote (≥ 3/5)**, followed by a **human audit (round 3)** of close-call sentences.
+2,500 sentences sampled from the pool (stratified by `speaker_type`) are labeled by a **5-judge LLM majority vote (≥ 3/5)**, followed by a **human audit** of 255 close-call (3–2 split) sentences.
 
 **Active judges:**
 
@@ -61,30 +126,14 @@ A binary sentence classifier for earnings-call transcripts that distinguishes **
 | j6 | ministral-3:8b | 16.5% |
 | j7 | cogito:14b | 23.6% |
 
-**Removed judges (systematic disagreement with human ground truth):**
+**Removed judges:**
 
 | Judge | Model | BP% | Reason |
 |-------|-------|-----|--------|
-| ~~j1~~ | ~~qwen3:8b~~ | ~~29.3%~~ | Over-flagged boilerplate; manual audit disagreed |
+| ~~j1~~ | ~~qwen3:8b~~ | ~~29.3%~~ | Over-flagged boilerplate; manual audit disagreed systematically |
 | ~~j2~~ | ~~gemma3:4b~~ | ~~47.5%~~ | Severe BP bias; overrode majority in 746/2,500 sentences |
 
 **Final gold set:** 2,500 sentences | BP = 257 (10.3%) | SB = 2,243 (89.7%)
-
----
-
-## Pipeline
-
-| Section | Description |
-|---------|-------------|
-| §1 | Environment setup, imports, paths |
-| §2 | Sentence extraction from 131 transcripts → `sentence_pool.parquet` |
-| §3 | Gold labeling: 5 LLM judges (j3–j7) + human audit (round 3) → `gold_labels.parquet` |
-| §4 | Stratified train/val/test split (60/20/20, seed=42) |
-| §5 | Feature engineering: 384-dim embeddings + 25 regex flags = 409-dim features |
-| §6 | Classifier zoo: Rules, LogReg, HistGBM, FastText, FinBERT, SetFit + 2 ensembles |
-| §7 | OOF threshold tuning (TUNE_FLOOR = 0.97; safety margin above 0.96 constraint) |
-| §8 | Ensemble + final test evaluation + leaderboard |
-| §9 | Error analysis |
 
 ---
 
@@ -93,56 +142,15 @@ A binary sentence classifier for earnings-call transcripts that distinguishes **
 | Rank | Model | Macro-F1 | BP F1 | SB Recall | Meets Floor |
 |------|-------|----------|-------|-----------|-------------|
 | 1 | **FinBERT-FT** | **0.923** | 0.862 | 0.976 | ✓ |
-| 2 | Ensemble(mean-prob) | 0.889 | 0.800 | 0.980 | ✓ |
+| 2 | Ensemble (mean-prob) | 0.889 | 0.800 | 0.980 | ✓ |
 | 3 | SetFit | 0.846 | 0.719 | 0.987 | ✓ |
-| 4 | HistGBM | 0.831 | 0.695 | 0.976 | ✓ |
-| 5 | Ensemble(rank-avg) | 0.828 | 0.688 | 0.978 | ✓ |
-| 6 | LogReg | 0.813 | 0.659 | 0.978 | ✓ |
-| 7 | FastText | 0.715 | 0.475 | 0.978 | ✓ |
+| 4 | Ensemble (rank-avg) | 0.843 | 0.716 | 0.978 | ✓ |
+| 5 | HistGBM | 0.831 | 0.695 | 0.976 | ✓ |
+| 6 | LogReg | 0.805 | 0.644 | 0.978 | ✓ |
+| 7 | FastText | 0.744 | 0.533 | 0.967 | ✓ |
 | 8 | Rules+Regex | 0.664 | 0.410 | 0.898 | **✗** |
 
-*Deployed artifact: `best_model.pkl` = HistGBM retrained on train+val, threshold=0.810.*
-
----
-
-## Setup
-
-### Requirements
-
-```bash
-pip install pandas numpy scikit-learn sentence-transformers tqdm \
-            streamlit fasttext-wheel transformers accelerate \
-            setfit pyarrow datasets nltk
-```
-
-### Ollama models (for gold labeling only)
-
-```bash
-ollama pull cogito:8b
-ollama pull qwen3:14b
-ollama pull gemma3:12b
-ollama pull ministral-3:8b
-ollama pull cogito:14b
-```
-
-### Reproduce gold labels
-
-```bash
-python run_gold_judges.py --smoke   # connectivity test
-python run_gold_judges.py           # full 2,500-sentence run (~60 min)
-```
-
-### Run the notebook
-
-Open `Assignment_2_BPClassifier.ipynb` in Jupyter and run cells top-to-bottom. All expensive steps (sentence extraction, embeddings, FinBERT weights, judge passes) are cached — re-runs skip completed steps automatically.
-
-### Run the GUI
-
-```bash
-/Users/yueqilin/anaconda3/bin/python -m streamlit run gui.py
-```
-
-Select a transcript from the ECT library tab, upload a `.txt` file, or paste text directly. Boilerplate sentences are highlighted in red with confidence scores.
+*Winner: FinBERT fine-tuned. Checkpoint at `saved_model/finbert_finetuned/`, threshold = 0.820.*
 
 ---
 
@@ -151,4 +159,6 @@ Select a transcript from the ECT library tab, upload a `.txt` file, or paste tex
 - **131 transcripts**, 15 tickers, 2022–2025
 - **53,236 unique sentences** after deduplication (minimum 40 characters)
 - **2,500-sentence gold sample** stratified by speaker type (analyst / executive / IR / operator)
-- **Splits:** train=1,500 / val=500 / test=500 (seed=42, stratified by label)
+- **Splits:** train = 1,500 / val = 500 / test = 500 (seed = 42, stratified by label)
+- **ECT corpus:** provided as `ECT.zip` (not in this repository)
+- **Unseen transcripts:** `ECT_unseen/` — AAPL Q2-2026 and MSFT Q3-2026 sourced from Seeking Alpha
