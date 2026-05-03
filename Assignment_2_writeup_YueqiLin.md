@@ -45,22 +45,37 @@ The goal of this assignment is to build a binary sentence classifier (`boilerpla
 - 2,500-sentence gold sample for supervised training and evaluation
 - Splits: train = 1,500 / val = 500 / test = 500 (seed = 42, stratified by label)
 - Label balance: BP = 257 (10.3%) / SB = 2,243 (89.7%)
+- **The test split was frozen at dataset creation and not examined, used for threshold tuning, or inspected for errors until the single final evaluation run reported in §6.2.**
 
 
 ## 2. Gold Labeling Methodology
 
 ### 2.1 Labeling Rubric
 
-| Class | Definition | Anchor examples |
-|-------|-----------|----------------|
-| `boilerplate` (0) | Scripted, generic, no material information | Operator intros ("My name is Regina and I'll be your operator"), safe-harbor disclaimers, generic thanks, analyst name/firm intros, short affirmations ("Sure.", "Great."), housekeeping |
-| `substantive` (1) | Material content | Revenue figures, margin guidance, segment results, specific customer wins, capex plans, product launch commentary, analyst financial questions |
+| Class | Definition | Clear examples | Ambiguous edge cases → ruling |
+|-------|-----------|----------------|--------------------|
+| `boilerplate` (0) | Scripted, generic, no material information | Operator intros ("My name is Regina…"), safe-harbor disclaimers, generic thanks ("Thank you for joining us today"), analyst name/firm intros, short affirmations ("Sure.", "Great.", "Absolutely."), housekeeping, slide-transition phrases ("Turning to Slide 5.") | "It's my pleasure to present results for the fourth quarter and full year 2024." → **BP** (scripted opening regardless of quarter reference); "Turning to our broader Data Center portfolio." → **BP** (slide navigation with no content) |
+| `substantive` (1) | Material content — financial data, strategic intent, specific operational detail, named events | Revenue/margin/EPS figures, segment guidance, specific customer wins, capex plans, product launch commentary, analyst financial questions, personnel appointments, regulatory commentary, forward-looking company assessments | "In closing, I feel very good about the trajectory of Goldman Sachs." → **SB** (CEO forward-looking sentiment about company direction); "Product and customer mix played its customary role." → **SB** (references specific financial drivers); "And what has been the more challenging aspect of it all?" → **SB** (analyst probing operational specifics, not a generic hello) |
 
-**Edge-case rules enforced in the prompt:**
-- Analyst name intro lines → boilerplate, even if they mention the question topic
-- Safe-harbor language → boilerplate even when it references specific metrics
-- Short generic affirmations → boilerplate
-- Sentence with a dollar/percentage figure AND real context → substantive
+**Tie-breaking rules for ambiguous edge cases (adopted during human audit):**
+
+Ambiguous edge cases are sentences that do not clearly fit one class — they may sound generic but carry substantive content, or they may mention a specific topic while serving only a structural role. The eight rules below document how each recurring type was resolved.
+
+1. **Analyst questions in Q&A are substantive by default.** Even short, conversational analyst follow-ups ("Do you think that you'll go in a different direction?", "Just your comfort level in terms of the functioning of the treasury market.") are substantive because they probe specific topics on the analyst's research agenda. Only pure social openers ("Hi, thanks for taking my question.") or explicit analyst name/firm introductions are boilerplate.
+
+2. **"Turning to…" / "Moving to…" slide transitions are boilerplate.** Phrases such as "Now turning to our third quarter outlook", "Turning to our broader Data Center portfolio", and "Now turning to our outlook for fiscal year '25" are structural navigation signals — they introduce a topic but carry no content themselves. Label the *next* sentence that states the actual data, not the navigation phrase.
+
+3. **Executive closing sentiments are substantive, not boilerplate.** A CEO statement like "In closing, I feel very good about the trajectory of Goldman Sachs" or "We, as a nation, must reindustrialize to prevent escalating conflict" expresses a forward-looking corporate view. This is distinct from a generic scripted close ("Thank you all for joining us today"). The test: would a financial analyst quote this in a research note? If yes, → substantive.
+
+4. **Personnel announcements are substantive.** Sentences announcing a new executive appointment ("I'm excited to welcome Gina Adams into her new role as General Counsel…") report a material corporate event, even if they sound congratulatory.
+
+5. **Hedged executive Q&A answers carry strategic intent.** Sentences like "I think the point I would make is it's very difficult to predict what will happen over the next 30–60 days" are substantive — the executive is providing their genuine outlook on business uncertainty. Only social-filler phrases with zero propositional content ("Sure, happy to take that.") are boilerplate.
+
+6. **Safe-harbor / forward-looking disclaimer blocks are boilerplate** even when they name specific metrics or reference filed documents. The content is legally required scripted language, not analytical commentary.
+
+7. **Speaker-label artifacts and slide fragments are boilerplate.** Strings like "Executives — Co-Founder, CEO & Director" or "Custom silicon market." that survived sentence tokenization are pipeline artefacts with no standalone meaning.
+
+8. **Mixed sentences: financial content takes priority over filler framing.** When a sentence combines generic pride/enthusiasm language with a financial or operational reference, the substantive content wins. *"I am very proud of our team for delivering record revenue this quarter"* → **substantive** (the record revenue is the signal, not the pride framing). Contrast with *"I am very proud of the entire team for their hard work"* → **boilerplate** (no financial or operational referent). The test: strip the sentiment wrapper — if what remains is a factual claim, label substantive.
 
 ### 2.2 LLM Judge Panel
 
@@ -78,11 +93,79 @@ A stratified sample of 2,500 sentences (stratified by `speaker_type`) was labele
 
 The final label uses **majority vote of 5 active judges** (≥ 3/5 agree). Unanimous agreement (5–0) occurred on 1,921 sentences (76.8%); the **disagreement rate** (any split, including 4–1) was **23.2%** (579 sentences), of which 255 were escalated to human review.
 
+**Vote-split distribution (all 2,500 sentences):**
+
+| Split | Count | % of gold |
+|-------|-------|-----------|
+| 5–0 unanimous | 1,921 | 76.8% |
+| 4–1 minority dissent | 324 | 13.0% |
+| 3–2 escalated to human | 255 | 10.2% |
+
+**Per-judge disagreement with the majority vote (all 2,500 sentences):**
+
+| Judge | Model | BP% | Disagrees with MV | Rate | Of which on 3–2 splits |
+|-------|-------|-----|-------------------|------|------------------------|
+| j3 | cogito:8b | 8.2% | 156 | 6.2% | 88 |
+| j4 | qwen3:14b | 11.2% | 93 | 3.7% | 76 |
+| j5 | gemma3:12b | 19.4% | 199 | 8.0% | 124 |
+| j6 | ministral-3:8b | 16.5% | 130 | 5.2% | 84 |
+| j7 | cogito:14b | 23.6% | 256 | 10.2% | 138 |
+
+j4 (qwen3:14b) is the most consistent judge — it disagrees with the majority on only 3.7% of sentences. j7 (cogito:14b) is the most idiosyncratic, dissenting on 10.2% of all sentences; it also accounts for the highest share of 3–2 split disagreements (138 of 255), suggesting it is the primary source of uncertainty in the panel. j5 (gemma3:12b) and j7 together drive 69% of the 3–2 escalations.
+
 ### 2.3 Human Audit
 
-255 close-call sentences (3–2 splits or any judge failure) were reviewed manually in a third audit round (`human_review_v3.csv`). Human labels override the LLM majority vote where provided; the remaining sentences keep the LLM label. Earlier audit rounds contained labeling errors and are excluded.
+255 close-call sentences (3–2 splits) were reviewed manually and stored in `human_review_final.csv`. Human labels override the LLM majority vote where provided; the remaining 2,245 sentences keep the LLM label. Two earlier draft rounds (`human_review.csv`, `human_review_round2.csv`) contained systematic labeling errors and are excluded from the pipeline.
+
+**Correction summary:** of the 255 reviewed sentences, **93 were corrected** (36.5%) — 89 from BP→SB and 4 from SB→BP. The high BP→SB correction rate (89/96 = 93% of BP-labelled close-calls flipped to SB) reflects that the LLM panel was systematically over-cautious on conversational executive and analyst language.
 
 **Final gold set:** 2,500 sentences | BP = 257 (10.3%) | SB = 2,243 (89.7%)
+
+### 2.4 Human-Review Corrections — Selected Examples
+
+The following sentences illustrate the most instructive disagreements between the LLM panel and the human auditor.
+
+**Category A — Analyst Q&A questions (LLM: boilerplate → Human: substantive)**
+
+These were the most common correction type. LLMs flagged short, conversational questions as generic filler; the human auditor recognized that even brief analyst questions are substantive because they probe a specific topic on the analyst's research agenda.
+
+| Sentence | Votes (j3–j7) | Why substantive |
+|----------|--------------|-----------------|
+| "And what has been the more challenging aspect of it all?" | 1,1,0,0,0 | Analyst asking FedEx management to diagnose operational difficulties — a specific follow-up, not a social filler |
+| "Just your comfort level in terms of the functioning of the treasury market." | 1,1,0,0,0 | Probing JPMorgan's risk view on treasury market liquidity — material to investors |
+| "But that being said, as Jamie noted, like we have no idea what the curve is going to look like, right?" | 1,1,0,0,0 | JPMorgan analyst referencing Jamie Dimon's prior comments and pressing on rate curve uncertainty |
+| "We're, what, 9 months or so into this new administration with the new regulators." | 1,1,0,0,0 | Analyst framing a question about the regulatory timeline — substantive political/regulatory context |
+| "And we all know about the commercial real estate office." | 0,1,1,0,0 | Analyst acknowledging CRE stress as setup for a material question on exposure |
+
+**Category B — Executive statements that sound generic but carry strategic content (LLM: boilerplate → Human: substantive)**
+
+The LLM panel mis-classified these as boilerplate because they lack numerical anchors and use hedged first-person language. The human auditor applied rule 3 (closing sentiments are substantive) and rule 5 (hedged executive answers carry strategic intent).
+
+| Sentence | Votes (j3–j7) | Why substantive |
+|----------|--------------|-----------------|
+| "In closing, I feel very good about the trajectory of Goldman Sachs." | 1,1,0,0,0 | CEO forward-looking assessment of company direction — an analyst would quote this; not a scripted goodbye |
+| "We believe it's an important component of the Fed's mandate to really ensure the safety and soundness of the banking system." | 1,1,0,0,0 | Goldman Sachs executive expressing a view on regulatory policy — material regulatory commentary |
+| "Product and customer mix played its customary role." | 0,0,1,0,1 | References specific financial margin drivers (mix effects) — standard earnings-call shorthand for a segment result |
+| "And as we see the various folks and various agencies go through the confirmation process, it will be helpful to have people in seats." | 1,1,0,0,0 | JPMorgan executive commenting on regulatory transition timeline — specific operational context |
+| "But as we progress through the year, we think things will get better and better." | 1,1,0,0,0 | Intel executive giving a directional outlook on full-year improvement — substantive guidance language |
+
+**Category C — Personnel announcements (LLM: boilerplate → Human: substantive)**
+
+| Sentence | Votes (j3–j7) | Why substantive |
+|----------|--------------|-----------------|
+| "I'm excited to welcome Gina Adams into her new role as General Counsel and Secretary of FedEx effective September 24." | 1,1,0,0,0 | Material corporate event: new C-suite legal officer appointment with an effective date |
+| "For the past 5 years, she served as our Asia Pacific Regional President." | 1,0,0,0,1 | Background on an executive appointment — provides material context for the personnel announcement |
+
+**Category D — Slide transitions and agenda phrases (LLM: substantive → Human: boilerplate)**
+
+Four corrections ran the other direction. The LLM panel was distracted by topic keywords ("Data Center", "outlook") and missed that these are structural navigation phrases, not content sentences.
+
+| Sentence | Votes (j3–j7) | Why boilerplate |
+|----------|--------------|-----------------|
+| "Now turning to our third quarter 2024 outlook." | 1,1,0,1,0 | Slide-transition signal only; the actual outlook numbers appear in the following sentences |
+| "Turning to our broader Data Center portfolio." | 1,1,0,1,0 | Navigation phrase introducing a segment — no data of its own |
+| "I'll start with a review of our financial results and then provide our outlook for the third quarter of fiscal 2025." | 1,1,0,1,0 | Agenda-setting sentence that structures the prepared remarks — the content follows; this phrase has none |
+| "Now turning to our outlook for fiscal year '25." | 1,1,0,1,0 | Same pattern: slide-navigation intro for FedEx full-year outlook section |
 
 
 ## 3. Feature Engineering
