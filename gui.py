@@ -2,46 +2,39 @@
 BPClassifier GUI — Streamlit app for inline boilerplate tagging.
 
 Run:
-    streamlit run gui.py
-
-If setfit is not found in the active Python, the script automatically
-re-launches itself using the Anaconda/Miniconda Streamlit that has it.
+    bash run_gui.sh          # recommended: single window, auto-finds the right env
+    streamlit run gui.py     # also works if setfit is in the active env
 
 Loads the winning model (SetFit, all-MiniLM-L6-v2 contrastive fine-tuned)
 from saved_model/setfit_model/ and its threshold from saved_model/winner.json.
 """
 
-# ── Auto-restart with Anaconda Streamlit if setfit is missing ─────────────────
-# This block runs before 'import streamlit' so the process is replaced cleanly.
+# ── Auto-restart with the correct Streamlit if setfit is missing ──────────────
+# Uses --server.headless true on the replacement launch so only one browser tab
+# opens (the replacement's), not two.
 import os as _os, sys as _sys
 try:
-    import setfit as _sf
-    _SETFIT_OK   = True
-    _SetFitModel = _sf.SetFitModel
+    from setfit import SetFitModel as _SetFitModel
 except ImportError:
-    _SETFIT_OK   = False
-    _SetFitModel = None
     from pathlib import Path as _P
     _conda = _os.environ.get('CONDA_PREFIX', '')
     _candidates = [
         *([_P(_conda) / 'bin' / 'streamlit'] if _conda else []),
-        _P.home() / 'anaconda3'          / 'bin' / 'streamlit',
-        _P.home() / 'miniconda3'         / 'bin' / 'streamlit',
-        _P.home() / 'opt' / 'anaconda3'  / 'bin' / 'streamlit',
-        _P.home() / 'opt' / 'miniconda3' / 'bin' / 'streamlit',
+        _P.home() / 'anaconda3'         / 'bin' / 'streamlit',
+        _P.home() / 'miniconda3'        / 'bin' / 'streamlit',
+        _P.home() / 'opt' / 'anaconda3' / 'bin' / 'streamlit',
+        _P.home() / 'opt' / 'miniconda3'/ 'bin' / 'streamlit',
         _P('/opt/anaconda3/bin/streamlit'),
         _P('/opt/miniconda3/bin/streamlit'),
     ]
-    for _st_bin in _candidates:
-        if _st_bin.exists():
-            print(f'\n[BPClassifier] setfit not found — re-launching with {_st_bin}\n',
-                  flush=True)
-            _os.execv(str(_st_bin), [str(_st_bin), 'run', __file__] + _sys.argv[1:])
+    for _st in _candidates:
+        if _st.exists():
+            print(f'[BPClassifier] setfit not found — re-launching with {_st}', flush=True)
+            _os.execv(str(_st), [str(_st), 'run', __file__] + _sys.argv[1:])
+    raise  # no Anaconda streamlit found; surface the original ImportError
 
-# ── Regular imports ───────────────────────────────────────────────────────────
 import json, html as _html
 from pathlib import Path
-
 import streamlit as st
 import streamlit.components.v1 as _components
 

@@ -53,8 +53,8 @@ A binary sentence classifier for earnings-call transcripts that distinguishes **
 │   ├── best_model.pkl                    # HistGBM fallback artifact (~1.6 MB)
 │   ├── fasttext_model.bin                # FastText model (~764 MB) — included in zip, gitignored on GitHub
 │   └── winner.json                       # {"winner_model": "SetFit ...", "threshold": 0.955}
-├── ECT/                                  # Raw earnings-call transcripts (131 files, from ECT.zip)
-└── ECT_unseen/                           # Two unseen transcripts for §9 verification
+├── ECT/                                  # Raw earnings-call transcripts (131 files, tracked in repo)
+└── ECT_unseen/                           # Two unseen transcripts for §10 verification
     ├── AAPL_Q2-2026.txt                  # Sourced from Seeking Alpha (not in ECT.zip)
     └── MSFT_Q3-2026.txt                  # Sourced from Seeking Alpha (not in ECT.zip)
 ```
@@ -69,8 +69,10 @@ Model weights are included in the zip. Just install dependencies and run:
 
 ```bash
 pip install -r requirements.txt
-streamlit run gui.py
+bash run_gui.sh
 ```
+
+`bash run_gui.sh` automatically finds the Python environment that has `setfit` installed and opens one browser tab. Alternatively, `streamlit run gui.py` works directly if `setfit` is already in the active environment.
 
 To re-run the full pipeline (retrains all classifiers including SetFit and FinBERT):
 
@@ -90,12 +92,7 @@ The large model weights are not in the repository. You must run the notebook to 
 pip install -r requirements.txt
 ```
 
-**2. Add the ECT corpus** (provided separately as `ECT.zip`):
-```bash
-unzip ECT.zip -d ECT/
-```
-
-**3. (Optional) Reproduce gold labels** — skip if using the cached labels in `cache/gold/`. Requires Ollama:
+**2. (Optional) Reproduce gold labels** — skip if using the cached labels in `cache/gold/`. Requires Ollama:
 ```bash
 ollama pull cogito:8b && ollama pull qwen3:14b && ollama pull gemma3:12b \
     && ollama pull ministral-3:8b && ollama pull cogito:14b
@@ -103,17 +100,19 @@ python run_gold_judges.py --smoke   # connectivity check
 python run_gold_judges.py           # full run (~60 min)
 ```
 
-**4. Run the notebook** (trains all classifiers, saves SetFit and FinBERT weights, writes `winner.json`):
+**3. Run the notebook** (trains all classifiers, saves SetFit and FinBERT weights, writes `winner.json`):
 ```bash
 jupyter nbconvert --to notebook --execute --inplace \
     --ExecutePreprocessor.timeout=7200 Assignment_2_BPClassifier.ipynb
 ```
 SetFit contrastive fine-tuning takes ~5 min on CPU. FinBERT fine-tuning takes ~15 min on GPU or ~40 min on CPU. All steps are cached — re-runs skip completed work.
 
-**5. Start the GUI:**
+**4. Start the GUI:**
 ```bash
-streamlit run gui.py
+bash run_gui.sh
 ```
+
+`bash run_gui.sh` finds the Anaconda/Miniconda Streamlit that has `setfit` and opens one browser tab. Alternatively, `streamlit run gui.py` works if `setfit` is in the active environment.
 
 ---
 
@@ -165,5 +164,5 @@ streamlit run gui.py
 - **53,236 unique sentences** after deduplication (minimum 40 characters)
 - **2,500-sentence gold sample** stratified by speaker type (analyst / executive / IR / operator)
 - **Splits:** train = 1,500 / val = 500 / test = 500 (seed = 42, stratified by label)
-- **ECT corpus:** provided as `ECT.zip` (not in this repository)
+- **ECT corpus:** 131 transcripts included in the repository under `ECT/`
 - **Unseen transcripts:** `ECT_unseen/` — AAPL Q2-2026 and MSFT Q3-2026 sourced from Seeking Alpha

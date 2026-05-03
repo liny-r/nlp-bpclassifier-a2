@@ -147,7 +147,7 @@ Eight classifiers span five distinct families, satisfying the ≥5-family requir
 
 ### 4.1 Rules + Regex (Classifier 1)
 
-A deterministic rule applied directly to the 25 regex flags: a sentence is boilerplate if any of the 11 boilerplate-signal flags fires and none of the high-confidence substantive flags fire. **Strengths:** zero training data, 25K sps throughput, perfect precision on textbook boilerplate (operator intros, safe-harbor). **Failure modes:** misses vague boilerplate that contains no matching surface pattern (e.g. "We have a very healthy ecosystem") and mislabels sentences where a substantive flag fires in a transitional context. SB recall = 0.898 — the only classifier that fails the 0.96 floor.
+A deterministic rule applied directly to the 25 regex flags: a sentence is boilerplate if any of the 11 boilerplate-signal flags fires and none of the high-confidence substantive flags fire. This baseline is included for interpretability and speed benchmarking; it is not recall-constrained and is not the deployed model. **Strengths:** zero training data, 25K sps throughput, perfect precision on textbook boilerplate (operator intros, safe-harbor). **Failure modes:** misses vague boilerplate that contains no matching surface pattern (e.g. "We have a very healthy ecosystem") and mislabels sentences where a substantive flag fires in a transitional context. SB recall = 0.898 — the only classifier that fails the 0.96 floor.
 
 ### 4.2 Logistic Regression (Classifier 2)
 
@@ -159,11 +159,11 @@ A deterministic rule applied directly to the 25 regex flags: a sentence is boile
 
 ### 4.4 FastText (Classifier 4)
 
-Supervised FastText on raw text: 25 epochs, word bigrams, lr=0.5, dim=100, 2M hash buckets. Training 1.4 s; inference 587 sps. Saved binary ~764 MB (2M-bucket n-gram matrix; char n-grams disabled). **Strengths:** no embedding dependency, fast training; bigrams capture some local context. **Failure modes:** lowest BP F1 (0.533 on test); bag-of-words has no positional awareness — "revenue" and "thank you" receive equal weight in the same sentence.
+Supervised FastText on raw text (no embedding+regex matrix): 25 epochs, word bigrams, lr=0.5, dim=100, 2M hash buckets. Training 1.4 s; inference 587 sps. Saved binary ~764 MB (2M-bucket n-gram matrix; char n-grams disabled). **Strengths:** no embedding dependency, fast training; bigrams capture some local context. **Failure modes:** lowest BP F1 (0.533 on test); bag-of-words has no positional awareness — "revenue" and "thank you" receive equal weight in the same sentence.
 
 ### 4.5 FinBERT Fine-tuned (Classifier 5)
 
-`ProsusAI/finbert` — a BERT model pre-trained on financial text — is fine-tuned for 3 epochs using AdamW (lr=2e-5, batch 16) with a linear warmup schedule. Inference runs on CPU (forced to avoid MPS out-of-memory on M1 Pro) at ~72 sps. **Strengths:** second-best test macro-F1 (0.923) and best BP F1 (0.862) across all classifiers; pre-training on financial corpora gives it sensitivity to domain-specific phrasing that generic embeddings miss. **Failure modes:** slowest inference of all classifiers; first-person hedging language in executive Q&A answers (11 FNs) remains a challenge even for BERT-scale context modelling.
+`ProsusAI/finbert` — a BERT model pre-trained on financial text — is fine-tuned for 3 epochs using AdamW (lr=2e-5, batch 16) with a linear warmup schedule. Trained on raw text (no embedding+regex matrix). Inference runs on CPU (forced to avoid MPS out-of-memory on M1 Pro) at ~72 sps. **Strengths:** second-best test macro-F1 (0.923) and best BP F1 (0.862) across all classifiers; pre-training on financial corpora gives it sensitivity to domain-specific phrasing that generic embeddings miss. **Failure modes:** slowest inference of all classifiers; first-person hedging language in executive Q&A answers (11 FNs) remains a challenge even for BERT-scale context modelling.
 
 ### 4.6 SetFit / MiniLM (Classifier 6)
 
@@ -397,8 +397,10 @@ Screenshots showing the stats bar and tagged-transcript view on both seen (AVGO)
 **Launch command:**
 
 ```bash
-streamlit run gui.py
+bash run_gui.sh
 ```
+
+`bash run_gui.sh` auto-detects the Anaconda/Miniconda environment that has `setfit` and opens one browser tab. `streamlit run gui.py` also works if `setfit` is already in the active environment.
 
 ## 11. Reproducibility
 
@@ -408,8 +410,10 @@ The zip includes all trained model weights. Install dependencies and start the G
 
 ```bash
 pip install -r requirements.txt
-streamlit run gui.py
+bash run_gui.sh
 ```
+
+`bash run_gui.sh` auto-detects the correct Python environment and opens one browser tab. Alternatively, `streamlit run gui.py` works if `setfit` is in the active environment.
 
 To re-run the full pipeline from scratch (retrains all classifiers; SetFit ~5 min on CPU, FinBERT ~15 min on GPU):
 
@@ -446,11 +450,22 @@ All steps are cached — re-runs skip completed work. SetFit contrastive fine-tu
 
 **Step 5 — Start the GUI:**
 ```bash
-streamlit run gui.py
+bash run_gui.sh
 ```
 
 **LLM assistance disclosure:** Claude (Anthropic, claude-sonnet-4-6) assisted with prose drafting/editing, debugging notebook cells (SetFit pipeline, FinBERT inference, threshold-sweep, error-analysis), and generating `gui.py`. All analytical decisions (rubric, judge selection, model choices, threshold strategy, error categorisation) were made by the author; gold labels, training, and numerical results came from the notebook.
 
+## References
+
+1. Pedregosa et al. (2011). *Scikit-learn: Machine Learning in Python*. JMLR 12, pp. 2825–2830.
+2. Bird, Klein & Loper (2009). *Natural Language Processing with Python*. O'Reilly. — NLTK `punkt` tokenizer.
+3. Reimers & Gurevych (2019). *Sentence-BERT: Sentence Embeddings using Siamese BERT-Networks*. EMNLP. — `sentence-transformers/all-MiniLM-L6-v2`.
+4. Tunstall et al. (2022). *Efficient Few-Shot Learning Without Prompts*. arXiv:2209.11055. — SetFit / `setfit` 1.1.3.
+5. Araci (2019). *FinBERT: Financial Sentiment Analysis with Pre-trained Language Models*. arXiv:1908.10063. — `ProsusAI/finbert` (Hugging Face Hub).
+6. Wolf et al. (2020). *Transformers: State-of-the-Art Natural Language Processing*. EMNLP. — `transformers` + `datasets` libraries.
+7. Joulin et al. (2017). *Bag of Tricks for Efficient Text Classification*. EACL. — FastText supervised classifier.
+8. Ollama (2023). *Run Large Language Models Locally*. https://ollama.com — local judge models (cogito:8b, qwen3:14b, gemma3:12b, ministral-3:8b, cogito:14b).
+9. Streamlit Inc. (2019). *Streamlit — The fastest way to build data apps*. https://streamlit.io — GUI framework.
 
 ## Appendix A — Human-Review Correction Examples
 
