@@ -119,7 +119,7 @@ j4 (qwen3:14b) is the most consistent judge — it disagrees with the majority o
 
 255 close-call sentences (3–2 splits) were reviewed manually and stored in `human_review_final.csv`. Human labels override the LLM majority vote where provided; the remaining 2,245 sentences keep the LLM label. Two earlier draft rounds (`human_review.csv`, `human_review_round2.csv`) contained systematic labeling errors and are excluded from the pipeline.
 
-**Correction summary:** of the 255 reviewed sentences, **93 were corrected** (36.5%) — 89 from BP→SB and 4 from SB→BP. The high BP→SB correction rate (89/96 = 93% of BP-labelled close-calls flipped to SB) reflects that the LLM panel was systematically over-cautious on conversational executive and analyst language.
+**Correction summary:** of the 255 reviewed sentences, **102 were corrected** (40.0%) — 93 from BP→SB and 9 from SB→BP. The high BP→SB correction rate (93 of 96 BP-labelled close-calls flipped to SB, 96.9%) reflects that the LLM panel was systematically over-cautious on conversational executive and analyst language.
 
 **Final gold set:** 2,500 sentences | BP = 257 (10.3%) | SB = 2,243 (89.7%)
 
@@ -161,7 +161,7 @@ A deterministic rule applied directly to the 25 regex flags: a sentence is boile
 
 ### 4.4 FastText (Classifier 4)
 
-Facebook's supervised FastText on raw sentence text. Trained for 25 epochs with word n-grams (n=2), learning rate 0.5, embedding dim 100. Training takes 1.4 s; inference only 587 sps (preprocessing overhead). **Strengths:** tiny model (~2 MB), no embedding dependency, robust to OOV tokens via character n-grams. **Failure modes:** worst BP F1 (0.475 on test) because n-gram bag-of-words has no positional or contextual awareness; "revenue" and "thank you" in the same sentence receive equal weight from both unigrams, making nuanced mixed sentences hard to classify.
+Facebook's supervised FastText on raw sentence text. Trained for 25 epochs with word n-grams (n=2), learning rate 0.5, embedding dim 100, 2M hash buckets (fasttext default). Training takes 1.4 s; inference only 587 sps (preprocessing overhead). The saved binary is ~764 MB (dominated by the 2M-bucket word n-gram matrix; character n-grams are disabled, `minn=0`). **Strengths:** no embedding dependency, fast training; word bigrams capture some local word-order context that pure unigrams miss. **Failure modes:** lowest BP F1 of the learned classifiers (0.533 on test) because n-gram bag-of-words has no positional or contextual awareness; "revenue" and "thank you" in the same sentence receive equal weight from both unigrams, making nuanced mixed sentences hard to classify.
 
 ### 4.5 FinBERT Fine-tuned (Classifier 5)
 
@@ -359,10 +359,10 @@ To assess out-of-domain generalization, FinBERT (t=0.820) is applied to two full
 
 | Transcript | Total (≥40 chars) | Boilerplate | Substantive |
 |------------|-------------------|-------------|-------------|
-| AAPL Q2-2026 | 423 | 104 (24.6%) | 319 (75.4%) |
-| MSFT Q3-2026 | 431 |  77 (17.9%) | 354 (82.1%) |
+| AAPL Q2-2026 | 420 | 101 (24.0%) | 319 (76.0%) |
+| MSFT Q3-2026 | 430 |  76 (17.7%) | 354 (82.3%) |
 
-The boilerplate rates (18–25%) are higher than the gold-set class balance (10.3% BP) because the gold sample was stratified by speaker type, under-representing operator-turn language; full transcripts include proportionally more operator intros and housekeeping remarks.
+The boilerplate rates (18–25%) are higher than the gold-set class balance (10.3% BP) because the gold sample was stratified by speaker type, under-representing operator-turn language; full transcripts include proportionally more operator intros and housekeeping remarks. Counts are from the GUI (per-line sentence tokenization); the notebook §10 cell, which tokenizes full paragraphs, may report counts differing by 1–3 sentences.
 
 **High-confidence boilerplate (P(SB) < 0.03):**
 
@@ -429,7 +429,7 @@ jupyter nbconvert --to notebook --execute --inplace \
 
 ### From a git clone
 
-`saved_model/finbert_finetuned/model.safetensors` (~440 MB) and `saved_model/fasttext_model.bin` exceed GitHub's 100 MB file-size limit and are excluded via `.gitignore`. The notebook must be run before the GUI will load.
+`saved_model/finbert_finetuned/model.safetensors` (~418 MB) and `saved_model/fasttext_model.bin` (~764 MB) exceed GitHub's 100 MB file-size limit and are excluded via `.gitignore`. The notebook must be run before the GUI will load.
 
 **Step 1 — Install:**
 ```bash
@@ -546,11 +546,11 @@ Four corrections ran the other direction. The LLM panel was distracted by topic 
 
 ## Appendix C — GUI Screenshots
 
-**Screenshot 1** — stats bar and boilerplate highlighting on a seen transcript (AVGO Q4-2024, in training pool):
+**Screenshot 1** — stats bar and boilerplate highlighting on a seen transcript (AVGO Q1-2025, in training pool):
 
 ![GUI screenshot — seen transcript stats panel](figures/GUI_screenshot_seen1_AVGO.png){width=95%}
 
-**Screenshot 2** — full tagged view on a seen transcript (AVGO Q4-2024):
+**Screenshot 2** — full tagged view on a seen transcript (AVGO Q1-2025):
 
 ![GUI screenshot — seen transcript tagged view](figures/GUI_screenshot_seen2_AVGO.png){width=95%}
 
