@@ -1,0 +1,8 @@
+{
+  "python.defaultInterpreterPath": "/Users/yueqilin/anaconda3/bin/python",
+  "python.analysis.extraPaths": [
+    "/Users/yueqilin/anaconda3/lib/python3.11/site-packages"
+  ],
+  "python-envs.defaultEnvManager": "ms-python.python:conda",
+  "python-envs.defaultPackageManager": "ms-python.python:conda"
+}

@@ -1,11 +1,11 @@
 {
-  "winner_model": "FinBERT (ProsusAI/finbert, fine-tuned)",
+  "winner_model": "SetFit (sentence-transformers/all-MiniLM-L6-v2, contrastive fine-tuned)",
   "winner_criterion": "highest macro-F1 on test set under SB recall >= 0.96",
-  "test_macro_f1": 0.923,
-  "test_accuracy": 0.97,
-  "test_sb_recall": 0.976,
-  "threshold": 0.8200000000000001,
-  "threshold_method": "val-set sweep (OOF impractical at 21 sps)",
-  "checkpoint_path": "saved_model/finbert_finetuned",
-  "runner_up": "HistGBM (macro-F1=0.831) \u2014 saved as best_model.pkl for GUI serving (CPU-friendly)"
+  "test_macro_f1": 0.9308,
+  "test_accuracy": 0.974,
+  "test_sb_recall": 0.9822,
+  "threshold": 0.9550000000000001,
+  "threshold_method": "val-set sweep",
+  "checkpoint_path": "saved_model/setfit_model",
+  "runner_up": "FinBERT (macro-F1=0.9228) \u2014 saved at saved_model/finbert_finetuned/"
 }

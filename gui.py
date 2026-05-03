@@ -4,47 +4,63 @@ BPClassifier GUI — Streamlit app for inline boilerplate tagging.
 Run:
     streamlit run gui.py
 
-Loads the winning model (FinBERT fine-tuned) from saved_model/finbert_finetuned/
-and its threshold from saved_model/winner.json.
+If setfit is not found in the active Python, the script automatically
+re-launches itself using the Anaconda/Miniconda Streamlit that has it.
+
+Loads the winning model (SetFit, all-MiniLM-L6-v2 contrastive fine-tuned)
+from saved_model/setfit_model/ and its threshold from saved_model/winner.json.
 """
 
+# ── Auto-restart with Anaconda Streamlit if setfit is missing ─────────────────
+# This block runs before 'import streamlit' so the process is replaced cleanly.
+import os as _os, sys as _sys
+try:
+    import setfit as _sf
+    _SETFIT_OK   = True
+    _SetFitModel = _sf.SetFitModel
+except ImportError:
+    _SETFIT_OK   = False
+    _SetFitModel = None
+    from pathlib import Path as _P
+    _conda = _os.environ.get('CONDA_PREFIX', '')
+    _candidates = [
+        *([_P(_conda) / 'bin' / 'streamlit'] if _conda else []),
+        _P.home() / 'anaconda3'          / 'bin' / 'streamlit',
+        _P.home() / 'miniconda3'         / 'bin' / 'streamlit',
+        _P.home() / 'opt' / 'anaconda3'  / 'bin' / 'streamlit',
+        _P.home() / 'opt' / 'miniconda3' / 'bin' / 'streamlit',
+        _P('/opt/anaconda3/bin/streamlit'),
+        _P('/opt/miniconda3/bin/streamlit'),
+    ]
+    for _st_bin in _candidates:
+        if _st_bin.exists():
+            print(f'\n[BPClassifier] setfit not found — re-launching with {_st_bin}\n',
+                  flush=True)
+            _os.execv(str(_st_bin), [str(_st_bin), 'run', __file__] + _sys.argv[1:])
+
+# ── Regular imports ───────────────────────────────────────────────────────────
 import json, html as _html
 from pathlib import Path
 
-import numpy as np
 import streamlit as st
 import streamlit.components.v1 as _components
 
 # ── Paths ─────────────────────────────────────────────────────────────────────
-ROOT         = Path(__file__).parent
-WINNER_PATH  = ROOT / 'saved_model' / 'winner.json'
-FINBERT_PATH = ROOT / 'saved_model' / 'finbert_finetuned'
+ROOT        = Path(__file__).parent
+WINNER_PATH = ROOT / 'saved_model' / 'winner.json'
+SETFIT_PATH = ROOT / 'saved_model' / 'setfit_model'
 
 # ── Load winner model once ────────────────────────────────────────────────────
 @st.cache_resource
 def load_winner():
     winner = json.loads(WINNER_PATH.read_text())
     threshold = float(winner['threshold'])
+    model = _SetFitModel.from_pretrained(str(SETFIT_PATH))
+    return model, threshold
 
-    from transformers import AutoTokenizer, AutoModelForSequenceClassification
-    tokenizer = AutoTokenizer.from_pretrained(str(FINBERT_PATH))
-    model     = AutoModelForSequenceClassification.from_pretrained(str(FINBERT_PATH))
-    model.eval()
-    return tokenizer, model, threshold
-
-# ── FinBERT inference ─────────────────────────────────────────────────────────
-def predict(sentences, tokenizer, model, threshold, batch_size=32):
-    import torch
-    all_probas = []
-    for i in range(0, len(sentences), batch_size):
-        batch = sentences[i : i + batch_size]
-        enc = tokenizer(batch, truncation=True, max_length=128,
-                        padding=True, return_tensors='pt')
-        with torch.no_grad():
-            logits = model(**enc).logits
-        probas = torch.softmax(logits, dim=-1)[:, 1].cpu().numpy()
-        all_probas.extend(probas.tolist())
-    probas = np.array(all_probas)
+# ── SetFit inference ──────────────────────────────────────────────────────────
+def predict(sentences, model, threshold):
+    probas = model.predict_proba(list(sentences), as_numpy=True)[:, 1]
     return (probas >= threshold).astype(int), probas
 
 # ── Paragraph-aware sentence splitter ────────────────────────────────────────
@@ -76,7 +92,6 @@ def split_preserving_lines(text: str, min_chars: int = 40):
 # ── Page config ───────────────────────────────────────────────────────────────
 st.set_page_config(page_title='Boilerplate Detector', layout='wide')
 
-# Reduce default Streamlit top padding
 st.markdown(
     '<style>.block-container{padding-top:3rem;padding-bottom:1rem;}</style>',
     unsafe_allow_html=True,
@@ -92,7 +107,7 @@ with hdr_col:
     st.markdown(
         '<p style="margin:0;font-size:24px;font-weight:700;">Boilerplate Detector'
         '<span style="font-size:12px;color:#888;font-weight:normal;margin-left:10px;">'
-        'FinBERT &nbsp;·&nbsp; ProsusAI/finbert (fine-tuned) &nbsp;·&nbsp; test macro-F1 = 0.923'
+        'SetFit &nbsp;·&nbsp; all-MiniLM-L6-v2 (contrastive fine-tuned) &nbsp;·&nbsp; test macro-F1 = 0.931'
         '</span></p>'
         '<p style="margin:0 0 8px;font-size:12px;color:#888;">'
         'Highlights scripted intros, safe-harbor language, and operator chatter in earnings-call transcripts.</p>',
@@ -119,7 +134,7 @@ with tab_upload:
         st.session_state.source_label = uploaded.name
 
 with tab_paste:
-    pasted = st.text_area('', height=160, label_visibility='collapsed',
+    pasted = st.text_area('Paste transcript', height=160, label_visibility='collapsed',
                           placeholder='Paste raw earnings-call transcript here…')
     if pasted.strip():
         st.session_state.raw_text    = pasted
@@ -142,13 +157,13 @@ if not raw_text.strip():
     st.stop()
 
 # ── Classify ──────────────────────────────────────────────────────────────────
-with st.spinner('Classifying with FinBERT…'):
-    tokenizer, model, threshold = load_winner()
+with st.spinner('Classifying with SetFit…'):
+    model, threshold = load_winner()
     tokens, kept_sents = split_preserving_lines(raw_text)
     if not kept_sents:
         st.warning('No sentences long enough to classify (min 40 chars).')
         st.stop()
-    labels_arr, probas_arr = predict(kept_sents, tokenizer, model, threshold)
+    labels_arr, probas_arr = predict(kept_sents, model, threshold)
 
 label_map = {}
 proba_map = {}

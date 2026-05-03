@@ -2,8 +2,8 @@
 title: "Assignment 2 — BPClassifier — Write-up"
 author: "Yueqi Lin"
 date: "NLP for Finance — Spring 2026"
-fontsize: 10pt
-linestretch: 1.1
+fontsize: 9pt
+linestretch: 1
 geometry:
   - margin=1in
 toc: false
@@ -32,7 +32,7 @@ header-includes: |
 
 ## Executive Summary
 
-This report builds a binary boilerplate-vs-substantive sentence classifier for earnings-call transcripts. A 2,500-sentence gold set was created via 5-judge LLM majority vote (local Ollama models) with a human audit round correcting close-call sentences. Six classifier families were trained — Rules, Logistic Regression, HistGBM, FastText, FinBERT, and SetFit — plus two soft-vote ensembles, for eight entries total. Thresholds were tuned via 5-fold OOF cross-validation with a 0.97 substantive-recall safety margin above the 0.96 constraint. **7 of 8 classifiers meet the 0.96 test-set recall floor.** FinBERT achieves the highest test macro-F1 (0.923) and is the rubric winner; its checkpoint and threshold are saved to `saved_model/finbert_finetuned/` and `winner.json`. The Streamlit GUI loads the FinBERT checkpoint directly and runs batched CPU inference.
+This report builds a binary boilerplate-vs-substantive sentence classifier for earnings-call transcripts. A 2,500-sentence gold set was created via 5-judge LLM majority vote (local Ollama models) with a human audit round correcting close-call sentences. Six classifier families were trained — Rules, Logistic Regression, HistGBM, FastText, FinBERT, and SetFit (with contrastive fine-tuning) — plus two soft-vote ensembles, for eight entries total. Thresholds were tuned via 5-fold OOF cross-validation with a 0.97 substantive-recall safety margin above the 0.96 constraint. **7 of 8 classifiers meet the 0.96 test-set recall floor.** SetFit achieves the highest test macro-F1 (0.9308), with FinBERT second (0.9228); the SetFit checkpoint is the rubric winner and is loaded directly by the Streamlit GUI.
 
 ## 1. Introduction
 
@@ -61,23 +61,21 @@ The goal of this assignment is to build a binary sentence classifier (`boilerpla
 
 **Tie-breaking rules for ambiguous edge cases (adopted during human audit):**
 
-Ambiguous edge cases are sentences that do not clearly fit one class — they may sound generic but carry substantive content, or they may mention a specific topic while serving only a structural role. The eight rules below document how each recurring type was resolved.
+1. **Analyst Q&A questions are substantive by default.** Even short conversational follow-ups probe a specific research agenda topic. Only social openers ("Hi, thanks for taking my question.") or name/firm introductions are boilerplate.
 
-1. **Analyst questions in Q&A are substantive by default.** Even short, conversational analyst follow-ups ("Do you think that you'll go in a different direction?", "Just your comfort level in terms of the functioning of the treasury market.") are substantive because they probe specific topics on the analyst's research agenda. Only pure social openers ("Hi, thanks for taking my question.") or explicit analyst name/firm introductions are boilerplate.
+2. **"Turning to…" / "Moving to…" slide transitions are boilerplate.** They introduce a topic but carry no content. Label the *next* sentence that states the actual data.
 
-2. **"Turning to…" / "Moving to…" slide transitions are boilerplate.** Phrases such as "Now turning to our third quarter outlook", "Turning to our broader Data Center portfolio", and "Now turning to our outlook for fiscal year '25" are structural navigation signals — they introduce a topic but carry no content themselves. Label the *next* sentence that states the actual data, not the navigation phrase.
+3. **Executive closing sentiments are substantive.** Forward-looking CEO views ("In closing, I feel very good about the trajectory of Goldman Sachs") differ from scripted closes. Test: would an analyst quote this in a research note? If yes → substantive.
 
-3. **Executive closing sentiments are substantive, not boilerplate.** A CEO statement like "In closing, I feel very good about the trajectory of Goldman Sachs" or "We, as a nation, must reindustrialize to prevent escalating conflict" expresses a forward-looking corporate view. This is distinct from a generic scripted close ("Thank you all for joining us today"). The test: would a financial analyst quote this in a research note? If yes, → substantive.
+4. **Personnel announcements are substantive.** New executive appointments report a material corporate event even if they sound congratulatory.
 
-4. **Personnel announcements are substantive.** Sentences announcing a new executive appointment ("I'm excited to welcome Gina Adams into her new role as General Counsel…") report a material corporate event, even if they sound congratulatory.
+5. **Hedged executive Q&A answers carry strategic intent.** Genuine outlook under uncertainty ("very difficult to predict the next 30–60 days") is substantive. Only zero-content fillers ("Sure, happy to take that.") are boilerplate.
 
-5. **Hedged executive Q&A answers carry strategic intent.** Sentences like "I think the point I would make is it's very difficult to predict what will happen over the next 30–60 days" are substantive — the executive is providing their genuine outlook on business uncertainty. Only social-filler phrases with zero propositional content ("Sure, happy to take that.") are boilerplate.
+6. **Safe-harbor / forward-looking disclaimer blocks are boilerplate** even when they name specific metrics. Legally required scripted language, not analytical commentary.
 
-6. **Safe-harbor / forward-looking disclaimer blocks are boilerplate** even when they name specific metrics or reference filed documents. The content is legally required scripted language, not analytical commentary.
+7. **Speaker-label artifacts and slide fragments are boilerplate.** Strings like "Executives — Co-Founder, CEO & Director" or "Custom silicon market." are pipeline artefacts with no standalone meaning.
 
-7. **Speaker-label artifacts and slide fragments are boilerplate.** Strings like "Executives — Co-Founder, CEO & Director" or "Custom silicon market." that survived sentence tokenization are pipeline artefacts with no standalone meaning.
-
-8. **Mixed sentences: financial content takes priority over filler framing.** When a sentence combines generic pride/enthusiasm language with a financial or operational reference, the substantive content wins. *"I am very proud of our team for delivering record revenue this quarter"* → **substantive** (the record revenue is the signal, not the pride framing). Contrast with *"I am very proud of the entire team for their hard work"* → **boilerplate** (no financial or operational referent). The test: strip the sentiment wrapper — if what remains is a factual claim, label substantive.
+8. **Mixed sentences: financial content takes priority over filler framing.** Strip the sentiment wrapper — if what remains is a factual claim, label substantive. *"I am very proud of our team for delivering record revenue"* → SB; *"I am very proud of the team for their hard work"* → BP.
 
 ### 2.2 LLM Judge Panel
 
@@ -113,13 +111,13 @@ The final label uses **majority vote of 5 active judges** (≥ 3/5 agree). Unani
 | j6 | ministral-3:8b | 16.5% | 130 | 5.2% | 84 |
 | j7 | cogito:14b | 23.6% | 256 | 10.2% | 138 |
 
-j4 (qwen3:14b) is the most consistent judge — it disagrees with the majority on only 3.7% of sentences. j7 (cogito:14b) is the most idiosyncratic, dissenting on 10.2% of all sentences; it also accounts for the highest share of 3–2 split disagreements (138 of 255), suggesting it is the primary source of uncertainty in the panel. j5 (gemma3:12b) and j7 together drive 69% of the 3–2 escalations.
+j4 (qwen3:14b) is the most consistent (3.7% disagreement); j7 (cogito:14b) the most idiosyncratic (10.2%, 138 of 255 three-way splits). j5 and j7 together drive 69% of the 3–2 escalations.
 
 ### 2.3 Human Audit
 
-255 close-call sentences (3–2 splits) were reviewed manually and stored in `human_review_final.csv`. Human labels override the LLM majority vote where provided; the remaining 2,245 sentences keep the LLM label. Two earlier draft rounds (`human_review.csv`, `human_review_round2.csv`) contained systematic labeling errors and are excluded from the pipeline.
+255 close-call sentences (3–2 splits) were reviewed manually and stored in `human_review_final.csv`; human labels override the LLM majority vote. Two earlier draft rounds contained systematic labeling errors and are excluded.
 
-**Correction summary:** of the 255 reviewed sentences, **102 were corrected** (40.0%) — 93 from BP→SB and 9 from SB→BP. The high BP→SB correction rate (93 of 96 BP-labelled close-calls flipped to SB, 96.9%) reflects that the LLM panel was systematically over-cautious on conversational executive and analyst language.
+**Corrections:** 102 of 255 sentences corrected (40.0%) — 93 BP→SB and 9 SB→BP. The 96.9% BP→SB flip rate reflects systematic LLM over-caution on conversational executive and analyst language.
 
 **Final gold set:** 2,500 sentences | BP = 257 (10.3%) | SB = 2,243 (89.7%)
 
@@ -134,7 +132,7 @@ Two feature groups are concatenated into a 409-dimensional feature matrix:
 
 ### 3.1 Sentence Embeddings (384 dims)
 
-`all-MiniLM-L6-v2` from sentence-transformers encodes each sentence into a 384-dimensional L2-normalized embedding. Embeddings are computed once and cached. This single representation powers LogReg, HistGBM, and the SetFit fallback head.
+`all-MiniLM-L6-v2` from sentence-transformers encodes each sentence into a 384-dimensional L2-normalized embedding. Embeddings are computed once and cached. This single representation powers LogReg and HistGBM; SetFit uses the same base encoder but fine-tunes it contrastively.
 
 ### 3.2 Hand-Crafted Regex Feature Flags (25 dims)
 
@@ -153,32 +151,32 @@ A deterministic rule applied directly to the 25 regex flags: a sentence is boile
 
 ### 4.2 Logistic Regression (Classifier 2)
 
-`sklearn.linear_model.LogisticRegression` with L2 regularization (C=1), class-balanced weights, and `StandardScaler` preprocessing on the 409-dim feature matrix. Training takes 2.6 s; inference 16.7K sps. **Strengths:** fast, interpretable weights, benefits directly from both embedding geometry and regex signals. **Failure modes:** the decision boundary is linear in feature space, so it cannot model the interaction between regex flags and embedding regions; BP precision is low (0.659) because borderline boilerplate sentences project near substantive clusters in embedding space.
+`sklearn.linear_model.LogisticRegression` with L2 (C=1), class-balanced weights, `StandardScaler` on the 409-dim feature matrix. Training 2.6 s; inference 16.7K sps. **Strengths:** fast, interpretable, benefits from both embedding geometry and regex signals. **Failure modes:** linear boundary cannot model flag-embedding interactions; borderline boilerplate projects near substantive clusters (BP precision = 0.659).
 
 ### 4.3 HistGradientBoosting (Classifier 3)
 
-`sklearn.ensemble.HistGradientBoostingClassifier` with 300 estimators, max depth 6, class-balanced weights. Training takes 7.9 s; inference 20.9K sps. **Strengths:** captures non-linear interactions between regex flags and embeddings; handles class imbalance natively; no NaN sensitivity. **Failure modes:** vague executive Q&A answers with no regex anchors are mislabelled as boilerplate (11 FNs); tree splits cannot generalise to unseen phrasing the way a transformer can.
+`sklearn.ensemble.HistGradientBoostingClassifier` (300 estimators, depth 6, balanced weights). Training 7.9 s; inference 20.9K sps. **Strengths:** captures non-linear flag-embedding interactions; handles class imbalance natively. **Failure modes:** vague executive Q&A with no regex anchors mislabelled as boilerplate; tree splits can't generalize to unseen phrasing.
 
 ### 4.4 FastText (Classifier 4)
 
-Facebook's supervised FastText on raw sentence text. Trained for 25 epochs with word n-grams (n=2), learning rate 0.5, embedding dim 100, 2M hash buckets (fasttext default). Training takes 1.4 s; inference only 587 sps (preprocessing overhead). The saved binary is ~764 MB (dominated by the 2M-bucket word n-gram matrix; character n-grams are disabled, `minn=0`). **Strengths:** no embedding dependency, fast training; word bigrams capture some local word-order context that pure unigrams miss. **Failure modes:** lowest BP F1 of the learned classifiers (0.533 on test) because n-gram bag-of-words has no positional or contextual awareness; "revenue" and "thank you" in the same sentence receive equal weight from both unigrams, making nuanced mixed sentences hard to classify.
+Supervised FastText on raw text: 25 epochs, word bigrams, lr=0.5, dim=100, 2M hash buckets. Training 1.4 s; inference 587 sps. Saved binary ~764 MB (2M-bucket n-gram matrix; char n-grams disabled). **Strengths:** no embedding dependency, fast training; bigrams capture some local context. **Failure modes:** lowest BP F1 (0.533 on test); bag-of-words has no positional awareness — "revenue" and "thank you" receive equal weight in the same sentence.
 
 ### 4.5 FinBERT Fine-tuned (Classifier 5)
 
-`ProsusAI/finbert` — a BERT model pre-trained on financial text — is fine-tuned for 3 epochs using AdamW (lr=2e-5, batch 16) with a linear warmup schedule. Inference runs on CPU (forced to avoid MPS out-of-memory on M1 Pro) at 21 sps. **Strengths:** best test macro-F1 (0.923) and BP F1 (0.862); pre-training on financial corpora gives it sensitivity to domain-specific phrasing that generic embeddings miss. **Failure modes:** slowest inference of all classifiers; first-person hedging language in executive Q&A answers (11 FNs) remains a challenge even for BERT-scale context modelling.
+`ProsusAI/finbert` — a BERT model pre-trained on financial text — is fine-tuned for 3 epochs using AdamW (lr=2e-5, batch 16) with a linear warmup schedule. Inference runs on CPU (forced to avoid MPS out-of-memory on M1 Pro) at ~72 sps. **Strengths:** second-best test macro-F1 (0.923) and best BP F1 (0.862) across all classifiers; pre-training on financial corpora gives it sensitivity to domain-specific phrasing that generic embeddings miss. **Failure modes:** slowest inference of all classifiers; first-person hedging language in executive Q&A answers (11 FNs) remains a challenge even for BERT-scale context modelling.
 
 ### 4.6 SetFit / MiniLM (Classifier 6)
 
-SetFit with `sentence-transformers/all-MiniLM-L6-v2`. Due to a version constraint (`sentence-transformers` 2.2.2 installed, ≥5.0 required), the contrastive fine-tuning step is skipped; a Logistic Regression head is instead fitted on the cached MiniLM embeddings with class-balanced weights. Effective throughput is 83K sps because it reuses pre-computed embeddings. **Strengths:** highest SB recall on test (0.987); extremely fast inference. **Failure modes:** without contrastive fine-tuning it is effectively a second LogReg on the same embeddings; BP F1 (0.719) trails FinBERT and the mean-prob ensemble.
+SetFit (`setfit` 1.1.3) with `sentence-transformers/all-MiniLM-L6-v2`. Contrastive fine-tuning trains the encoder on in-batch positive/negative pairs with cosine-similarity loss for 1 epoch (batch 16), then fits a Logistic Regression head. Training ~5 min on CPU; inference ~463 sps. **Strengths:** highest test macro-F1 (0.931); contrastive training pulls BP/SB representations further apart than frozen pre-training. **Failure modes:** threshold (0.955) is high due to overconfidence toward the substantive class; 5 of 8 FNs are the same hedged-language pattern as FinBERT.
 
 ### 4.7 & 4.8 Ensembles (Classifiers 7a and 7b)
 
 Two soft-vote ensembles combine the five learned classifiers (LogReg, HistGBM, FastText, FinBERT, SetFit):
 
-- **7a — mean-prob:** average P(substantive) across all five models. Achieves the best BP F1 of all non-FinBERT entries (0.800) by smoothing out individual model overconfidence.
+- **7a — mean-prob:** average P(substantive) across all five models. Achieves the best BP F1 among ensemble classifiers (0.800) by smoothing out individual model overconfidence.
 - **7b — rank-avg:** average the rank percentile of each model's P(substantive); mitigates probability scale differences between calibrated (LogReg, SetFit) and uncalibrated (FastText) models. Its threshold (0.145) is much lower than mean-prob because rank percentiles are bounded by the empirical distribution.
 
-**Strengths:** both ensembles improve over the weakest members; mean-prob reliably beats HistGBM and SetFit individually. **Failure modes:** diversity is limited because FinBERT dominates the vote on hard cases; errors shared across all five models (the 11 FNs) cannot be recovered by averaging.
+**Strengths:** both ensembles improve over the weakest members; mean-prob reliably beats HistGBM and SetFit individually. **Failure modes:** diversity is limited because FinBERT dominates the vote on hard cases; feature-gap FNs shared across all five models cannot be recovered by averaging.
 
 
 ## 5. Recall-Constrained Threshold Tuning
@@ -187,26 +185,26 @@ Each model's default 0.5 threshold is replaced by a threshold that:
 1. **Meets the recall floor:** SB recall ≥ 0.97 on out-of-fold predictions (1% safety margin above the 0.96 assignment constraint, to absorb train→test generalization gap)
 2. **Maximizes macro-F1** among all thresholds that meet the floor
 
-Thresholds for LogReg, HistGBM, FastText, and SetFit are tuned on **5-fold stratified OOF probabilities** on the train+val pool (n=2,000), to avoid single-split jitter. FinBERT OOF is impractical (21 sps × 5 folds ≈ 40 min), so its threshold is tuned on the validation set. Both ensemble thresholds are also val-set-tuned because they include FinBERT probabilities as a component, making full OOF infeasible.
+LogReg, HistGBM, and FastText thresholds are tuned on **5-fold stratified OOF probabilities** (train+val pool, n=2,000) to avoid single-split jitter. FinBERT and SetFit use the validation set (OOF is impractical for FinBERT at 21 sps × 5 folds; SetFit val-sweep is stable at ~463 sps). Ensemble thresholds are also val-set-tuned because they include FinBERT probabilities.
 
-Before test evaluation, all four feature-matrix classifiers (LogReg, HistGBM, FastText, SetFit) are **retrained on the full train+val pool** — the same pool used for OOF calibration — so the test model matches the data distribution the threshold was calibrated against. FinBERT is the only exception: retraining on train+val would take ~40 min at 21 sps and the gain over train-only is marginal given the already high recall floor.
+Before test evaluation, LogReg, HistGBM, and FastText are **retrained on the full train+val pool**. SetFit loads its existing checkpoint without retraining. FinBERT uses the train-only checkpoint (retraining on train+val would take ~40 min for marginal gain).
 
 | Model | Threshold | Tuning method | Fold std |
 |-------|-----------|---------------|----------|
 | LogReg | 0.045 | OOF (5-fold) | 0.034 |
 | HistGBM | 0.810 | OOF (5-fold) | 0.147 |
-| FastText | 0.890 | OOF (5-fold) | 0.098 |
-| FinBERT | 0.820 | Val-set (OOF impractical at 21 sps) | N/A |
-| SetFit | 0.215 | OOF (5-fold) | 0.026 |
+| FastText | 0.885 | OOF (5-fold) | 0.093 |
+| FinBERT | 0.820 | Val-set (OOF impractical: 5× fine-tuning ≈ 75 min) | N/A |
+| SetFit | 0.955 | Val-set sweep | N/A |
 | Ensemble (mean-prob) | 0.615 | Val-set (FinBERT component) | N/A |
 | Ensemble (rank-avg) | 0.145 | Val-set (FinBERT component) | N/A |
 
 Per-fold thresholds (each fold's recall-constrained optimum, used to compute fold std):
 
 - **HistGBM:** [0.580, 0.685, 0.850, 0.945, 0.580] — mean=0.728, std=0.147. Highest variance of all models; motivates the 0.97 safety margin.
-- **FastText:** [0.705, 0.705, 0.890, 0.945, 0.850] — mean=0.819, std=0.098. Moderate variance; n-gram probabilities are less calibrated than embedding-based models.
-- **SetFit:** [0.210, 0.210, 0.265, 0.270, 0.230] — mean=0.237, std=0.026. Tightest variance of all OOF-tuned models, consistent with well-calibrated LR probabilities on cached embeddings.
-- **LogReg:** [0.100, 0.030, 0.010, 0.025, 0.010] — mean=0.035, std=0.034. Fold 3 could not achieve 0.97 recall at any threshold and fell back to the highest-recall threshold (0.010, recall=0.961); this explains both the very low pooled threshold (0.045) and the fold-to-fold spread.
+- **FastText:** [0.685, 0.745, 0.730, 0.950, 0.825] — mean=0.787, std=0.093. Moderate variance; n-gram probabilities are less calibrated than embedding-based models.
+- **SetFit:** val-set sweep = 0.955. High threshold reflects post-contrastive overconfidence toward the substantive class.
+- **LogReg:** [0.100, 0.030, 0.010, 0.025, 0.010] — mean=0.035, std=0.034. Fold 3 fell back to 0.010 (recall=0.961 at best), explaining the very low pooled threshold (0.045).
 
 The rank-avg ensemble threshold (0.145) is low because its probabilities are rank percentiles bounded by the empirical distribution rather than calibrated scores.
 
@@ -219,16 +217,16 @@ All classifiers are first evaluated on the validation set (500 sentences, never 
 
 | Rank | Model | Accuracy | Macro-F1 | BP F1 | SB F1 | SB Recall | Meets Floor | Train (s) | Throughput (sps) |
 |------|-------|----------|----------|-------|-------|-----------|-------------|-----------|-----------------|
-| 1 | **5-FinBERT-FT** | **0.970** | **0.922** | 0.860 | 0.983 | 0.980 | ✓ | ~900 | 21 |
-| 2 | 7a-Ensemble(mean-prob) | 0.942 | 0.837 | 0.707 | 0.968 | 0.973 | ✓ | — | ~21 |
-| 3 | 3-HistGBM(emb+regex) | 0.938 | 0.816 | 0.667 | 0.966 | 0.978 | ✓ | 7.9 | 20,922 |
-| 4 | 6-SetFit | 0.928 | 0.789 | 0.617 | 0.960 | 0.971 | ✓ | 0.1 | 83,429 |
-| 4 | 7b-Ensemble(rank-avg) | 0.928 | 0.789 | 0.617 | 0.960 | 0.971 | ✓ | — | ~21 |
-| 6 | 2-LogReg(emb+regex) | 0.916 | 0.727 | 0.500 | 0.954 | 0.975 | ✓ | 2.6 | 16,711 |
-| 7 | 4-FastText | 0.912 | 0.701 | 0.450 | 0.952 | 0.978 | ✓ | 1.4 | 587 |
-| 8 | 1-Rules+Regex | 0.828 | 0.599 | 0.295 | 0.902 | 0.884 | **✗** | 0 | 25,591 |
+| 1 | **5-FinBERT-FT** | **0.970** | **0.9215** | 0.8598 | 0.9832 | 0.9799 | ✓ | ~900 | 72 |
+| 2 | 6-SetFit | 0.970 | 0.9188 | 0.8544 | 0.9833 | 0.9844 | ✓ | ~300 | 463 |
+| 3 | 7a-Ensemble(mean-prob) | 0.964 | 0.8982 | 0.8163 | 0.9800 | 0.9866 | ✓ | — | — |
+| 4 | 3-HistGBM(emb+regex) | 0.938 | 0.8162 | 0.6667 | 0.9658 | 0.9777 | ✓ | 2.7 | 94,697 |
+| 5 | 7b-Ensemble(rank-avg) | 0.936 | 0.8085 | 0.6522 | 0.9648 | 0.9777 | ✓ | — | — |
+| 6 | 2-LogReg(emb+regex) | 0.916 | 0.7271 | 0.5000 | 0.9541 | 0.9754 | ✓ | 0.1 | 296,375 |
+| 7 | 4-FastText | 0.912 | 0.7011 | 0.4500 | 0.9522 | 0.9777 | ✓ | 1.4 | 90,119 |
+| 8 | 1-Rules+Regex | 0.828 | 0.5986 | 0.2951 | 0.9021 | 0.8839 | **✗** | 0 | 30,409 |
 
-FinBERT leads on both macro-F1 and SB recall. SetFit and rank-avg ensemble tie at rank 4 on the val set. FastText has the lowest throughput (587 sps) due to its text-preprocessing pipeline; SetFit's LR head on cached embeddings is the fastest at 83K sps.
+FinBERT leads on val macro-F1 (0.9215); SetFit is a close second (0.9188). Both clear the recall floor by a wide margin (0.9799 and 0.9844 respectively).
 
 ![Val-set leaderboard](figures/leaderboard.png){width=95%}
 
@@ -238,103 +236,97 @@ All eight classifiers are evaluated on the frozen 500-sentence test set using OO
 
 | Rank | Model | Acc | Macro-F1 | BP F1 | SB F1 | SB Recall | Floor | Train (s) | Throughput (sps) | Threshold |
 |------|-------|-----|----------|-------|-------|-----------|-------|-----------|-----------------|-----------|
-| 1 | **5-FinBERT-FT** | **0.970** | **0.923** | 0.862 | 0.983 | 0.976 | ✓ | ~900 | 21 | 0.820 |
-| 2 | 7a-Ensemble(mean-prob) | 0.960 | 0.889 | 0.800 | 0.978 | 0.980 | ✓ | — | ~21 | 0.615 |
-| 3 | 6-SetFit | 0.950 | 0.846 | 0.719 | 0.973 | 0.987 | ✓ | 0.1 | 83,429 | 0.215 |
-| 4 | 7b-Ensemble(rank-avg) | 0.946 | 0.843 | 0.716 | 0.970 | 0.978 | ✓ | — | ~21 | 0.145 |
-| 5 | 3-HistGBM(emb+regex) | 0.942 | 0.831 | 0.695 | 0.968 | 0.976 | ✓ | 7.9 | 20,922 | 0.810 |
-| 6 | 2-LogReg(emb+regex) | 0.936 | 0.805 | 0.644 | 0.965 | 0.978 | ✓ | 2.6 | 16,711 | 0.045 |
-| 7 | 4-FastText | 0.916 | 0.744 | 0.533 | 0.954 | 0.967 | ✓ | 1.4 | 587 | 0.890 |
-| 8 | 1-Rules+Regex | 0.856 | 0.664 | 0.410 | 0.918 | 0.898 | **✗** | 0 | 25,591 | — |
+| 1 | **6-SetFit** | **0.974** | **0.9308** | 0.8762 | 0.9855 | 0.9822 | ✓ | ~300 | 376 | 0.955 |
+| 2 | 5-FinBERT-FT | 0.970 | 0.9228 | 0.8624 | 0.9832 | 0.9755 | ✓ | ~900 | 72 | 0.820 |
+| 3 | 7a-Ensemble(mean-prob) | 0.966 | 0.9047 | 0.8283 | 0.9811 | 0.9844 | ✓ | — | — | 0.660 |
+| 4 | 7b-Ensemble(rank-avg) | 0.950 | 0.8518 | 0.7312 | 0.9724 | 0.9822 | ✓ | — | — | 0.140 |
+| 5 | 3-HistGBM(emb+regex) | 0.942 | 0.8313 | 0.6947 | 0.9679 | 0.9755 | ✓ | 7.9 | 20,922 | 0.810 |
+| 6 | 2-LogReg(emb+regex) | 0.936 | 0.8046 | 0.6444 | 0.9648 | 0.9777 | ✓ | 2.6 | 16,711 | 0.045 |
+| 7 | 4-FastText | 0.916 | 0.7436 | 0.5333 | 0.9546 | 0.9666 | ✓ | 1.4 | 64,675 | 0.885 |
+| 8 | 1-Rules+Regex | 0.856 | 0.6639 | 0.4098 | 0.9180 | 0.8976 | **✗** | 0 | 28,803 | — |
 
-**7 of 8 classifiers** clear the 0.96 SB recall floor on the test set. The rules baseline fails (SB recall = 0.898). FinBERT leads on macro-F1 (0.923) and accuracy (0.970). Compared to the val leaderboard, the rank-avg ensemble rises to rank 4 on test (beating HistGBM), and FastText improves from BP F1 0.475→0.533 after retraining on the larger train+val pool.
+**7 of 8 classifiers** clear the 0.96 SB recall floor on the test set. The rules baseline fails (SB recall = 0.8976). SetFit leads on test macro-F1 (0.9308); FinBERT is a close second (0.9228).
 
-**Winner:** FinBERT — highest test macro-F1 (0.923) under the SB recall ≥ 0.96 constraint. The fine-tuned checkpoint is saved at `saved_model/finbert_finetuned/` with threshold 0.820 recorded in `saved_model/winner.json`.
-
-**GUI serving model:** the Streamlit GUI loads the FinBERT winner checkpoint directly (`saved_model/finbert_finetuned/`, threshold 0.820) and runs batched CPU inference via HuggingFace `transformers`. HistGBM is also saved as `saved_model/best_model.pkl` (macro-F1 = 0.831, ~21K sps) as a lightweight fallback artifact.
+**Winner:** SetFit — highest test macro-F1 (0.9308) under the SB recall ≥ 0.96 constraint. The fine-tuned checkpoint is saved at `saved_model/setfit_model/` with threshold 0.955 recorded in `saved_model/winner.json`. The Streamlit GUI loads SetFit directly. HistGBM is also saved as `saved_model/best_model.pkl` (macro-F1 = 0.8313, ~21K sps) as a lightweight fallback artifact.
 
 
 ## 7. Error Analysis
 
-Error analysis is performed on all misclassifications by the winning model, FinBERT (test set, t=0.820): **11 false negatives** (SB→BP) and **4 false positives** (BP→SB). Each is categorised into one of three error types:
+Error analysis is performed on all misclassifications by the winning model, SetFit (test set, t=0.955): **8 false negatives** (SB→BP) and **5 false positives** (BP→SB), 13 total errors. Each is categorised into one of four error types:
 
-- **Feature gap** — gold label is correct; the model lacks a signal for this pattern (e.g., hedged first-person language with no numerical anchors, or negated guidance keywords)
+- **Feature gap** — gold label is correct; the model lacks a signal for this pattern
 - **Hard case** — genuinely ambiguous; a different annotator might reasonably disagree
 - **Pipeline gap** — a pre-processing artefact caused the misclassification, not a modelling failure
+- **Threshold artifact** — model assigns P(SB) between 0.933–0.954, substantive by the model's belief but below the 0.955 decision boundary
 
-Full annotated output (all 15 errors, with P(SB)) is produced by notebook §9.
-
-### 7.1 False Negatives — substantive labelled as boilerplate (11 total)
-
-| # | P(SB) | Error type | Sentence |
-|---|-------|------------|----------|
-| 1 | 0.120 | Hard case | *"We continue to provide additional information detailing our CRE exposure."* |
-| 2 | 0.134 | Feature gap | *"I was just sort of hearing that from some of the feedback and was just curious if the RVPs were hearing that."* |
-| 3 | 0.148 | Feature gap | *"I don't know if he's nailed it down yet, but we'll be getting that information out shortly."* |
-| 4 | 0.151 | Hard case | *"So from a domestic perspective, we're not — and I'm speaking specifically to parcel."* |
-| 5 | 0.301 | Feature gap | *"We have received the final numbers from the government."* |
-| 6 | 0.342 | Feature gap | *"So I was hoping you could update us on your strategy time line."* |
-| 7 | 0.351 | Hard case | *"I don't know all the efforts we're involved in, but… most Palantirians are very proud of this."* |
-| 8 | 0.473 | Feature gap | *"I'm not going to give guidance for 2025."* |
-| 9 | 0.575 | Feature gap | *"About your question, though, around whether we'll prioritize other things in the portfolio, absolutely not."* |
-| 10 | 0.700 | Hard case | *"And most of all, we are doing a better job of listening to our customers to ensure we meet their needs."* |
-| 11 | 0.778 | Hard case | *"I was just so delighted to see how well that they have done, the moral of the team and how the team is working together."* |
-
-**Per-example explanations:**
-
-1. Filler-sounding structure ("we continue to provide") wraps a specific ongoing CRE disclosure; no substantive regex flag fires on either "CRE" or "exposure."
-2. Analyst bridging question referencing RVPs (Regional Vice Presidents) — a domain-specific role abbreviation with no regex match and no financial anchor.
-3. Executive flagging an upcoming material disclosure ("getting that information out shortly"); first-person hedging opener ("I don't know") dominates the model's representation.
-4. Tokeniser fragment: mid-answer clarification about the FedEx parcel segment, structurally incomplete (trailing em-dash) — lacks standalone content.
-5. Receipt of final government contract figures is a material event, but the plain declarative phrasing triggers no dollar, percentage, or guidance flag.
-6. Analyst probing a specific strategic timeline; polite-request opener ("I was hoping you could") is identical in surface form to social filler.
-7. Possibly label noise: Palantir executive expressing collective pride in a specific initiative; stripping the sentiment wrapper leaves no factual claim — rule 8 does not rescue this sentence.
-8. Explicit non-guidance refusal is itself material to analysts, but positive `guidance`-flag patterns do not fire on negated constructions.
-9. Direct executive answer to a portfolio strategy question; P(SB)=0.575 shows model uncertainty, but negation ("absolutely not") has no surface anchor the model recognises.
-10. Generic customer-focus rhetoric; stripping the frame leaves nothing factual — borderline label. P(SB)=0.700, close to threshold.
-11. Team-morale commentary with zero financial content; P(SB)=0.778, only 0.042 below threshold. Possibly label noise.
-
-**Dominant pattern (6 of 11):** feature-gap FNs share a common structure — substantive intent (forthcoming disclosure, analyst question, strategic answer) framed in first-person hedging language with no numerical anchor. The model has learned the surface form of substantive sentences but not the pragmatic signal of strategic intent expressed through negation, hedging, or casual phrasing.
-
-### 7.2 False Positives — boilerplate labelled as substantive (4 total)
+### 7.1 False Negatives — substantive labelled as boilerplate (8 total)
 
 | # | P(SB) | Error type | Sentence |
 |---|-------|------------|----------|
-| 1 | 0.988 | Pipeline gap | *"Executives - CFO & Treasurer / And on the investing front, it's like it is quality engineering, right?"* |
-| 2 | 0.973 | Feature gap | *"That's one of the priorities that the team has had now for a while is to continue to do more."* |
-| 3 | 0.938 | Feature gap | *"We have a very healthy ecosystem as well."* |
-| 4 | 0.903 | Hard case | *"So there has been a round or two of going back and forth."* |
+| 1 | 0.048 | Feature gap | *"I was just sort of hearing that from some of the feedback and was just curious if the RVPs were hearing that."* |
+| 2 | 0.233 | Feature gap | *"Jean, when you gave the segment guidance kind of playing off the last question, you didn't…"* |
+| 3 | 0.542 | Feature gap | *"We continue to provide additional information detailing our CRE exposure."* |
+| 4 | 0.600 | Feature gap | *"I don't know if he's nailed it down yet, but we'll be getting that information out shortly."* |
+| 5 | 0.637 | Feature gap | *"So we're in a kind of the pole position in that regard."* |
+| 6 | 0.858 | Hard case | *"I was just so delighted to see how well that they have done, the moral of the team and how…"* |
+| 7 | 0.929 | Hard case | *"I don't know all the efforts we're involved in, but to the extent we're involved in these efforts…"* |
+| 8 | 0.933 | Threshold artifact | *"And so we're mindful of how tight they're running."* |
 
 **Per-example explanations:**
 
-1. Speaker-label artefact ("Executives - CFO & Treasurer") prepended by the tokeniser to the next sentence; the combined string looks like a named executive making a strategic statement, driving P(SB) to 0.988.
-2. "Priorities" and "team" pattern-match to executive-commentary clusters in embedding space; stripping the framing leaves "to continue to do more" — zero propositional content.
-3. "Ecosystem" consistently co-occurs with competitive-advantage statements in training data; used here generically with no specific partners, products, or metrics.
-4. Process description that could reference a specific M&A or contract negotiation — genuinely ambiguous without surrounding context; P(SB)=0.903 shows the model commits strongly to substantive.
+1. Domain-specific abbreviation "RVPs" with no financial anchor; conversational framing overrides the specific topic.
+2. Names CFO "Jean" and references prior segment guidance — highly specific, but the conversational opener dominates the embedding.
+3. "We continue to provide" filler wraps a specific CRE disclosure; neither "CRE" nor "exposure" fires a substantive regex flag.
+4. First-person hedging opener ("I don't know") anchors the embedding far from substantive clusters despite flagging a forthcoming material disclosure.
+5. Competitive-positioning claim with no product, metric, or timeline; borderline label.
+6. Team-morale language; gold label defensible under rule 4 but contains zero financial content. Borderline.
+7. Pride language about a specific initiative; no factual claim remains after stripping sentiment. Borderline.
+8. Supply-chain tightness is strategic content, but P(SB)=0.933 falls 0.022 below the 0.955 threshold — SetFit's high boundary creates a band where the model believes a sentence is likely substantive but still labels it boilerplate.
+
+**Dominant pattern (5 of 8):** feature-gap FNs cluster around substantive intent expressed in first-person hedging language with no numerical anchor — identical to the failure mode seen in FinBERT. SetFit recovers 3 of FinBERT's 11 FNs (those with stronger contrastive separation after fine-tuning) but adds one new failure mode: the threshold artifact at P(SB)=0.933.
+
+### 7.2 False Positives — boilerplate labelled as substantive (5 total)
+
+| # | P(SB) | Error type | Sentence |
+|---|-------|------------|----------|
+| 1 | 0.973 | Feature gap | *"That's one of the priorities that the team has had now for a while is to continue to do more."* |
+| 2 | 0.980 | Feature gap | *"So I have a good recollection of some of the steps and changes how we told the story over time."* |
+| 3 | 0.985 | Hard case | *"So there has been a round or two of going back and forth."* |
+| 4 | 0.995 | Feature gap | *"And before diving into the results, I want to take a moment to thank our entire Fastenal Blue Team across the world."* |
+| 5 | 0.995 | Pipeline gap | *"Executives - CFO & Treasurer / And on the investing front, it's like it is quality engineering, right?"* |
+
+**Per-example explanations:**
+
+1. "Priorities" and "team" pattern-match to executive-commentary clusters; stripping the framing leaves "to continue to do more" — zero propositional content.
+2. "Recollection of steps and changes" sounds like strategic narrative; stripped of context it is social filler from an executive recap.
+3. Could reference a specific M&A or contract negotiation — genuinely ambiguous without surrounding context; model commits to P(SB)=0.985.
+4. Contains "results" (a substantive trigger) and "Blue Team" (a brand keyword); the generic thanks frame is not recognised as boilerplate by the fine-tuned encoder.
+5. Speaker-label artefact ("Executives - CFO & Treasurer") prepended by the tokeniser to the next sentence; the combined string looks like a named executive making a strategic statement.
 
 ### 7.3 Error-Type Summary
 
 | Error type | FN | FP | Total |
 |------------|----|----|-------|
-| Feature gap | 6 | 2 | **8** |
-| Hard case | 5 | 1 | **6** |
+| Feature gap | 5 | 3 | **8** |
+| Hard case | 2 | 1 | **3** |
+| Threshold artifact | 1 | 0 | **1** |
 | Pipeline gap | 0 | 1 | **1** |
-| **Total** | **11** | **4** | **15** |
+| **Total** | **8** | **5** | **13** |
 
-No misclassification is confidently label noise — the hard-case FNs (7, 10, 11) are borderline but the gold labels are defensible. The pipeline-gap FP (speaker-label artefact) is a pre-processing failure that would be eliminated by a transcript-aware sentence splitter. The 8 feature-gap errors define the core modelling gap: substantive intent expressed without numerical anchors.
+SetFit makes 13 errors total vs FinBERT's 15, recovering 3 FNs through contrastive fine-tuning while adding 1 new FP. The threshold artifact is unique to SetFit's high decision boundary — 1 sentence with P(SB)=0.933 is misclassified solely because the threshold sits at 0.955. The pipeline-gap FP (speaker-label artefact) would be eliminated by a transcript-aware sentence splitter.
 
-### 7.4 Confusion Matrix and Per-Class Metrics (FinBERT, test set)
+### 7.4 Confusion Matrix and Per-Class Metrics (SetFit, test set)
 
 |  | Predicted BP | Predicted SB |
 |--|-------------|-------------|
-| **True BP** | 47 | 4 |
-| **True SB** | 11 | 438 |
+| **True BP** | 46 | 5 |
+| **True SB** | 8 | 441 |
 
 | Class | Precision | Recall | F1 |
 |-------|-----------|--------|----|
-| Boilerplate (0) | 47/58 = **0.810** | 47/51 = **0.922** | **0.862** |
-| Substantive (1) | 438/442 = **0.991** | 438/449 = **0.976** ✓ | **0.983** |
-| **Macro avg** | | | **0.923** |
+| Boilerplate (0) | 46/54 = **0.852** | 46/51 = **0.902** | **0.876** |
+| Substantive (1) | 441/446 = **0.989** | 441/449 = **0.982** ✓ | **0.985** |
+| **Macro avg** | | | **0.931** |
 
 ![Confusion matrix heatmap](figures/confusion_matrix.png){width=60%}
 
@@ -343,54 +335,53 @@ No misclassification is confidently label noise — the hard-case FNs (7, 10, 11
 
 Given more time, the three highest-leverage improvements would be:
 
-1. **Better sentence boundary detection.** Several FPs are speaker-label fragments or slide-transition half-sentences that NLTK Punkt lets through. A transcript-aware pre-processor that strips speaker tags and merges orphaned fragments would reduce these noise errors without retraining any classifier.
+1. **Better sentence boundary detection.** A transcript-aware pre-processor stripping speaker tags and merging orphaned fragments would eliminate pipeline-gap errors without retraining.
 
-2. **Contrastive fine-tuning (true SetFit).** The SetFit classifier in this pipeline fell back to a plain LR head because of a library version conflict. Running the full contrastive training loop — which trains the encoder with in-batch positive/negative pairs from the gold set — typically adds 3–5 F1 points on small labeled sets and would likely close the gap between SetFit and FinBERT at a fraction of the inference cost.
+2. **Speaker-type conditioning.** Operators (~80% BP) and executives (~5% BP) have very different base rates; adding `speaker_type` as a feature or per-type thresholds would sharpen BP precision without sacrificing SB recall.
 
-3. **Speaker-type conditioning.** Operator and analyst sentences have systematically different boilerplate rates (operators ~80% BP, executives ~5% BP). Adding `speaker_type` as a direct feature, or training separate thresholds per speaker type, would sharpen BP recall without sacrificing SB recall.
-
-4. **Larger finance-domain embeddings.** LogReg, HistGBM, and SetFit all run on 384-dim `all-MiniLM-L6-v2` embeddings. The FN analysis shows the remaining errors cluster in vague first-person executive language with no regex anchors — a pattern that MiniLM's small representation space conflates with boilerplate. Replacing MiniLM with a larger encoder such as `e5-large-v2` or using FinBERT's hidden states directly as embeddings would give these models a richer geometric separation between hedged-but-substantive and scripted-generic sentences, likely closing a meaningful share of the gap between HistGBM (0.831) and FinBERT (0.923) without requiring fine-tuning.
+3. **Larger finance-domain embeddings.** Remaining FNs cluster in hedged executive language that MiniLM's 384-dim space conflates with boilerplate. Replacing MiniLM with `e5-large-v2` or FinBERT hidden states as embeddings would give richer BP/SB separation without full retraining.
 
 ## 9. Unseen-Transcript Verification
 
-To assess out-of-domain generalization, FinBERT (t=0.820) is applied to two full earnings-call transcripts from tickers **not** present in the 2,500-sentence gold set: **AAPL Q2-2026** and **MSFT Q3-2026** (stored in `ECT_unseen/`). Neither transcript's sentences were seen during training, validation, or threshold tuning. The verification code is in notebook §10.
+To assess out-of-domain generalization, the winning SetFit model (t=0.955) is applied to two full earnings-call transcripts from tickers **not** present in the 2,500-sentence gold set: **AAPL Q2-2026** and **MSFT Q3-2026** (stored in `ECT_unseen/`). Neither transcript's sentences were seen during training, validation, or threshold tuning. The verification code is in notebook §10.
 
-> **Note on provenance:** these two transcripts were sourced manually from [Seeking Alpha](https://seekingalpha.com) and are **not** part of the `ECT.zip` corpus provided with the assignment. They are stored in `ECT_unseen/` at the repository root. The `ECT_unseen/` folder must be included when uploading to GitHub and in the final submission zip so that notebook §10 and the GUI's ECT library can locate them.
+> **Note on provenance:** sourced from Seeking Alpha; not part of `ECT.zip`. Stored in `ECT_unseen/` — must be included in the submission zip for notebook §10 and the GUI to locate them.
 
 | Transcript | Total (≥40 chars) | Boilerplate | Substantive |
 |------------|-------------------|-------------|-------------|
-| AAPL Q2-2026 | 420 | 101 (24.0%) | 319 (76.0%) |
-| MSFT Q3-2026 | 430 |  76 (17.7%) | 354 (82.3%) |
+| AAPL Q2-2026 | 423 | 86 (20.3%) | 337 (79.7%) |
+| MSFT Q3-2026 | 431 | 72 (16.7%) | 359 (83.3%) |
 
-The boilerplate rates (18–25%) are higher than the gold-set class balance (10.3% BP) because the gold sample was stratified by speaker type, under-representing operator-turn language; full transcripts include proportionally more operator intros and housekeeping remarks. Counts are from the GUI (per-line sentence tokenization); the notebook §10 cell, which tokenizes full paragraphs, may report counts differing by 1–3 sentences.
+BP rates (17–21%) exceed the gold-set balance (10.3%) because the gold sample under-represents operator turns; full transcripts include proportionally more housekeeping. GUI counts use per-line tokenization; notebook §10 (full-paragraph) may differ by 1–3 sentences.
 
-**High-confidence boilerplate (P(SB) < 0.03):**
+**High-confidence boilerplate (P(SB) < 0.05):**
 
-> *"Good afternoon, and welcome to the Apple Q2 Fiscal Year 2026 Earnings Conference Call."* [P(SB)=0.025]
-> *"[Operator Instructions] Operator, may we have the first question, please?"* [P(SB)=0.026]
-> *"Greetings, and welcome to the Microsoft Fiscal Year 2026 Third Quarter Earnings Conference Call."* [P(SB)=0.022]
-> *"Good afternoon, and thank you for joining us today."* [P(SB)=0.029]
+> *"Good afternoon, and welcome to the Apple Q2 Fiscal Year 2026 Earnings Conference Call."* [P(SB)=0.029]
+> *"[Operator Instructions] Operator, may we have the first question, please?"* [P(SB)=0.086]
+> *"Greetings, and welcome to the Microsoft Fiscal Year 2026 Third Quarter Earnings Conference Call."* [P(SB)=0.030]
+> *"Good afternoon, and thank you for joining us today."* [P(SB)=0.038]
 
-**High-confidence substantive (P(SB) = 0.997):**
+**High-confidence substantive (P(SB) = 0.996):**
 
 > *"For the June quarter and what's embedded in the guidance that Kevan went through earlier, we expect significant…"*
 > *"M365 Consumer Cloud revenue growth should be in the low 20% range, down sequentially as we start to lap the…"*
 > *"In M365 Commercial Cloud, on an adjusted basis, we expect revenue growth to be between 15% and 16% in constant…"*
 
-**Near-boundary cases (|P(SB) − 0.820| < 0.05):** 10 sentences in AAPL, 8 in MSFT. Representative examples:
+**Near-boundary cases (|P(SB) − 0.955| < 0.02):** 16 sentences in AAPL, 8 in MSFT. Representative examples:
 
-> *"These statements involve risks and uncertainties that may cause actual results or trends to differ materially…"* [P(SB)=0.839] — safe-harbor disclaimer with forward-looking phrasing; likely a false positive
-> *"In my view, Tim is one of the greatest business leaders of all time."* [P(SB)=0.854] — executive closing sentiment; consistent with §2.1 rule 3 (executive closing sentiments are substantive)
+> *"Speaking first today is Apple's CEO, Tim Cook."* [P(SB)=0.956, SB] — speaker-introduction line classified as substantive by a narrow margin; borderline because it lacks either financial content or explicit operator phrasing
+> *"Amit Daryanani - Evercore ISI Institutional Equities, Research Division"* [P(SB)=0.949, BP] — analyst affiliation label classified as boilerplate; lacks sentence structure and financial content
+> *"The next question comes from the line of Brent Thill with Jefferies."* [P(SB)=0.940, BP] — Q&A transition classified as boilerplate, consistent with §2.1 operator-chatter rule
 
-**Qualitative assessment:** textbook boilerplate (operator welcomes, `[Operator Instructions]`, replay logistics) is classified with high confidence (P(SB) < 0.03). Specific financial guidance and segment metrics are classified as substantive with equal confidence (P(SB) = 0.997). Near-boundary errors cluster around the same ambiguous patterns identified in §7 — safe-harbor language with forward-looking phrasing and hedged executive commentary without numerical anchors. The model generalizes to new tickers and new quarters while preserving the same systematic uncertainty profile seen on the test set.
+**Qualitative assessment:** textbook boilerplate classified with high confidence (P(SB) < 0.05); specific guidance and metrics at P(SB) = 0.996. Near-boundary cases cluster around speaker-introduction lines and Q&A transitions — the same failure profile as the test set. The model generalizes to new tickers and quarters.
 
 
 ## 10. GUI
 
-A Streamlit application (`gui.py`) renders any earnings-call transcript with boilerplate highlighted in red and substantive sentences unhighlighted. The GUI loads the winning model — FinBERT fine-tuned (`saved_model/finbert_finetuned/`, threshold 0.820 from `winner.json`) — and runs batched CPU inference.
+A Streamlit application (`gui.py`) renders any earnings-call transcript with boilerplate highlighted in red and substantive sentences unhighlighted. The GUI loads the winning model — SetFit (`saved_model/setfit_model/`, threshold 0.955 from `winner.json`) — and runs CPU inference via the `setfit` library.
 
 **Features:**
-- **Compact header bar** — model identity (`FinBERT · ProsusAI/finbert (fine-tuned) · test macro-F1 = 0.923`) displayed inline with the title
+- **Compact header bar** — model identity (`SetFit · all-MiniLM-L6-v2 (contrastive fine-tuned) · test macro-F1 = 0.931`) displayed inline with the title
 - **ECT library dropdown** — one-click loading of any of the 131 training-pool transcripts
 - **Upload button** — upload any `.txt` transcript file
 - **Paste expander** — paste raw transcript text directly
@@ -420,7 +411,7 @@ pip install -r requirements.txt
 streamlit run gui.py
 ```
 
-To re-run the full pipeline from scratch (retrains all classifiers including FinBERT, ~15 min on GPU):
+To re-run the full pipeline from scratch (retrains all classifiers; SetFit ~5 min on CPU, FinBERT ~15 min on GPU):
 
 ```bash
 jupyter nbconvert --to notebook --execute --inplace \
@@ -429,7 +420,7 @@ jupyter nbconvert --to notebook --execute --inplace \
 
 ### From a git clone
 
-`saved_model/finbert_finetuned/model.safetensors` (~418 MB) and `saved_model/fasttext_model.bin` (~764 MB) exceed GitHub's 100 MB file-size limit and are excluded via `.gitignore`. The notebook must be run before the GUI will load.
+`saved_model/finbert_finetuned/model.safetensors` (~418 MB) and `saved_model/fasttext_model.bin` (~764 MB) exceed GitHub's 100 MB file-size limit and are excluded via `.gitignore`. The SetFit checkpoint (`saved_model/setfit_model/`) is compact (~90 MB) and included in the submission zip; the GUI will not load without it. The notebook must be run to regenerate all excluded weights.
 
 **Step 1 — Install:**
 ```bash
@@ -449,19 +440,19 @@ python run_gold_judges.py --smoke   # connectivity check
 python run_gold_judges.py           # full run (~60 min)
 ```
 
-**Step 4 — Run the notebook** (trains all classifiers, saves FinBERT weights, writes `winner.json`):
+**Step 4 — Run the notebook** (trains all classifiers, saves SetFit and FinBERT weights, writes `winner.json`):
 ```bash
 jupyter nbconvert --to notebook --execute --inplace \
     --ExecutePreprocessor.timeout=7200 Assignment_2_BPClassifier.ipynb
 ```
-All steps are cached — re-runs skip completed work. FinBERT fine-tuning takes ~15 min on GPU or ~40 min on CPU.
+All steps are cached — re-runs skip completed work. SetFit contrastive fine-tuning takes ~5 min on CPU; FinBERT fine-tuning takes ~15 min on GPU or ~40 min on CPU.
 
 **Step 5 — Start the GUI:**
 ```bash
 streamlit run gui.py
 ```
 
-**LLM assistance disclosure:** Claude (Anthropic, claude-sonnet-4-6) was used as a coding and writing assistant throughout this project. Specifically: iterative prose drafting and editing across all sections of this write-up; debugging notebook cells (FinBERT inference loop, threshold-sweep logic, error-analysis cell); and generating the Streamlit GUI (`gui.py`). All analytical decisions — rubric design, judge selection, model choices, threshold strategy, error categorisation — were made by the author. The gold labels, classifier training, and all numerical results were produced by running the notebook.
+**LLM assistance disclosure:** Claude (Anthropic, claude-sonnet-4-6) assisted with prose drafting/editing, debugging notebook cells (SetFit pipeline, FinBERT inference, threshold-sweep, error-analysis), and generating `gui.py`. All analytical decisions (rubric, judge selection, model choices, threshold strategy, error categorisation) were made by the author; gold labels, training, and numerical results came from the notebook.
 
 
 ## Appendix A — Human-Review Correction Examples
@@ -470,7 +461,7 @@ The following sentences illustrate the four main correction categories from the 
 
 **Category A — Analyst Q&A questions (LLM: boilerplate → Human: substantive)**
 
-LLMs flagged short, conversational questions as generic filler; the human auditor recognized that even brief analyst questions are substantive because they probe a specific topic on the analyst's research agenda.
+LLMs flagged short analyst questions as filler; the auditor recognized they probe a specific research agenda topic.
 
 | Sentence | Votes (j3–j7) | Why substantive |
 |----------|--------------|-----------------|
@@ -482,7 +473,7 @@ LLMs flagged short, conversational questions as generic filler; the human audito
 
 **Category B — Executive statements that sound generic but carry strategic content (LLM: boilerplate → Human: substantive)**
 
-The LLM panel mis-classified these because they lack numerical anchors and use hedged first-person language. The human auditor applied rule 3 (closing sentiments are substantive) and rule 5 (hedged executive answers carry strategic intent).
+LLMs mis-classified these due to lack of numerical anchors and hedged first-person language (rules 3 and 5).
 
 | Sentence | Votes (j3–j7) | Why substantive |
 |----------|--------------|-----------------|
@@ -501,7 +492,7 @@ The LLM panel mis-classified these because they lack numerical anchors and use h
 
 **Category D — Slide transitions and agenda phrases (LLM: substantive → Human: boilerplate)**
 
-Four corrections ran the other direction. The LLM panel was distracted by topic keywords ("Data Center", "outlook") and missed that these are structural navigation phrases, not content sentences.
+LLMs were distracted by topic keywords ("Data Center", "outlook") and missed that these are structural navigation phrases with no content.
 
 | Sentence | Votes (j3–j7) | Why boilerplate |
 |----------|--------------|-----------------|
@@ -546,26 +537,17 @@ Four corrections ran the other direction. The LLM panel was distracted by topic 
 
 ## Appendix C — GUI Screenshots
 
-**Screenshot 1** — stats bar and boilerplate highlighting on a seen transcript (AVGO Q1-2025, in training pool):
+| Seen transcript — AVGO Q1-2025 (training pool) | |
+|---|---|
+| ![All view](figures/GUI_screenshot_seen1_AVGO.png){width=48%} | ![BP-only view](figures/GUI_screenshot_seen2_AVGO.png){width=48%} |
+| All view (stats bar + inline highlights) | Boilerplate-only filter |
 
-![GUI screenshot — seen transcript stats panel](figures/GUI_screenshot_seen1_AVGO.png){width=95%}
+| Unseen transcript — AAPL Q2-2026 | |
+|---|---|
+| ![All view](figures/GUI_screenshot_unseen1_AAPL.png){width=48%} | ![Substantive view](figures/GUI_screenshot_unseen2_AAPL.png){width=48%} |
+| All view | All view |
 
-**Screenshot 2** — full tagged view on a seen transcript (AVGO Q1-2025):
-
-![GUI screenshot — seen transcript tagged view](figures/GUI_screenshot_seen2_AVGO.png){width=95%}
-
-**Screenshot 3** — stats bar on an unseen transcript (AAPL Q2-2026, outside training pool):
-
-![GUI screenshot — unseen transcript stats panel](figures/GUI_screenshot_unseen1_AAPL.png){width=95%}
-
-**Screenshot 4** — full tagged view on an unseen transcript (AAPL Q2-2026):
-
-![GUI screenshot — unseen transcript tagged view](figures/GUI_screenshot_unseen2_AAPL.png){width=95%}
-
-**Screenshot 5** — stats bar on a second unseen transcript (MSFT Q3-2026):
-
-![GUI screenshot — second unseen transcript stats panel](figures/GUI_screenshot_unseen3_MSFT.png){width=95%}
-
-**Screenshot 6** — full tagged view on a second unseen transcript (MSFT Q3-2026):
-
-![GUI screenshot — second unseen transcript tagged view](figures/GUI_screenshot_unseen4_MSFT.png){width=95%}
+| Unseen transcript — MSFT Q3-2026 | |
+|---|---|
+| ![All view](figures/GUI_screenshot_unseen3_MSFT.png){width=48%} | ![BP-only view](figures/GUI_screenshot_unseen4_MSFT.png){width=48%} |
+| All view | All view |
