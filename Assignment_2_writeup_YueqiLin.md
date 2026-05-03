@@ -545,9 +545,9 @@ LLMs were distracted by topic keywords ("Data Center", "outlook") and missed tha
 | Unseen transcript — AAPL Q2-2026 | |
 |---|---|
 | ![All view](figures/GUI_screenshot_unseen1_AAPL.png){width=48%} | ![Substantive view](figures/GUI_screenshot_unseen2_AAPL.png){width=48%} |
-| All view | All view |
+| All view | Substantive-only filter |
 
 | Unseen transcript — MSFT Q3-2026 | |
 |---|---|
 | ![All view](figures/GUI_screenshot_unseen3_MSFT.png){width=48%} | ![BP-only view](figures/GUI_screenshot_unseen4_MSFT.png){width=48%} |
-| All view | All view |
+| All view | Boilerplate-only filter |
