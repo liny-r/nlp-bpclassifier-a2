@@ -176,7 +176,7 @@ SetFit with `sentence-transformers/all-MiniLM-L6-v2`. Due to a version constrain
 Two soft-vote ensembles combine the five learned classifiers (LogReg, HistGBM, FastText, FinBERT, SetFit):
 
 - **7a — mean-prob:** average P(substantive) across all five models. Achieves the best BP F1 of all non-FinBERT entries (0.800) by smoothing out individual model overconfidence.
-- **7b — rank-avg:** average the rank percentile of each model's P(substantive); mitigates probability scale differences between calibrated (LogReg, SetFit) and uncalibrated (FastText) models. Its threshold (0.140) is much lower than mean-prob because rank percentiles are bounded by the empirical distribution.
+- **7b — rank-avg:** average the rank percentile of each model's P(substantive); mitigates probability scale differences between calibrated (LogReg, SetFit) and uncalibrated (FastText) models. Its threshold (0.145) is much lower than mean-prob because rank percentiles are bounded by the empirical distribution.
 
 **Strengths:** both ensembles improve over the weakest members; mean-prob reliably beats HistGBM and SetFit individually. **Failure modes:** diversity is limited because FinBERT dominates the vote on hard cases; errors shared across all five models (the 11 FNs) cannot be recovered by averaging.
 
@@ -554,18 +554,18 @@ Four corrections ran the other direction. The LLM panel was distracted by topic 
 
 ![GUI screenshot — seen transcript tagged view](figures/GUI_screenshot_seen2_AVGO.png){width=95%}
 
-**Screenshot 3** — stats bar on an unseen transcript (AAPL Q1-2025, outside training pool):
+**Screenshot 3** — stats bar on an unseen transcript (AAPL Q2-2026, outside training pool):
 
 ![GUI screenshot — unseen transcript stats panel](figures/GUI_screenshot_unseen1_AAPL.png){width=95%}
 
-**Screenshot 4** — full tagged view on an unseen transcript (AAPL Q1-2025):
+**Screenshot 4** — full tagged view on an unseen transcript (AAPL Q2-2026):
 
 ![GUI screenshot — unseen transcript tagged view](figures/GUI_screenshot_unseen2_AAPL.png){width=95%}
 
-**Screenshot 5** — stats bar on a second unseen transcript (MSFT Q2-2025):
+**Screenshot 5** — stats bar on a second unseen transcript (MSFT Q3-2026):
 
 ![GUI screenshot — second unseen transcript stats panel](figures/GUI_screenshot_unseen3_MSFT.png){width=95%}
 
-**Screenshot 6** — full tagged view on a second unseen transcript (MSFT Q2-2025):
+**Screenshot 6** — full tagged view on a second unseen transcript (MSFT Q3-2026):
 
 ![GUI screenshot — second unseen transcript tagged view](figures/GUI_screenshot_unseen4_MSFT.png){width=95%}
