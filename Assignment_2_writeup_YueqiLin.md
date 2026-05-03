@@ -155,26 +155,26 @@ A deterministic rule applied directly to the 25 regex flags: a sentence is boile
 
 ### 4.3 HistGradientBoosting (Classifier 3)
 
-`sklearn.ensemble.HistGradientBoostingClassifier` (300 estimators, depth 6, balanced weights). Training 7.9 s; inference 20.9K sps. **Strengths:** captures non-linear flag-embedding interactions; handles class imbalance natively. **Failure modes:** vague executive Q&A with no regex anchors mislabelled as boilerplate; tree splits can't generalize to unseen phrasing.
+`sklearn.ensemble.HistGradientBoostingClassifier` (300 estimators, depth 6, balanced weights). Training 2.9 s; inference ~100K sps. **Strengths:** captures non-linear flag-embedding interactions; handles class imbalance natively. **Failure modes:** vague executive Q&A with no regex anchors mislabelled as boilerplate; tree splits can't generalize to unseen phrasing.
 
 ### 4.4 FastText (Classifier 4)
 
-Supervised FastText on raw text (no embedding+regex matrix): 25 epochs, word bigrams, lr=0.5, dim=100, 2M hash buckets. Training 1.4 s; inference 587 sps. Saved binary ~764 MB (2M-bucket n-gram matrix; char n-grams disabled). **Strengths:** no embedding dependency, fast training; bigrams capture some local context. **Failure modes:** lowest BP F1 (0.533 on test); bag-of-words has no positional awareness — "revenue" and "thank you" receive equal weight in the same sentence.
+Supervised FastText on raw text (no embedding+regex matrix): 25 epochs, word bigrams, lr=0.5, dim=100, 2M hash buckets. Training 0.5 s; inference ~98K sps. Saved binary ~764 MB (2M-bucket n-gram matrix; char n-grams disabled). **Strengths:** no embedding dependency, fast training; bigrams capture some local context. **Failure modes:** lowest BP F1 (0.558 on test); bag-of-words has no positional awareness — "revenue" and "thank you" receive equal weight in the same sentence.
 
 ### 4.5 FinBERT Fine-tuned (Classifier 5)
 
-`ProsusAI/finbert` — a BERT model pre-trained on financial text — is fine-tuned for 3 epochs using AdamW (lr=2e-5, batch 16) with a linear warmup schedule. Trained on raw text (no embedding+regex matrix). Inference runs on CPU (forced to avoid MPS out-of-memory on M1 Pro) at ~72 sps. **Strengths:** second-best test macro-F1 (0.923) and best BP F1 (0.862) across all classifiers; pre-training on financial corpora gives it sensitivity to domain-specific phrasing that generic embeddings miss. **Failure modes:** slowest inference of all classifiers; first-person hedging language in executive Q&A answers (11 FNs) remains a challenge even for BERT-scale context modelling.
+`ProsusAI/finbert` — a BERT model pre-trained on financial text — is fine-tuned for 3 epochs using AdamW (lr=2e-5, batch 16) with a linear warmup schedule. Trained on raw text (no embedding+regex matrix). Inference runs on CPU (forced to avoid MPS out-of-memory on M1 Pro) at ~81 sps. **Strengths:** second-best test macro-F1 (0.923) and best BP F1 (0.862) across all classifiers; pre-training on financial corpora gives it sensitivity to domain-specific phrasing that generic embeddings miss. **Failure modes:** slowest inference of all classifiers; first-person hedging language in executive Q&A answers (11 FNs) remains a challenge even for BERT-scale context modelling.
 
 ### 4.6 SetFit / MiniLM (Classifier 6)
 
-SetFit (`setfit` 1.1.3) with `sentence-transformers/all-MiniLM-L6-v2`. Contrastive fine-tuning trains the encoder on in-batch positive/negative pairs with cosine-similarity loss for 1 epoch (batch 16), then fits a Logistic Regression head. Training ~5 min on CPU; inference ~463 sps. **Strengths:** highest test macro-F1 (0.931); contrastive training pulls BP/SB representations further apart than frozen pre-training. **Failure modes:** threshold (0.955) is high due to overconfidence toward the substantive class; 5 of 8 FNs are the same hedged-language pattern as FinBERT.
+SetFit (`setfit` 1.1.3) with `sentence-transformers/all-MiniLM-L6-v2`. Contrastive fine-tuning trains the encoder on in-batch positive/negative pairs with cosine-similarity loss for 1 epoch (batch 16), then fits a Logistic Regression head. Training ~5 min on CPU; inference ~555 sps. **Strengths:** highest test macro-F1 (0.931); contrastive training pulls BP/SB representations further apart than frozen pre-training. **Failure modes:** threshold (0.955) is high due to overconfidence toward the substantive class; 5 of 8 FNs are the same hedged-language pattern as FinBERT.
 
 ### 4.7 & 4.8 Ensembles (Classifiers 7a and 7b)
 
 Two soft-vote ensembles combine the five learned classifiers (LogReg, HistGBM, FastText, FinBERT, SetFit):
 
 - **7a — mean-prob:** average P(substantive) across all five models. Achieves the best BP F1 among ensemble classifiers (0.800) by smoothing out individual model overconfidence.
-- **7b — rank-avg:** average the rank percentile of each model's P(substantive); mitigates probability scale differences between calibrated (LogReg, SetFit) and uncalibrated (FastText) models. Its threshold (0.145) is much lower than mean-prob because rank percentiles are bounded by the empirical distribution.
+- **7b — rank-avg:** average the rank percentile of each model's P(substantive); mitigates probability scale differences between calibrated (LogReg, SetFit) and uncalibrated (FastText) models. Its threshold (0.140) is much lower than mean-prob because rank percentiles are bounded by the empirical distribution.
 
 **Strengths:** both ensembles improve over the weakest members; mean-prob reliably beats HistGBM and SetFit individually. **Failure modes:** diversity is limited because FinBERT dominates the vote on hard cases; feature-gap FNs shared across all five models cannot be recovered by averaging.
 
@@ -193,11 +193,11 @@ Before test evaluation, LogReg, HistGBM, and FastText are **retrained on the ful
 |-------|-----------|---------------|----------|
 | LogReg | 0.045 | OOF (5-fold) | 0.034 |
 | HistGBM | 0.810 | OOF (5-fold) | 0.147 |
-| FastText | 0.885 | OOF (5-fold) | 0.093 |
+| FastText | 0.865 | OOF (5-fold) | 0.093 |
 | FinBERT | 0.820 | Val-set (OOF impractical: 5× fine-tuning ≈ 75 min) | N/A |
 | SetFit | 0.955 | Val-set sweep | N/A |
-| Ensemble (mean-prob) | 0.615 | Val-set (FinBERT component) | N/A |
-| Ensemble (rank-avg) | 0.145 | Val-set (FinBERT component) | N/A |
+| Ensemble (mean-prob) | 0.660 | Val-set (FinBERT component) | N/A |
+| Ensemble (rank-avg) | 0.140 | Val-set (FinBERT component) | N/A |
 
 Per-fold thresholds (each fold's recall-constrained optimum, used to compute fold std):
 
@@ -206,7 +206,7 @@ Per-fold thresholds (each fold's recall-constrained optimum, used to compute fol
 - **SetFit:** val-set sweep = 0.955. High threshold reflects post-contrastive overconfidence toward the substantive class.
 - **LogReg:** [0.100, 0.030, 0.010, 0.025, 0.010] — mean=0.035, std=0.034. Fold 3 fell back to 0.010 (recall=0.961 at best), explaining the very low pooled threshold (0.045).
 
-The rank-avg ensemble threshold (0.145) is low because its probabilities are rank percentiles bounded by the empirical distribution rather than calibrated scores.
+The rank-avg ensemble threshold (0.140) is low because its probabilities are rank percentiles bounded by the empirical distribution rather than calibrated scores.
 
 
 ## 6. Results
@@ -223,7 +223,7 @@ All classifiers are first evaluated on the validation set (500 sentences, never 
 | 4 | 3-HistGBM(emb+regex) | 0.938 | 0.8162 | 0.6667 | 0.9658 | 0.9777 | ✓ | 2.7 | 94,697 |
 | 5 | 7b-Ensemble(rank-avg) | 0.936 | 0.8085 | 0.6522 | 0.9648 | 0.9777 | ✓ | — | — |
 | 6 | 2-LogReg(emb+regex) | 0.916 | 0.7271 | 0.5000 | 0.9541 | 0.9754 | ✓ | 0.1 | 296,375 |
-| 7 | 4-FastText | 0.912 | 0.7011 | 0.4500 | 0.9522 | 0.9777 | ✓ | 1.4 | 90,119 |
+| 7 | 4-FastText | 0.912 | 0.7011 | 0.4500 | 0.9522 | 0.9777 | ✓ | — | 39,952 |
 | 8 | 1-Rules+Regex | 0.828 | 0.5986 | 0.2951 | 0.9021 | 0.8839 | **✗** | 0 | 30,409 |
 
 FinBERT leads on val macro-F1 (0.9215); SetFit is a close second (0.9188). Both clear the recall floor by a wide margin (0.9799 and 0.9844 respectively).
@@ -236,18 +236,18 @@ All eight classifiers are evaluated on the frozen 500-sentence test set using OO
 
 | Rank | Model | Acc | Macro-F1 | BP F1 | SB F1 | SB Recall | Floor | Train (s) | Throughput (sps) | Threshold |
 |------|-------|-----|----------|-------|-------|-----------|-------|-----------|-----------------|-----------|
-| 1 | **6-SetFit** | **0.974** | **0.9308** | 0.8762 | 0.9855 | 0.9822 | ✓ | ~300 | 376 | 0.955 |
-| 2 | 5-FinBERT-FT | 0.970 | 0.9228 | 0.8624 | 0.9832 | 0.9755 | ✓ | ~900 | 72 | 0.820 |
+| 1 | **6-SetFit** | **0.974** | **0.9308** | 0.8762 | 0.9855 | 0.9822 | ✓ | ~300 | 555 | 0.955 |
+| 2 | 5-FinBERT-FT | 0.970 | 0.9228 | 0.8624 | 0.9832 | 0.9755 | ✓ | ~900 | 81 | 0.820 |
 | 3 | 7a-Ensemble(mean-prob) | 0.966 | 0.9047 | 0.8283 | 0.9811 | 0.9844 | ✓ | — | — | 0.660 |
-| 4 | 7b-Ensemble(rank-avg) | 0.950 | 0.8518 | 0.7312 | 0.9724 | 0.9822 | ✓ | — | — | 0.140 |
-| 5 | 3-HistGBM(emb+regex) | 0.942 | 0.8313 | 0.6947 | 0.9679 | 0.9755 | ✓ | 7.9 | 20,922 | 0.810 |
-| 6 | 2-LogReg(emb+regex) | 0.936 | 0.8046 | 0.6444 | 0.9648 | 0.9777 | ✓ | 2.6 | 16,711 | 0.045 |
-| 7 | 4-FastText | 0.916 | 0.7436 | 0.5333 | 0.9546 | 0.9666 | ✓ | 1.4 | 64,675 | 0.885 |
-| 8 | 1-Rules+Regex | 0.856 | 0.6639 | 0.4098 | 0.9180 | 0.8976 | **✗** | 0 | 28,803 | — |
+| 4 | 7b-Ensemble(rank-avg) | 0.946 | 0.8368 | 0.7033 | 0.9703 | 0.9822 | ✓ | — | — | 0.140 |
+| 5 | 3-HistGBM(emb+regex) | 0.942 | 0.8313 | 0.6947 | 0.9680 | 0.9755 | ✓ | 2.9 | 99,953 | 0.810 |
+| 6 | 2-LogReg(emb+regex) | 0.936 | 0.8046 | 0.6444 | 0.9648 | 0.9777 | ✓ | 0.1 | 317,049 | 0.045 |
+| 7 | 4-FastText | 0.924 | 0.7583 | 0.5581 | 0.9584 | 0.9755 | ✓ | 0.5 | 97,529 | 0.865 |
+| 8 | 1-Rules+Regex | 0.856 | 0.6639 | 0.4098 | 0.9180 | 0.8976 | **✗** | 0 | 28,242 | — |
 
 **7 of 8 classifiers** clear the 0.96 SB recall floor on the test set. The rules baseline fails (SB recall = 0.8976). SetFit leads on test macro-F1 (0.9308); FinBERT is a close second (0.9228).
 
-**Winner:** SetFit — highest test macro-F1 (0.9308) under the SB recall ≥ 0.96 constraint. The fine-tuned checkpoint is saved at `saved_model/setfit_model/` with threshold 0.955 recorded in `saved_model/winner.json`. The Streamlit GUI loads SetFit directly. HistGBM is also saved as `saved_model/best_model.pkl` (macro-F1 = 0.8313, ~21K sps) as a lightweight fallback artifact.
+**Winner:** SetFit — highest test macro-F1 (0.9308) under the SB recall ≥ 0.96 constraint. The fine-tuned checkpoint is saved at `saved_model/setfit_model/` with threshold 0.955 recorded in `saved_model/winner.json`. The Streamlit GUI loads SetFit directly. HistGBM is also saved as `saved_model/best_model.pkl` (macro-F1 = 0.8313, ~100K sps) as a lightweight fallback artifact.
 
 
 ## 7. Error Analysis

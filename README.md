@@ -31,7 +31,6 @@ A binary sentence classifier for earnings-call transcripts that distinguishes **
 │   ├── sentence_pool.parquet             # 53,236 unique sentences (≥40 chars)
 │   ├── splits.pkl                        # Train/val/test splits (60/20/20, seed=42)
 │   ├── embeddings_gold.pkl               # all-MiniLM-L6-v2 embeddings (384-dim)
-│   ├── error_analysis_val.csv            # Val-set HistGBM/ensemble error analysis (development artifact)
 │   └── gold/
 │       ├── gold_labels.parquet           # 2,500-sentence gold set (5-judge MV + human audit)
 │       ├── human_review_final.csv        # Round 3 human audit (255 close-call sentences; 11 BP / 244 SB)
@@ -148,10 +147,10 @@ bash run_gui.sh
 | 1 | **SetFit** | **0.9308** | 0.8762 | 0.9822 | ✓ |
 | 2 | FinBERT-FT | 0.9228 | 0.8624 | 0.9755 | ✓ |
 | 3 | Ensemble (mean-prob) | 0.9047 | 0.8283 | 0.9844 | ✓ |
-| 4 | Ensemble (rank-avg) | 0.8518 | 0.7312 | 0.9822 | ✓ |
+| 4 | Ensemble (rank-avg) | 0.8368 | 0.7033 | 0.9822 | ✓ |
 | 5 | HistGBM | 0.8313 | 0.6947 | 0.9755 | ✓ |
 | 6 | LogReg | 0.8046 | 0.6444 | 0.9777 | ✓ |
-| 7 | FastText | 0.7436 | 0.5333 | 0.9666 | ✓ |
+| 7 | FastText | 0.7583 | 0.5581 | 0.9755 | ✓ |
 | 8 | Rules+Regex | 0.6639 | 0.4098 | 0.8976 | **✗** |
 
 *Winner: SetFit (contrastive fine-tuned). Checkpoint at `saved_model/setfit_model/`, threshold = 0.955 (recorded in `saved_model/winner.json`).*
