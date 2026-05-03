@@ -12,3 +12,6 @@ pyarrow
 datasets
 nltk
 torch
+matplotlib
+scipy
+requests

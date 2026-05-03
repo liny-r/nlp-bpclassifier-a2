@@ -7,7 +7,7 @@
 
 ## Overview
 
-A binary sentence classifier for earnings-call transcripts that distinguishes **boilerplate** (scripted, generic, non-material) from **substantive** (financials, guidance, strategy, risks) sentences. Built on 131 transcripts covering 15 tickers (AMD, AVGO, BLK, C, FAST, FDX, GS, INTC, JNJ, JPM, NKE, NVDA, PLTR, WFC).
+A binary sentence classifier for earnings-call transcripts that distinguishes **boilerplate** (scripted, generic, non-material) from **substantive** (financials, guidance, strategy, risks) sentences. Built on 131 transcripts covering 14 tickers (AMD, AVGO, BLK, C, FAST, FDX, GS, INTC, JNJ, JPM, NKE, NVDA, PLTR, WFC).
 
 **Winner:** FinBERT fine-tuned (`ProsusAI/finbert`) — test macro-F1 = **0.923**, SB recall = **0.976**  
 **Hard constraint:** substantive recall ≥ 0.96 on the held-out test set.
@@ -34,7 +34,8 @@ A binary sentence classifier for earnings-call transcripts that distinguishes **
 │   ├── error_analysis_val.csv            # Val-set HistGBM/ensemble error analysis (development artifact)
 │   └── gold/
 │       ├── gold_labels.parquet           # 2,500-sentence gold set (5-judge MV + human audit)
-│       ├── human_review_final.csv        # Round 3 human audit template (255 close-call sentences)
+│       ├── human_review_final.csv        # Round 3 human audit template (255 close-call sentences; human_label col cleared)
+│       ├── human_review_recovered.csv    # 102 human corrections recovered from gold_labels.parquet (BP→SB: 93, SB→BP: 9)
 │       ├── judge1_qwen3.parquet          # Removed judge (over-flagged boilerplate)
 │       ├── judge2_gemma3.parquet         # Removed judge (severe BP bias)
 │       ├── judge3_cogito.parquet
@@ -164,7 +165,7 @@ streamlit run gui.py
 
 ## Data
 
-- **131 transcripts**, 15 tickers, 2022–2025
+- **131 transcripts**, 14 tickers, 2022–2025
 - **53,236 unique sentences** after deduplication (minimum 40 characters)
 - **2,500-sentence gold sample** stratified by speaker type (analyst / executive / IR / operator)
 - **Splits:** train = 1,500 / val = 500 / test = 500 (seed = 42, stratified by label)
