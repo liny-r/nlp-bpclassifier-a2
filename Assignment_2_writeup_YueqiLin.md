@@ -427,10 +427,7 @@ jupyter nbconvert --to notebook --execute --inplace \
 pip install -r requirements.txt
 ```
 
-**Step 2 — Add the ECT corpus** (provided separately as `ECT.zip`; not in the repo):
-```bash
-unzip ECT.zip -d ECT/
-```
+**Step 2 — ECT corpus** — all 131 transcripts are included in the repo under `ECT/`; no separate download needed.
 
 **Step 3 — (Optional) Reproduce gold labels** — skip to use cached labels in `cache/gold/`. Requires Ollama:
 ```bash
