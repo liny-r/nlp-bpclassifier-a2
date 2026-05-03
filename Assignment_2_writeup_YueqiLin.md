@@ -411,24 +411,38 @@ streamlit run gui.py
 
 ## 11. Reproducibility
 
-**Install dependencies:**
+Complete steps from a clean clone to a running GUI:
+
+**Step 1 — Clone and install:**
 ```bash
-pip install pandas numpy scikit-learn sentence-transformers tqdm \
-            streamlit fasttext-wheel transformers accelerate setfit \
-            pyarrow datasets nltk
+git clone https://github.com/liny-r/nlp-bpclassifier-a2.git
+cd nlp-bpclassifier-a2
+pip install -r requirements.txt
 ```
 
-**Reproduce gold labels** (requires Ollama with five models pulled):
+**Step 2 — Add the ECT corpus** (provided separately as `ECT.zip`; not in the repo):
+```bash
+unzip ECT.zip -d ECT/
+```
+
+**Step 3 — (Optional) Reproduce gold labels** — skip if using the cached labels already in `cache/gold/`. Requires Ollama with five models pulled:
 ```bash
 ollama pull cogito:8b && ollama pull qwen3:14b && ollama pull gemma3:12b \
     && ollama pull ministral-3:8b && ollama pull cogito:14b
-python run_gold_judges.py --smoke   # connectivity check
-python run_gold_judges.py           # full run (~60 min)
+python run_gold_judges.py --smoke   # connectivity check (~2 min)
+python run_gold_judges.py           # full labeling run (~60 min)
 ```
 
-**Run the notebook:** open `Assignment_2_BPClassifier.ipynb` in Jupyter and run cells top-to-bottom. All expensive steps (sentence extraction, embeddings, judge labels, FinBERT weights) are cached — re-runs skip completed steps automatically.
+**Step 4 — Run the notebook** (trains all classifiers, saves FinBERT weights, writes `winner.json`):
+```bash
+jupyter nbconvert --to notebook --execute --inplace \
+    --ExecutePreprocessor.timeout=7200 Assignment_2_BPClassifier.ipynb
+```
+All expensive steps (sentence extraction, embeddings, FinBERT fine-tuning) are cached — re-runs skip completed work automatically. FinBERT fine-tuning takes ~15 min on a GPU or ~40 min on CPU (M1 Pro, forced CPU).
 
-**Run the GUI:**
+> **Note on large model files:** `saved_model/finbert_finetuned/model.safetensors` (~440 MB) and `saved_model/fasttext_model.bin` are excluded from the repository by `.gitignore` (GitHub's 100 MB file-size limit). Running the notebook regenerates both files. The GUI cannot load until Step 4 is complete.
+
+**Step 5 — Start the GUI:**
 ```bash
 streamlit run gui.py
 ```
